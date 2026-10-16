@@ -1,3 +1,3 @@
-Gasoducto Virtual Canalete - sitio web estático
+Gasoducto Virtual (La Lucha, Sahagún → Canalete) - sitio web estático
 
 
