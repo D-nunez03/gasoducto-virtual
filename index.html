@@ -1,13 +1,15 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body style="margin:0">
-<title>Gasoducto Virtual Canalete</title>
+<title>Así llega el gas natural</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: lienzo 3D fijo a pantalla completa; columna narrativa a la izquierda que se desplaza encima (abajo en móvil). Tema único oscuro, a propósito. */
 :root{
-  --ink:#0e1d26;          /* paneles */
-  --ink-2:#163040;
+  --ink:#0a2442;          /* paneles: azul noche Surtigas */
+  --ink-2:#14406d;
+  --brand:#0086ce;        /* azul Surtigas */
+  --leaf:#8cc63f;         /* verde Promigas */
   --paper:#eef3f2;        /* texto principal */
   --muted:#a9bcc2;
   --pe:#f5c21b;           /* amarillo tubería PE de gas */
@@ -37,10 +39,15 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden
 .step:last-child{min-height:150vh}
 .card{pointer-events:auto;max-width:410px;background:color-mix(in srgb,var(--ink) 92%,transparent);border:1px solid var(--ink-2);border-radius:6px;padding:22px 24px 24px;box-shadow:0 18px 40px -18px rgba(5,15,20,.55);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:10px}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center}
-.eyebrow b{font-weight:500;color:var(--paper);font-variant-numeric:tabular-nums}
+.eyebrow b{font-weight:500;color:#5cc2f2;font-variant-numeric:tabular-nums}
 h1,h2{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:.95;margin:0;text-wrap:balance}
 h1{font-size:clamp(40px,5.4vw,60px)}
-h1 em{font-style:normal;color:var(--pe)}
+h1 em{font-style:normal;color:#5cc2f2}
+.logo{background:#fff;border-radius:6px;padding:8px 12px;align-self:flex-start;display:flex}
+.logo img{height:46px;width:auto;display:block}
+.chip{align-self:flex-start;font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;padding:4px 10px;border-radius:3px;background:var(--leaf);color:#0a2442}
+.chap{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5cc2f2}
+#fade{position:fixed;inset:0;z-index:1;background:var(--ink);opacity:0;pointer-events:none}
 h2{font-size:clamp(32px,4.4vw,44px)}
 p{margin:0;color:#d5e0e1;max-width:62ch}
 .k{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
@@ -84,8 +91,18 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
 @media (prefers-reduced-motion:reduce){.hint i::after{animation:none}}
 </style>
 
-<canvas id="scene" aria-label="Maqueta 3D del recorrido del gas natural desde Montería hasta Canalete"></canvas>
+<canvas id="scene" aria-label="Maqueta 3D de cómo llega el gas natural: red de Cartagena y gasoducto virtual a Canalete"></canvas>
+<div id="fade"></div>
 <div id="tags" aria-hidden="true">
+  <div class="tag cg" data-k="c-cg">City Gate Ternera II<small>recibo de gas de Promigas</small></div>
+  <div class="tag" data-k="c-argos">Industria<small>Cementos Argos · Mamonal</small></div>
+  <div class="tag" data-k="c-sc">Comercio<small>Hotel Santa Clara</small></div>
+  <div class="tag town" data-k="c-popa">Estación distrital<small>Pie de la Popa</small></div>
+  <div class="tag part" data-k="c-reg">Cambio de regulador</div>
+  <div class="tag cg" data-k="c-dig">¡Rotura por obra!<small>fuga de gas a la atmósfera</small></div>
+  <div class="tag vc" data-k="c-sede">Sede Surtigas<small>Cartagena</small></div>
+  <div class="tag vc" data-k="c-lab">Laboratorio de metrología<small>acreditado por ONAC</small></div>
+  <div class="tag town" data-k="c-sol">Energía solar<small>Caribe Plaza</small></div>
   <div class="tag cg" data-k="cg">Estación La Lucha<small>Sahagún · compresión y carga de GNC</small></div>
   <div class="tag" data-k="mon">Montería<small>paso del Jumbo</small></div>
   <div class="tag part" data-k="reg">Regulador</div><div class="tag part" data-k="val">Válvula y maneral</div><div class="tag part" data-k="med">Medidor</div><div class="tag part" data-k="aco">Acometida · elevador</div><div class="tag part" data-k="int">A la instalación interna</div>
@@ -103,55 +120,87 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
 
 <main id="story">
   <section class="step"><div class="card">
-    <div class="eyebrow">Surtigas · Gasoducto virtual</div>
-    <h1>Del gasoducto <em>a la cocina</em></h1>
-    <p>Canalete no tiene gasoducto. El gas natural se comprime en Sahagún y llega por carretera: <strong>123,9 km</strong> en un Jumbo de gas natural comprimido, y luego por <strong>16,4 km</strong> de red hasta cada vivienda.</p>
-    <div class="hint"><i></i>Desplácese hacia abajo para recorrerlo</div>
+    <div class="logo"><img src="logo.png" alt="Surtigas, una empresa Promigas"></div>
+    <h1>Así llega el gas natural <em>a su casa</em></h1>
+    <p>Dos recorridos: la red de Cartagena y el gasoducto virtual que lleva gas a Canalete.</p>
+    <div class="hint"><i></i>Desplácese hacia abajo</div>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>01</b> Origen · Sahagún</div>
-    <h2>Estación La Lucha</h2>
-    <p>El gas natural llega por el tubo madre de Promigas, el gasoducto troncal, a la Estación La Lucha.</p>
-    <p>Allí se comprime y se carga en el Jumbo: un remolque de cilindros que transporta el gas a alta presión.</p>
+    <div class="chap">Capítulo 1 · Red de Cartagena</div>
+    <div class="eyebrow"><b>01</b> Recibo</div>
+    <h2>Donde empieza nuestra red</h2>
+    <p>En el City Gate recibimos el gas de Promigas, lo medimos y bajamos su presión.</p>
+    <div class="stat"><div><strong class="c-flow">650 → 350</strong><span>psig</span></div></div>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>02</b> Transporte</div>
-    <h2>123,9 km por la vía</h2>
-    <p>El Jumbo funciona como un gasoducto sobre ruedas. Sale de Sahagún, atraviesa Montería y entrega el gas en Canalete, a donde no llega la red de transporte.</p>
-    <p class="k">Trazado real del recorrido: 12.001 puntos GPS.</p>
+    <div class="eyebrow"><b>02</b> Red de acero</div>
+    <h2>Energía para la industria y el comercio</h2>
+    <p>La red de acero lleva el gas a alta presión hasta fábricas, hoteles y grandes comercios.</p>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>03</b> Llegada · Canalete</div>
-    <h2>Estación Virtual Canalete</h2>
-    <p>En la subestación el Jumbo se conecta y descarga. La presión baja por etapas; el gas se calienta para compensar el enfriamiento de la expansión y sale regulado hacia la red del municipio.</p>
+    <div class="eyebrow"><b>03</b> Estación distrital</div>
+    <h2>Hasta cada barrio</h2>
+    <p>La estación distrital regula de nuevo la presión y alimenta la red de polietileno.</p>
+    <div class="stat"><div><strong class="c-pe">25 – 60</strong><span>psig · red secundaria</span></div></div>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>04</b> Distribución</div>
-    <h2>La red de Canalete</h2>
-    <p>Desde la estación, el gas avanza calle por calle por la red secundaria de polietileno, que opera entre 25 y 60 psig.</p>
-    <div class="stat"><div><strong class="c-pe">16,4</strong><span>km de red</span></div><div><strong class="c-pe">667</strong><span>tramos</span></div></div>
+    <div class="eyebrow"><b>04</b> Trabajos varios</div>
+    <h2>Servicios en el hogar</h2>
+    <p>Cambio de regulador, reubicación de medidores y mantenimiento de gasodomésticos.</p>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>05</b> Usuario final</div>
-    <h2>Centro de medición</h2>
-    <p>La acometida lleva el gas hasta el centro de medición de cada vivienda: elevador, válvula, regulador y medidor.</p>
-    <p>El regulador baja la presión a 0,25 psig para uso doméstico y el medidor registra lo que consume el hogar.</p>
-    <div class="stat"><div><strong class="c-flow">≈16 m³</strong><span>consumo mensual de un hogar típico de Canalete</span></div></div>
+    <div class="eyebrow"><b>05</b> Prevención de daños</div>
+    <h2>Una obra sin aviso puede romper la red</h2>
+    <p>Nuestras cuadrillas de emergencia controlan la fuga y restablecen el servicio.</p>
+    <div class="stat"><div><strong class="c-truck">93 %</strong><span>de nuestra huella de carbono viene de daños a la red</span></div></div>
+    <div class="chip">Llame antes de excavar</div>
   </div></section>
-
   <section class="step"><div class="card">
-    <div class="eyebrow">Resumen</div>
-    <h2>Gas natural donde no llega el tubo</h2>
-    <div class="chain"><span>Tubo madre</span><span class="ar">→</span><span>Estación La Lucha</span><span class="ar">→</span><span class="c-truck">Jumbo</span><span class="ar">→</span><span class="c-flow">Estación virtual</span><span class="ar">→</span><span class="c-pe">Red</span><span class="ar">→</span><span>Vivienda</span></div>
-    <div class="stat"><div><strong class="c-truck">123,9</strong><span>km por vía</span></div><div><strong class="c-pe">16,4</strong><span>km de red</span></div></div>
+    <div class="eyebrow"><b>06</b> Sede Surtigas</div>
+    <h2>Medimos con precisión</h2>
+    <p>Laboratorio de metrología acreditado por ONAC: presión, temperatura y volumen de gas.</p>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="eyebrow"><b>07</b> Soluciones energéticas</div>
+    <h2>Más allá del gas</h2>
+    <p>Sistemas solares en comercios, industrias y hogares.</p>
+    <div class="stat"><div><strong style="color:var(--leaf)">200</strong><span>sistemas solares residenciales · meta 2026</span></div></div>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="chap">Capítulo 2 · Gasoducto virtual</div>
+    <div class="eyebrow"><b>08</b> Estación La Lucha · Sahagún</div>
+    <h2>¿Y donde no llega el tubo?</h2>
+    <p>Comprimimos el gas y lo cargamos en un camión Jumbo.</p>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="eyebrow"><b>09</b> Transporte</div>
+    <h2>123,9 km de gasoducto sobre ruedas</h2>
+    <p>De Sahagún a Canalete, pasando por Montería.</p>
+    <div class="stat"><div><strong class="c-truck">0</strong><span>accidentes de personal directo desde jun. 2024</span></div></div>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="eyebrow"><b>10</b> Estación virtual Canalete</div>
+    <h2>El gas vuelve a la red</h2>
+    <p>Se descomprime, se calienta y sale regulado hacia el municipio.</p>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="eyebrow"><b>11</b> Distribución y mantenimiento</div>
+    <h2>16,4 km de red en Canalete</h2>
+    <div class="stat"><div><strong class="c-pe">99,7 %</strong><span>cumplimiento del plan de mantenimiento</span></div></div>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="eyebrow"><b>12</b> Revisión periódica</div>
+    <h2>Una revisión cada 5 años</h2>
+    <p>Un inspector acreditado verifica la instalación y busca fugas (Res. CREG 059 de 2012).</p>
+    <p class="k">Medidores digitales: alertan fugas, flujo cero y posible fraude.</p>
+  </div></section>
+  <section class="step"><div class="card">
+    <div class="logo"><img src="logo.png" alt="Surtigas, una empresa Promigas"></div>
+    <h2>Energía más limpia</h2>
+    <div class="stat"><div><strong style="color:var(--leaf)">–35 %</strong><span>emisiones en 2026</span></div><div><strong style="color:var(--leaf)">2040</strong><span>carbono neutral</span></div></div>
   </div></section>
 </main>
-<div class="credit">Geometría: SIG Surtigas (EPSG:3116) · Imagen: Esri World Imagery (2 m en la ruta) · Edificaciones: Google Open Buildings (alturas estimadas)</div>
+<div class="credit">Geometría: SIG Surtigas · Imagen: Esri World Imagery · Edificaciones: Google Open Buildings (alturas estimadas)</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -718,6 +767,322 @@ function sample(s){
   o.t=a.t.clone().lerp(b.t,e); o.e=e; o.i=i; return o;
 }
 
+// =================== CAPÍTULO 1 · CARTAGENA (red convencional) ===================
+const CM = {"sites":{"cg":[5445.6,-2337.2],"popa":[-1950.0,1648.9],"santaclara":[-4039.0,3425.5],"surtigas":[337.7,973.4],"argos":[808.8,-6488.4]},"hero":{"x":-1955.7,"y":1772.8,"nx":0.887,"ny":-0.4617,"px":-1947.5,"py":1768.5},"dig":{"x":-4092.0,"y":3407.2,"ang":-2.559},"panel":[[-2072.7,1863.9],[-1979.1,1841.9],[-2010.5,1787.3],[-2089.0,1816.8],[-2072.7,1863.9]],"acMax":14265,"peMax":12275};
+const sceneC=new THREE.Scene(); sceneC.background=SKY; sceneC.fog=new THREE.Fog(SKY,1000,8000);
+sceneC.add(new THREE.HemisphereLight(0xe8f2ff,0x5a6b3a,0.8));
+(function(){const s2=new THREE.DirectionalLight(0xfff3df,0.85); s2.position.set(-0.5,1,0.35); sceneC.add(s2);})();
+const cS=CM.sites, cv=(k,h=2)=>V(cS[k][0],cS[k][1],h);
+function sph(g,r,c,x,y,z,half){const m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12,0,Math.PI*2,0,half?Math.PI/2:Math.PI),M(c));m.position.set(x,y,z);g.add(m);return m}
+
+// ---- persona (técnico Surtigas: camisa azul claro con franjas reflectivas, jean, casco blanco)
+function person(o={}){
+  const g=new THREE.Group(), SH='#b8cde6', JE='#2c4a7a', SK=o.skin||'#a8774f', RF='#c8f03c', SI='#dfe4e6', HAND=o.gloves?'#1c1c1c':SK;
+  const legs=[-0.1,0.1].map(x=>{const l=new THREE.Group();l.position.set(x,0.9,0);g.add(l);box(l,0.15,0.88,0.17,JE,0,-0.88,0);box(l,0.16,0.08,0.27,'#2b2421',0,-0.9,0.04);return l;});
+  box(g,0.42,0.62,0.24,SH,0,0.88,0); box(g,0.43,0.05,0.25,'#1e1e1e',0,0.87,0);
+  box(g,0.425,0.05,0.245,RF,0,1.27,0); box(g,0.427,0.016,0.247,SI,0,1.287,0);
+  box(g,0.425,0.04,0.245,RF,0,1.1,0);
+  box(g,0.08,0.035,0.01,'#0086ce',0.1,1.2,0.122);
+  const arms=[-0.27,0.27].map(x=>{const a=new THREE.Group();a.position.set(x,1.46,0);g.add(a);box(a,0.11,0.58,0.12,SH,0,-0.58,0);box(a,0.115,0.045,0.125,RF,0,-0.36,0);box(a,0.116,0.015,0.126,SI,0,-0.345,0);box(a,0.09,0.11,0.09,HAND,0,-0.69,0);return a;});
+  box(g,0.1,0.07,0.1,SK,0,1.5,0); sph(g,0.11,SK,0,1.67,0);
+  if(o.helmet!==false){sph(g,0.135,'#f7f7f5',0,1.7,0,true);cyl(g,0.165,0.015,'#f7f7f5',0,1.705,0.02,'y',20);}
+  else sph(g,0.112,'#1d1a18',0,1.69,-0.01,true);
+  if(o.muffs){cyl(g,0.06,0.05,'#d23c2f',-0.125,1.66,0,'x',12);cyl(g,0.06,0.05,'#d23c2f',0.125,1.66,0,'x',12);}
+  if(o.glasses)box(g,0.17,0.04,0.02,'#151a1e',0,1.69,0.105);
+  if(o.lanyard)box(g,0.02,0.3,0.01,'#1f5fa8',0,1.3,0.125);
+  g.userData={arms,legs}; return g;
+}
+
+// ---- suelo: fondo regional + bloques 2 m + detalle 0,5 m
+const texL=new THREE.TextureLoader(), maxAn=renderer.capabilities.getMaxAnisotropy();
+function plateC(url,x0,y0,w,h,order){
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:'#5d7a5a',fog:true,depthWrite:false,depthTest:false}));
+  m.rotation.x=-Math.PI/2; m.position.set(x0+w/2,0,-(y0+h/2)); m.renderOrder=order; sceneC.add(m);
+  if(url){m.visible=false;texL.load(url,t=>{t.anisotropy=Math.min(8,maxAn);m.material.map=t;m.material.color.set('#ffffff');m.material.needsUpdate=true;m.visible=true;},undefined,()=>{});}
+  return m;
+}
+plateC(null,-60000,-60000,120000,120000,-7).material.color.set('#3d6170');
+plateC('ctg/region_ctg.jpg',-23000,-22000,46000,36000,-6);
+
+// ---- redes
+const cTrMat=ribbonMaterial({color:'#7fae2f',pulse:'#e9ff9a',front:1,spacing:90,speed:70,pulseAmt:1,layer:-3});
+const cAcMat=ribbonMaterial({color:'#e8692e',pulse:'#5fd6ff',front:150,spacing:70,speed:55,pulseAmt:1,layer:-4});
+const cPeMat=ribbonMaterial({color:'#d9a400',pulse:'#36e2ff',front:90,spacing:28,speed:28,pulseAmt:1,layer:-5});
+[cTrMat,cAcMat,cPeMat].forEach(m=>{m.depthWrite=false;m.userData.sp=m.uniforms.uSpacing.value;m.userData.sv=m.uniforms.uSpeed.value;});
+cTrMat.uniforms.uProg.value=1e9;
+
+// ---- edificaciones (casas con techo a dos aguas; edificios con cubierta plana)
+let cReady=false;
+fetch('ctg/ctg.json').then(r=>r.json()).then(D=>{
+  D.tiles.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,2500,2500,-5));
+  D.dets.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,800,800,-4));
+  const tr=new THREE.Mesh(segRibbon(D.tr,0.5),cTrMat), ac=new THREE.Mesh(segRibbon(D.ac,0.55),cAcMat), pe=new THREE.Mesh(segRibbon(D.pe,0.6),cPeMat);
+  tr.renderOrder=2; ac.renderOrder=3; pe.renderOrder=4; sceneC.add(tr,ac,pe);
+  const L=D.bld.filter(b=>Math.hypot(b[0]-CM.dig.x,b[1]-CM.dig.y)>24), N=L.length, rr=mulberry(21);
+  const WALL=['#f4efe6','#efe3c8','#e9d3b0','#f2f2ee','#d9e6ea','#f3d9a4','#e8c9a8','#f6f1df'], BIG=['#e8e6e1','#d6dadc','#f1eee8','#dcd8cf'], RF=['#b5573a','#c06a45','#9aa3a8','#a9b1b5','#8d969c','#b9623e'];
+  // por celdas de 1 km para que la cámara descarte lo que no ve
+  const cells=new Map(), CEL=1000;
+  L.forEach(b=>{const k=Math.floor(b[0]/CEL)+','+Math.floor(b[1]/CEL);(cells.get(k)||cells.set(k,[]).get(k)).push(b);});
+  const wm=lam('#ffffff'), rmM=lam('#ffffff');
+  cells.forEach((list,k)=>{
+    const [cx,cy]=k.split(',').map(Number), ctr=V((cx+0.5)*CEL,(cy+0.5)*CEL,8), bs=new THREE.Sphere(ctr,CEL*0.75);
+    const bg=bodyGeo.clone(); bg.boundingSphere=bs; const rg=roofGeo.clone(); rg.boundingSphere=bs;
+    const bm=new THREE.InstancedMesh(bg,wm,list.length), rm=new THREE.InstancedMesh(rg,rmM,list.length); let nr=0;
+    list.forEach(([x,y,l1,l2,a,h,small],i)=>{
+      const rot=Math.atan2(Math.cos(a),-Math.sin(a));
+      dummy.position.copy(V(x,y));dummy.rotation.set(0,rot,0);dummy.scale.set(l2,h,l1);dummy.updateMatrix();bm.setMatrixAt(i,dummy.matrix);
+      bm.setColorAt(i,col.set(small?WALL[(rr()*WALL.length)|0]:BIG[(rr()*BIG.length)|0]));
+      if(small){dummy.position.y=h;dummy.scale.set(l2+0.5,clamp(l2*0.22,0.9,2.2),l1+0.5);dummy.updateMatrix();rm.setMatrixAt(nr,dummy.matrix);rm.setColorAt(nr,col.set(RF[(rr()*RF.length)|0]));nr++;}
+    });
+    rm.count=nr; sceneC.add(bm,rm);
+  });
+  cReady=true;
+}).catch(()=>{});
+
+// ---- City Gate Ternera II
+const cgC=new THREE.Group(); let cgFlowCurve, techCG;
+(function(g){
+  box(g,64,0.4,44,'#e4e2da',0,0,0); fence(g,64,44);
+  // llegada del gasoducto de Promigas + válvula de bloqueo
+  cyl(g,0.45,3.2,'#8f979b',-28,1.6,-17);
+  const w=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.07,8,24),M('#c0392b')); w.position.set(-28,3.4,-17); w.rotation.x=Math.PI/2; g.add(w);
+  pipeRun(g,[[-28,3,-17],[-28,1.6,-13],[-22,1.6,-13],[-6,1.6,-13]],0.32,'#8f979b');
+  for(let i=0;i<3;i++){cyl(g,0.7,3.4,'#d9dcd8',-20+i*3,2.1,-17);cyl(g,0.75,0.3,STEEL,-20+i*3,3.9,-17);pipeRun(g,[[-20+i*3,0.6,-17],[-20+i*3,1.6,-13]],0.15,STEEL);}
+  cyl(g,1.1,6,'#b44a3a',-8,2.0,-18,'x'); box(g,1,1.8,1,DARK,-4,3.6,-18);
+  for(let i=0;i<2;i++){const z=-9.5-i*2.6;pipeRun(g,[[-6,1.6,-13],[-6,1.3,z],[12,1.3,z],[14,1.6,-13]],0.24,STEEL);cyl(g,0.48,0.95,BLUE,0,1.3,z,'z');cyl(g,0.48,0.95,BLUE,5,1.3,z,'z');cyl(g,0.25,0.6,'#c0392b',9,1.9,z);}
+  box(g,4,2.4,2.6,WHITE,17,0.4,-18); cyl(g,0.8,2.2,'#e1b12c',23,1.5,-18);
+  pipeRun(g,[[14,1.6,-13],[27,1.6,-13],[29,0.2,-13]],0.3,'#e8692e');
+  box(g,10,3.4,6,WHITE,-22,0.4,14); box(g,10.6,0.4,6.6,'#0086ce',-22,3.8,14);
+  cgFlowCurve=new THREE.CatmullRomCurve3([[-28,0.3,-17],[-28,3,-17],[-28,1.6,-13],[-6,1.6,-13],[-6,1.3,-9.5],[12,1.3,-9.5],[14,1.6,-13],[27,1.6,-13],[29,0.2,-13]].map(p=>new THREE.Vector3(...p)),false,'catmullrom',0.05);
+  techCG=person({muffs:true,glasses:true,gloves:true}); techCG.position.set(2.5,0.4,-7.2); techCG.rotation.y=Math.PI*0.92; g.add(techCG);
+  const det=new THREE.Group(); box(det,0.12,0.18,0.05,'#5d6266',0,0,0); det.position.set(0,-0.72,0.08); techCG.userData.arms[0].add(det);
+})(cgC);
+cgC.position.copy(V(cS.cg[0],cS.cg[1])); cgC.rotation.y=0.5; sceneC.add(cgC); cgC.updateMatrixWorld(true);
+cgFlowCurve.points.forEach(p=>cgC.localToWorld(p));
+const cgFlow=new THREE.InstancedMesh(new THREE.SphereGeometry(0.14,8,6),new THREE.MeshBasicMaterial({color:0x5fd6ff,fog:false}),80); cgFlow.visible=false; sceneC.add(cgFlow);
+const techCGw=techCG.getWorldPosition(new THREE.Vector3()).setY(1.5);
+
+// ---- estaciones M/R de clientes (industria y comercio)
+function mrSkid(k){const g=new THREE.Group();box(g,6,0.3,4,'#e4e2da',0,0,0);box(g,2.2,1.6,1.6,'#f2c200',0,0.3,0);cyl(g,0.15,5,STEEL,0,0.9,0,'x');g.position.copy(V(cS[k][0],cS[k][1]));sceneC.add(g);}
+mrSkid('argos');
+
+// ---- Estación distrital Pie de la Popa
+(function(){
+  const g=new THREE.Group();
+  box(g,18,0.3,13,'#e4e2da',0,0,0); fence(g,18,13);
+  box(g,5,3,4,'#1f6fb2',-4,0.3,-2.5); const r=new THREE.Mesh(roofGeo,M('#8cc63f')); r.scale.set(5.8,1.3,4.8); r.position.set(-4,3.3,-2.5); g.add(r);
+  for(let i=0;i<2;i++){const z=1.5+i*2;pipeRun(g,[[-6,1,z],[6,1,z]],0.13,STEEL);cyl(g,0.32,0.6,BLUE,1,1,z,'z');}
+  pipeRun(g,[[-8,0.1,2.5],[-8,1,2.5],[-6,1,2.5]],0.15,'#e8692e'); pipeRun(g,[[6,1,2.5],[8,1,2.5],[8,0.1,2.5]],0.15,YEL);
+  g.position.copy(V(cS.popa[0],cS.popa[1])); g.rotation.y=0.3; sceneC.add(g);
+})();
+
+// ---- Vivienda: trabajo vario (cambio de regulador)
+const hC=CM.hero; let regOld, regNew, techH, meterCw, heroCw, toolW, regHome=new THREE.Vector3();
+const hAz=Math.atan2(hC.nx,-hC.ny);
+(function(){
+  const g=new THREE.Group(), W=7.2,D=10,H=3.3;
+  box(g,W,H,D,'#f6e2b3',0,0,0);
+  const roof=new THREE.Mesh(roofGeo,M('#c06a45'));roof.scale.set(W+0.8,1.8,D+0.8);roof.position.y=H;g.add(roof);
+  box(g,1.1,2.2,0.08,'#3f6d8c',-1.2,0,D/2+0.01); box(g,1.4,1.1,0.08,'#3c5b6b',-2.6,1.1,D/2+0.01);
+  box(g,W,0.15,1.6,'#cfc9bb',0,0,D/2+0.8);
+  const mg=new THREE.Group(); mg.position.set(2.3,0,D/2); g.add(mg);
+  const GALV='#b8bfc2', GREY='#c9cdcf', BR='#b8902f';
+  box(mg,0.8,0.02,0.32,GALV,0,0.18,0.16); box(mg,0.8,0.02,0.32,GALV,0,1.14,0.16);
+  box(mg,0.02,0.98,0.32,GALV,-0.4,0.18,0.16); box(mg,0.02,0.98,0.32,GALV,0.4,0.18,0.16); box(mg,0.8,0.98,0.02,'#8d969a',0,0.18,0.01);
+  const door=new THREE.Group(); door.position.set(0.4,0,0.32); door.rotation.y=-1.9; mg.add(door); box(door,0.8,0.96,0.02,GALV,-0.4,0.19,0);
+  cyl(mg,0.022,0.3,YEL,-0.24,0.05,0.16); cyl(mg,0.03,0.05,BR,-0.24,0.22,0.16); cyl(mg,0.018,0.14,GALV,-0.24,0.31,0.16);
+  box(mg,0.07,0.06,0.07,BR,-0.24,0.36,0.16); box(mg,0.14,0.02,0.025,'#f2c200',-0.17,0.4,0.2); cyl(mg,0.018,0.1,GALV,-0.24,0.47,0.16);
+  const mkReg=(c)=>{const r=new THREE.Group();cyl(r,0.095,0.07,c,0,0,0,'z',24);cyl(r,0.035,0.06,'#80878b',0,0,0.06,'z',16);cyl(r,0.02,0.05,'#80878b',-0.09,0.02,0,'x',10);mg.add(r);return r;};
+  regOld=mkReg('#8e9599'); regNew=mkReg('#6f9fca'); regHome.set(-0.24,0.6,0.16); regOld.position.copy(regHome); regNew.visible=false;
+  pipeRun(mg,[[-0.24,0.69,0.16],[-0.24,0.95,0.16],[-0.2,1.0,0.16],[-0.12,1.0,0.16],[-0.08,0.95,0.16],[-0.08,0.86,0.16]],0.016,GALV);
+  box(mg,0.32,0.36,0.2,GREY,0.03,0.46,0.13); box(mg,0.33,0.05,0.21,'#b3b8bb',0.03,0.8,0.13);
+  cyl(mg,0.03,0.05,GALV,-0.08,0.85,0.13); cyl(mg,0.03,0.05,GALV,0.14,0.85,0.13); box(mg,0.2,0.06,0.01,'#1c2a22',0.03,0.62,0.235);
+  pipeRun(mg,[[0.14,0.86,0.13],[0.14,1.08,0.13],[0.14,1.12,0.09],[0.14,1.12,0.0]],0.016,GALV);
+  box(mg,0.42,0.2,0.22,'#c0392b',0.75,0.15,0.75); toolW=new THREE.Vector3(0.75,0.4,0.75);
+  techH=person({skin:'#8d5f3f'}); techH.position.set(-0.85,0.15,0.6); techH.rotation.y=Math.PI*0.72; mg.add(techH);
+  // ubicar la casa con el frente hacia la tubería
+  const dist=Math.hypot(hC.px-hC.x,hC.py-hC.y), back=Math.max(0,(D/2+3.5)-dist);
+  g.position.copy(V(hC.x-hC.nx*back,hC.y-hC.ny*back)); g.rotation.y=hAz; sceneC.add(g); g.updateMatrixWorld(true);
+  heroCw=g.position.clone().setY(2); meterCw=mg.localToWorld(new THREE.Vector3(-0.1,0.6,0.15));
+  const tap=V(hC.px,hC.py,0.4), rb=mg.localToWorld(new THREE.Vector3(-0.24,0.4,0.16)), mid=rb.clone().lerp(tap,0.5);
+  sceneC.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([tap,mid,rb,mg.localToWorld(new THREE.Vector3(-0.24,0.05,0.16))]),40,0.035,8,false),M(YEL)));
+})();
+
+// ---- Retroexcavadora rompe la tubería (frente al Hotel Santa Clara)
+const dg=CM.dig, dAl=[Math.cos(dg.ang),Math.sin(dg.ang)], dN=[-Math.sin(dg.ang),Math.cos(dg.ang)];
+const digW=V(dg.x,dg.y,1);
+const dAz=Math.atan2(-dN[0],dN[1]), dAzS=Math.atan2(-dAl[0],dAl[1]);
+let boom, stick, trench, pipeA, pipeB, cloud, ring, crewTruck, crew=[], cones;
+(function(){
+  const bk=new THREE.Group(), Y='#f2b705';
+  box(bk,4.2,0.8,0.6,'#2a2a2a',0,0,-1.1); box(bk,4.2,0.8,0.6,'#2a2a2a',0,0,1.1);
+  const up=new THREE.Group(); up.position.y=0.85; bk.add(up);
+  box(up,3.2,1.1,2.4,Y,-0.4,0,0); box(up,1.0,1.0,2.3,'#3b3b3b',-2.1,0.1,0);
+  box(up,1.4,1.6,1.2,Y,0.4,1.1,0.55); box(up,1.3,0.9,1.22,'#22323c',0.45,1.6,0.55);
+  boom=new THREE.Group(); boom.position.set(1.2,1.5,-0.35); up.add(boom); box(boom,3.4,0.4,0.4,Y,1.7,-0.2,0);
+  stick=new THREE.Group(); stick.position.set(3.4,0,0); boom.add(stick); box(stick,2.4,0.3,0.32,Y,1.2,-0.15,0);
+  const bucket=new THREE.Group(); bucket.position.set(2.4,0,0); stick.add(bucket); box(bucket,0.8,0.7,0.9,'#565656',0.1,-0.6,0);
+  const p=[dg.x+dAl[0]*5.3,dg.y+dAl[1]*5.3]; bk.position.copy(V(p[0],p[1],0)); bk.rotation.y=Math.atan2(-dAl[1],-dAl[0]); sceneC.add(bk);
+  trench=new THREE.Mesh(new THREE.BoxGeometry(1,0.04,1),M('#4a3a2c')); trench.position.copy(V(dg.x,dg.y,0.03)); trench.rotation.y=Math.atan2(dAl[1],dAl[0]); trench.scale.set(0.01,1,0.01); sceneC.add(trench);
+  const mound=sph(sceneC,1.6,'#7a5e44',0,0,0,true); mound.position.copy(V(dg.x+dN[0]*2.2-dAl[0]*1.5,dg.y+dN[1]*2.2-dAl[1]*1.5,0));  mound.scale.set(1,0.01,1); trench.userData.mound=mound;
+  const pg=new THREE.CylinderGeometry(0.09,0.09,1.4,12);
+  [pipeA,pipeB]=[-1,1].map(s=>{const m=new THREE.Mesh(pg,M(YEL));m.rotation.z=Math.PI/2;const h=new THREE.Group();h.add(m);m.position.x=s*0.75;h.position.copy(V(dg.x,dg.y,0.15));h.rotation.y=Math.atan2(dAl[1],dAl[0]);h.visible=false;sceneC.add(h);return h;});
+  // nube de gas
+  const cv=document.createElement('canvas');cv.width=cv.height=64;const c=cv.getContext('2d');const gr=c.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.5,'rgba(235,245,250,0.5)');gr.addColorStop(1,'rgba(235,245,250,0)');c.fillStyle=gr;c.fillRect(0,0,64,64);
+  const NC=420, pos=new Float32Array(NC*3); const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  cloud=new THREE.Points(geo,new THREE.PointsMaterial({map:new THREE.CanvasTexture(cv),size:3.2,transparent:true,depthWrite:false,opacity:0,color:'#eef6fa'})); cloud.userData.seed=[...Array(NC)].map((_,i)=>[Math.random(),Math.random()*6.283,0.6+Math.random()]); cloud.visible=false; sceneC.add(cloud);
+  ring=new THREE.Mesh(new THREE.RingGeometry(3.4,4.1,48),new THREE.MeshBasicMaterial({color:'#e23b2e',transparent:true,opacity:0,depthWrite:false,fog:false})); ring.rotation.x=-Math.PI/2; ring.position.copy(V(dg.x,dg.y,0.25)); sceneC.add(ring);
+  // camioneta y cuadrilla Surtigas
+  crewTruck=new THREE.Group(); box(crewTruck,4.8,0.9,1.9,'#f4f6f7',0,0.45,0); box(crewTruck,2.0,0.9,1.85,'#f4f6f7',0.8,1.35,0); box(crewTruck,1.9,0.6,1.86,'#22323c',0.85,1.45,0); box(crewTruck,4.82,0.18,1.92,'#0086ce',0,0.95,0);
+  box(crewTruck,0.4,0.15,1.2,'#f2c200',0.7,1.82,0);
+  [[1.5,-0.95],[1.5,0.95],[-1.5,-0.95],[-1.5,0.95]].forEach(([x,z])=>cyl(crewTruck,0.38,0.3,'#1c1c1c',x,0.38,z,'z',14));
+  crewTruck.visible=false; sceneC.add(crewTruck);
+  [0,1].forEach(i=>{const t=person({gloves:true});t.visible=false;sceneC.add(t);crew.push(t);});
+  cones=new THREE.Group(); for(let i=0;i<7;i++){const a=i/7*6.283;const c=new THREE.Group();const cn=new THREE.Mesh(new THREE.ConeGeometry(0.18,0.55,12),M('#ff6a1a'));cn.position.y=0.3;c.add(cn);box(c,0.32,0.04,0.32,'#1c1c1c',0,0,0);const w=V(dg.x+Math.cos(a)*2.6,dg.y+Math.sin(a)*2.6,0.05);c.position.copy(w);cones.add(c);} cones.visible=false; sceneC.add(cones);
+})();
+
+// ---- Sede Surtigas y laboratorio de metrología
+let labRoof, labFront, labFlowCurve, labW, sedeW;
+const labFlow=new THREE.InstancedMesh(new THREE.SphereGeometry(0.035,8,6),new THREE.MeshBasicMaterial({color:0x2fd0ff,fog:false}),60); labFlow.visible=false; sceneC.add(labFlow);
+(function(){
+  const g=new THREE.Group();
+  box(g,46,11,18,'#f3f5f6',0,0,-6);
+  for(let f=0;f<3;f++){box(g,46.2,1.4,18.2,'#2f6da3',0,1.6+f*3.4,-6);}
+  box(g,8,0.4,4,'#0086ce',0,3.6,4.5); [[-3.5,4],[3.5,4]].forEach(([x,z])=>box(g,0.3,3.6,0.3,'#e8e8e8',x,0,z+2));
+  const cvs=document.createElement('canvas');cvs.width=1024;cvs.height=256;const c=cvs.getContext('2d');c.fillStyle='#ffffff';c.fillRect(0,0,1024,256);c.fillStyle='#0086ce';c.font='600 170px Barlow Condensed, Arial Narrow, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('Surtigas',512,138);
+  const sign=new THREE.Mesh(new THREE.PlaneGeometry(14,3.5),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cvs)})); sign.position.set(0,13,3.05); g.add(sign); box(g,14.2,3.7,0.3,'#e8eaeb',0,11.15,2.95);
+  // anexo: laboratorio
+  const lab=new THREE.Group(); lab.position.set(-8,0,20); g.add(lab);
+  box(lab,24,0.2,14,'#dfe3e6',0,0,0); box(lab,24,4.5,0.3,'#f3f5f6',0,0,-7); box(lab,0.3,4.5,14,'#f3f5f6',-12,0,0); box(lab,0.3,4.5,14,'#f3f5f6',12,0,0);
+  labFront=new THREE.Group(); lab.add(labFront); box(labFront,24,4.5,0.3,'#f3f5f6',0,0,7); box(labFront,24.1,0.6,0.32,'#0086ce',0,3.4,7);
+  labRoof=new THREE.Mesh(new THREE.BoxGeometry(24.6,0.4,14.6),new THREE.MeshLambertMaterial({color:'#e9ecee',transparent:true})); labRoof.position.y=4.7; lab.add(labRoof);
+  // banco de pruebas de medidores
+  box(lab,16,0.9,1.4,'#c9ced2',0,0.2,-4.5); box(lab,16,0.06,1.5,'#9aa3a8',0,1.1,-4.5);
+  const pts=[];
+  for(let i=0;i<9;i++){const x=-7+i*1.7; box(lab,0.38,0.44,0.26,i===0?'#5e6b74':'#d4d8da',x,1.16,-4.5); box(lab,0.22,0.06,0.01,'#1c2a22',x,1.42,-4.36); pts.push([x-0.12,1.7,-4.5],[x+0.12,1.7,-4.5]);}
+  pipeRun(lab,[[-7.4,1.7,-4.5],[7.2,1.7,-4.5]],0.035,'#b8bfc2');
+  for(let i=0;i<9;i++){const x=-7+i*1.7;cyl(lab,0.03,0.12,'#b8bfc2',x-0.12,1.62,-4.5);cyl(lab,0.03,0.12,'#b8bfc2',x+0.12,1.62,-4.5);}
+  labFlowCurve=new THREE.CatmullRomCurve3([[-7.6,1.7,-4.5],[7.4,1.7,-4.5]].map(p=>new THREE.Vector3(...p)));
+  // manómetros, patrón y estación de cómputo
+  for(let i=0;i<3;i++){cyl(lab,0.03,1.2,'#8d969c',-9+i*0.7,0.8,2);const gd=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,0.06,24),M('#f4f4f4'));gd.rotation.x=Math.PI/2;gd.position.set(-9+i*0.7,1.45,2.03);lab.add(gd);}
+  box(lab,3,0.8,1.2,'#cfd4d6',6,0.2,2.5); [5.3,6.7].forEach(x=>{box(lab,0.9,0.55,0.05,'#1d2a33',x,1.05,2.2);const s=new THREE.Mesh(new THREE.PlaneGeometry(0.82,0.47),new THREE.MeshBasicMaterial({color:'#4fb3ff'}));s.position.set(x,1.33,2.23);lab.add(s);});
+  box(lab,2,2.2,0.8,'#9fb4c4',10,0.2,-6);
+  const t1=person({helmet:false,glasses:true,lanyard:true,skin:'#b98560'}); t1.position.set(-2,0.2,-3.4); t1.rotation.y=Math.PI; lab.add(t1);
+  const t2=person({helmet:false,lanyard:true,skin:'#8d5f3f'}); t2.position.set(6,0.2,3.4); t2.rotation.y=Math.PI; lab.add(t2);
+  g.position.copy(V(cS.surtigas[0],cS.surtigas[1])); sceneC.add(g); g.updateMatrixWorld(true);
+  labFlowCurve.points.forEach(p=>lab.localToWorld(p));
+  labW=lab.localToWorld(new THREE.Vector3(0,1.2,-1)); sedeW=g.position.clone().setY(6);
+})();
+
+// ---- Paneles solares (Caribe Plaza)
+let solar, solarN=0, panW;
+(function(){
+  const pts=CM.panel.slice(0,-1).map(p=>new THREE.Vector2(p[0],p[1]));
+  const sh=new THREE.Shape(pts); const ge=new THREE.ExtrudeGeometry(sh,{depth:12,bevelEnabled:false}); ge.rotateX(-Math.PI/2);
+  sceneC.add(new THREE.Mesh(ge,M('#e3dfd6')));
+  const inside=(x,y)=>{let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const a=pts[i],b=pts[j];if(((a.y>y)!==(b.y>y))&&(x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x))c=!c;}return c;};
+  let cx=0,cy=0;pts.forEach(p=>{cx+=p.x;cy+=p.y});cx/=pts.length;cy/=pts.length;
+  const ang=Math.atan2(pts[1].y-pts[0].y,pts[1].x-pts[0].x), ca=Math.cos(ang), sa=Math.sin(ang), list=[];
+  for(let u=-70;u<=70;u+=1.15)for(let v=-50;v<=50;v+=2.5){const x=cx+u*ca-v*sa,y=cy+u*sa+v*ca;
+    let ok=true;for(const [du,dv] of [[-1.2,-1.6],[1.2,-1.6],[-1.2,1.6],[1.2,1.6]])if(!inside(x+du*ca-dv*sa,y+du*sa+dv*ca)){ok=false;break;} if(ok)list.push([x,y,u]);}
+  list.sort((a,b)=>a[2]-b[2]); solarN=list.length;
+  solar=new THREE.InstancedMesh(new THREE.BoxGeometry(1.0,0.05,2.0),new THREE.MeshPhongMaterial({color:'#1d3f86',shininess:60,specular:'#8fb5ff'}),solarN);
+  list.forEach(([x,y],i)=>{dummy.position.copy(V(x,y,12.45));dummy.rotation.set(0,ang,0);dummy.rotateX(0.17);dummy.scale.set(1,1,1);dummy.updateMatrix();solar.setMatrixAt(i,dummy.matrix);});
+  solar.count=0; sceneC.add(solar); panW=V(cx,cy,12);
+})();
+
+// ---- keyframes del capítulo 1
+const MIDC=V(500,-1200,0), AM=CM.acMax, PM=CM.peMax;
+const KC=[
+ {s:0.00,t:MIDC,d:19000,az:0.3,el:1.05,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0},
+ {s:0.60,t:MIDC,d:16500,az:0.45,el:0.9},
+ {s:1.05,t:cv('cg'),d:900,az:0.8,el:0.5},
+ {s:1.40,t:cv('cg'),d:95,az:1.15,el:0.55},
+ {s:1.85,t:techCGw,d:9,az:2.2,el:0.22},
+ {s:1.97,t:cv('cg'),d:700,az:2.0,el:0.85},
+ {s:2.12,t:V(800,-1800),d:14500,az:0.6,el:0.95,ac:0},
+ {s:2.70,t:V(800,-1800),d:15000,az:0.4,el:0.97,ac:AM},
+ {s:2.92,t:V(800,-1800),d:15000,az:0.35,el:0.97},
+ {s:3.15,t:cv('popa'),d:260,az:0.6,el:0.6,pe:0},
+ {s:3.55,t:cv('popa'),d:3800,az:0.4,el:0.95,pe:PM*0.55},
+ {s:3.88,t:cv('popa'),d:4300,az:0.3,el:1.0,pe:PM},
+ {s:4.15,t:heroCw,d:40,az:hAz+0.5,el:0.5},
+ {s:4.40,t:meterCw,d:3.8,az:hAz+0.5,el:0.25,reg:0},
+ {s:4.80,t:meterCw,d:2.9,az:hAz+0.3,el:0.2,reg:1},
+ {s:4.96,t:meterCw,d:2.9,az:hAz+0.25,el:0.2},
+ {s:5.04,t:heroCw,d:350,az:hAz+0.3,el:0.95},
+ {s:5.15,t:digW,d:150,az:dAz+0.4,el:0.7,dig:0},
+ {s:5.45,t:digW,d:38,az:dAz+0.3,el:0.5,dig:0.55},
+ {s:5.70,t:digW.clone().setY(4),d:60,az:dAz+0.1,el:0.55,dig:0.78},
+ {s:5.95,t:digW,d:52,az:dAz-0.15,el:0.6,dig:1},
+ {s:6.03,t:digW,d:450,az:dAz,el:0.95},
+ {s:6.15,t:sedeW,d:420,az:0.7,el:0.5,lab:0},
+ {s:6.45,t:labW,d:60,az:0.45,el:0.88,lab:1},
+ {s:6.82,t:labW,d:24,az:0.25,el:1.02},
+ {s:6.92,t:labW,d:450,az:0.3,el:1.0},
+ {s:7.05,t:panW,d:430,az:0.6,el:0.6,sol:0},
+ {s:7.45,t:panW,d:170,az:0.4,el:0.78,sol:1},
+ {s:7.75,t:MIDC,d:9000,az:0.4,el:0.92},
+ {s:8.00,t:MIDC,d:15000,az:0.4,el:0.97},
+];
+for(let i=1;i<KC.length;i++)for(const k of Object.keys(KC[0]))if(KC[i][k]===undefined)KC[i][k]=KC[i-1][k];
+function sampleC(s){
+  let i=0; while(i<KC.length-2&&s>KC[i+1].s)i++;
+  const a=KC[i],b=KC[i+1]; const e=smooth(clamp((s-a.s)/(b.s-a.s),0,1)); const o={};
+  ['az','el','ac','pe','reg','dig','lab','sol'].forEach(k=>o[k]=lerp(a[k],b[k],e));
+  o.d=Math.exp(lerp(Math.log(a.d),Math.log(b.d),e)); o.t=a.t.clone().lerp(b.t,e); return o;
+}
+const tagPosC={'c-cg':cv('cg',22),'c-argos':cv('argos',40),'c-sc':cv('santaclara',30),'c-popa':cv('popa',10),'c-sede':cv('surtigas',30),'c-lab':labW.clone().setY(5),'c-sol':panW.clone().setY(18),'c-reg':meterCw.clone().setY(meterCw.y+0.25),'c-dig':digW.clone().setY(9)};
+function tagVisibleC(k,s,d){
+  if(k==='c-cg')return (s>0.95&&s<1.6)||(s<0.9)||(s>2.1&&s<2.95);
+  if(k==='c-argos'||k==='c-sc')return s>2.3&&s<2.95;
+  if(k==='c-popa')return s>3.05&&s<3.9;
+  if(k==='c-reg')return s>4.35&&s<4.98&&d<4;
+  if(k==='c-dig')return s>5.4&&s<6.0;
+  if(k==='c-sede')return s>6.05&&s<6.4;
+  if(k==='c-lab')return s>6.4&&s<6.95;
+  if(k==='c-sol')return s>7.0&&s<7.6;
+  return false;
+}
+const _v=new THREE.Vector3();
+function updateC(S,time,camD,s){
+  [cTrMat,cAcMat,cPeMat].forEach(m=>m.uniforms.uTime.value=time);
+  cAcMat.uniforms.uProg.value=S.ac; cPeMat.uniforms.uProg.value=S.pe;
+  cTrMat.uniforms.uW.value=clamp(camD*0.0022,0.4,30); cAcMat.uniforms.uW.value=clamp(camD*0.0042,0.3,70); cPeMat.uniforms.uW.value=clamp(camD*0.0016,0.15,12);
+  const dT=camD<350; [cTrMat,cAcMat,cPeMat].forEach(m=>{m.depthTest=dT;m.uniforms.uSpacing.value=Math.max(m.userData.sp,camD*0.012);m.uniforms.uSpeed.value=Math.max(m.userData.sv,camD*0.01);});
+  // City Gate
+  cgFlow.visible=s>0.95&&s<2.1&&camD<700;
+  if(cgFlow.visible){const n=cgFlow.count;for(let i=0;i<n;i++){cgFlowCurve.getPointAt(((i/n)+time*0.05)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();cgFlow.setMatrixAt(i,dummy.matrix);}cgFlow.instanceMatrix.needsUpdate=true;}
+  techCG.userData.arms[0].rotation.x=-0.9+Math.sin(time*1.5)*0.15;
+  // cambio de regulador
+  const r=S.reg, A=techH.userData.arms; A[0].rotation.x=A[1].rotation.x=r>0.02&&r<0.98?-1.25+Math.sin(time*3)*0.08:-0.2;
+  if(r<0.5){const k=smooth(clamp(r/0.45,0,1));regOld.visible=true;regOld.position.copy(regHome).lerp(toolW,k);regOld.position.z+=Math.sin(k*Math.PI)*0.4;regNew.visible=false;}
+  else{regOld.visible=true;regOld.position.copy(toolW);regNew.visible=true;const k=smooth(clamp((r-0.5)/0.45,0,1));regNew.position.copy(toolW).lerp(regHome,k);regNew.position.z+=Math.sin(k*Math.PI)*0.4;}
+  // retroexcavadora y fuga
+  const dgv=S.dig, k1=smooth(clamp(dgv/0.45,0,1));
+  boom.rotation.z=lerp(0.42,-0.25,k1)+(dgv>0.05&&dgv<0.47?Math.sin(time*2.2)*0.05:0); stick.rotation.z=lerp(-1.4,-1.0,k1);
+  const tw_=clamp(dgv/0.45,0,1); trench.scale.set(0.01+tw_*3.2,1,0.01+tw_*1.6); trench.userData.mound.scale.set(0.3+tw_*0.7,0.01+tw_*0.6,0.3+tw_*0.7);
+  pipeA.visible=pipeB.visible=dgv>0.3; const brk=dgv>0.47?0.12:0; pipeA.children[0].position.x=-0.75-brk; pipeB.children[0].position.x=0.75+brk; pipeA.children[0].rotation.y=pipeB.children[0].rotation.y=0;
+  let amt=clamp((dgv-0.47)/0.08,0,1)*(1-0.85*clamp((dgv-0.86)/0.12,0,1)); cloud.visible=amt>0.01&&camD<500; cloud.material.opacity=0.62*amt;
+  if(cloud.visible){const p=cloud.geometry.attributes.position.array, sd=cloud.userData.seed, o=V(dg.x,dg.y,0.3);
+    for(let i=0;i<sd.length;i++){const [ph,an,sp]=sd[i];const a=(ph+time*0.22*sp)%1;const rr=a*4.5*sp;p[i*3]=o.x+Math.cos(an)*rr+a*3;p[i*3+1]=0.3+a*a*16*sp;p[i*3+2]=o.z+Math.sin(an)*rr;}
+    cloud.geometry.attributes.position.needsUpdate=true;}
+  ring.material.opacity=amt*(0.45+0.35*Math.sin(time*6)); ring.scale.setScalar(1+0.08*Math.sin(time*6));
+  const ck=smooth(clamp((dgv-0.72)/0.2,0,1)); crewTruck.visible=dgv>0.72;
+  if(crewTruck.visible){const off=-12-30*(1-ck);crewTruck.position.copy(V(dg.x+dAl[0]*off,dg.y+dAl[1]*off,0));crewTruck.rotation.y=Math.atan2(dAl[1],dAl[0]);}
+  const cr=dgv>0.86; cones.visible=cr; crew.forEach((t,i)=>{t.visible=cr;const s2=i?1:-1;t.position.copy(V(dg.x-dAl[0]*2.6+dN[0]*1.6*s2,dg.y-dAl[1]*2.6+dN[1]*1.6*s2,0));t.lookAt(V(dg.x,dg.y,0));t.userData.arms[0].rotation.x=-0.8+Math.sin(time*2+i)*0.2;});
+  // laboratorio
+  const lb=S.lab; labRoof.position.y=4.7+lb*9; labRoof.material.opacity=1-lb*0.95; labRoof.visible=lb<0.98; labFront.position.y=-lb*4.4;
+  labFlow.visible=lb>0.5&&camD<120;
+  if(labFlow.visible){const n=labFlow.count;for(let i=0;i<n;i++){labFlowCurve.getPointAt(((i/n)+time*0.06)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();labFlow.setMatrixAt(i,dummy.matrix);}labFlow.instanceMatrix.needsUpdate=true;}
+  // solar
+  solar.count=Math.floor(solarN*clamp(S.sol,0,1));
+}
+// =================== fin capítulo 1 ===================
+// ---- Canalete: técnico de revisión periódica con detector de fugas
+const techR=person({helmet:false,lanyard:true,skin:'#a9754f'}); techR.position.set(0.55,0.15,0.75); techR.rotation.y=Math.PI*0.85; heroGroup.userData.mg.add(techR); techR.visible=false;
+(function(){const d=new THREE.Group();box(d,0.09,0.2,0.06,'#f2c200',0,-0.05,0);box(d,0.07,0.06,0.005,'#1c2a22',0,0.0,0.031);const wand=new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,0.45,6),M('#2b2b2b'));wand.position.set(0,0.2,0.12);wand.rotation.x=0.6;d.add(wand);d.position.set(0,-0.72,0.06);techR.userData.arms[1].add(d);})();
+
 // ---------- labels ----------
 const tags=[...document.querySelectorAll('.tag')].map(el=>({el,k:el.dataset.k}));
 const tagPos={cg:tw(CG[0],CG[1],20),vc:tw(0,0,14),town:tw(TOWN[0],TOWN[1]+380,10),mon:tw(802900,0,0),...window.__parts};
@@ -751,16 +1116,29 @@ const fmt=(v,dp=1)=>v.toLocaleString('es-CO',{minimumFractionDigits:dp,maximumFr
 let homeM3=0;
 
 // ---------- resize ----------
-function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<640?52:40;camera.updateProjectionMatrix();target=scrollStage();}
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<640?52:40;if(w>900)camera.setViewOffset(w,h,-w*0.16,0,w,h);else camera.clearViewOffset();camera.updateProjectionMatrix();target=scrollStage();}
 addEventListener('resize',resize);resize();
 
 // ---------- loop ----------
 const clock=new THREE.Clock(); const tmp=new THREE.Vector3();
-let lastRail=-1;
+let lastRail=-1; const FADE_S=7.92, fadeEl=document.getElementById('fade');
 function frame(){
   const dt=Math.min(clock.getDelta(),0.05), time=clock.elapsedTime;
   cur+= (target-cur)*(reduce?1:1-Math.pow(0.0025,dt));
-  const S=sample(cur);
+  const world=cur<FADE_S?0:1, c2=cur-7;
+  fadeEl.style.opacity=clamp(1-Math.abs(cur-FADE_S)/0.07,0,1).toFixed(3);
+  let camD;
+  if(world===0){
+    const S=sampleC(cur), tgt=S.t;
+    camera.position.set(tgt.x+Math.sin(S.az)*Math.cos(S.el)*S.d, tgt.y+Math.sin(S.el)*S.d, tgt.z+Math.cos(S.az)*Math.cos(S.el)*S.d);
+    if(camera.position.y<1.0)camera.position.y=1.0;
+    camera.lookAt(tgt); camD=S.d;
+    camera.near=clamp(camD*0.04,0.04,1500); camera.far=Math.max(camD*14,30000); camera.updateProjectionMatrix();
+    sceneC.fog.near=camD*1.6+400; sceneC.fog.far=camD*6+6000;
+    updateC(S,time,camD,cur);
+    ['mRoute','mNet','mHome'].forEach(id=>$(id).style.opacity=0);
+  } else {
+  const S=sample(c2);
   // truck
   const td=S.tr*ROUTE_LEN, tp=trackAt(td);
   truck.position.copy(tw(tp[0],tp[1],0.45));
@@ -770,7 +1148,7 @@ function frame(){
   camera.position.set(tgt.x+Math.sin(S.az)*Math.cos(S.el)*S.d, tgt.y+Math.sin(S.el)*S.d, tgt.z+Math.cos(S.az)*Math.cos(S.el)*S.d);
   if(camera.position.y<1.2)camera.position.y=1.2;
   camera.lookAt(tgt);
-  const camD=S.d;
+  camD=S.d;
   camera.near=clamp(camD*0.05,0.05,1500); camera.far=Math.max(camD*14,25000); camera.updateProjectionMatrix();
   scene.fog.near=camD*1.5+500; scene.fog.far=camD*5+5000;
   // scales for legibility
@@ -783,28 +1161,32 @@ function frame(){
   pipeMat.uniforms.uProg.value=S.net; pipeMat.uniforms.uTime.value=time; pipeMat.uniforms.uW.value=clamp(camD*0.0028,0.22,7);
   streetMat.uniforms.uW.value=Math.max(4.5,camD*0.002);
   // hose flow
-  const hoseOn=S.hose>0.02; hoseFlow.visible=hoseOn&&camD<900; if(hoseMesh)hoseMesh.visible=S.tr>0.999&&cur>3.1;
+  const hoseOn=S.hose>0.02; hoseFlow.visible=hoseOn&&camD<900; if(hoseMesh)hoseMesh.visible=S.tr>0.999&&c2>3.1;
   if(hoseFlow.visible){const n=hoseFlow.count;const reach=S.hose;for(let i=0;i<n;i++){let u=((i/n)+time*0.12)%1;u*=reach;hoseCurve.getPointAt(u,tmp);dummy.position.copy(tmp);dummy.scale.setScalar(1);dummy.rotation.set(0,0,0);dummy.updateMatrix();hoseFlow.setMatrixAt(i,dummy.matrix);}hoseFlow.instanceMatrix.needsUpdate=true;}
   // carga del Jumbo en La Lucha
-  loadFlow.visible=cur>1.3&&cur<2.08&&camD<600;
+  loadFlow.visible=c2>1.3&&c2<2.08&&camD<600;
   if(loadFlow.visible){const n=loadFlow.count;for(let i=0;i<n;i++){const u=((i/n)+time*0.08)%1;loadCurve.getPointAt(u,tmp);dummy.position.copy(tmp);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();loadFlow.setMatrixAt(i,dummy.matrix);}loadFlow.instanceMatrix.needsUpdate=true;}
   // home
   const homeOn=S.home>0.02; acoFlow.visible=homeOn&&camD<60;
   if(acoFlow.visible){const n=acoFlow.count;for(let i=0;i<n;i++){const u=(((i/n)+time*0.09)%1)*S.home;acoCurve.getPointAt(u,tmp);dummy.scale.setScalar(1);dummy.rotation.set(0,0,0);dummy.position.copy(tmp);dummy.updateMatrix();acoFlow.setMatrixAt(i,dummy.matrix);}acoFlow.instanceMatrix.needsUpdate=true;}
   if(S.home>0.9){homeM3+=dt*0.35;drawMeter(homeM3);}
   // HUD
-  const showRoute=cur>1.95&&cur<3.3, showNet=cur>4.05&&cur<5.1, showHome=cur>5.3&&cur<6.1;
+  const showRoute=c2>1.95&&c2<3.3, showNet=c2>4.05&&c2<5.1, showHome=c2>5.3&&c2<6.1;
+  techR.visible=c2>5.0&&c2<6.3; techR.userData.arms[1].rotation.x=-1.0+Math.sin(time*1.7)*0.25; techR.userData.arms[1].rotation.z=Math.sin(time*0.9)*0.15;
   $('mRoute').style.opacity=showRoute?1:0; $('vRoute').textContent=fmt(td/1000); $('bRoute').style.width=(S.tr*100).toFixed(1)+'%';
   const km=netKm(S.net); $('mNet').style.opacity=showNet?1:0; $('vNet').textContent=fmt(km); $('bNet').style.width=(km/DATA.pipeKm*100).toFixed(1)+'%';
   $('mHome').style.opacity=showHome?1:0; $('vHome').textContent=homeM3.toFixed(3).padStart(9,'0').replace('.',',');
+  tagPos.truck=truck.position.clone().setY(6*ts+4);
+  }
   // tags
-  const w=innerWidth,h=innerHeight; tagPos.truck=truck.position.clone().setY(6*ts+4);
+  const w=innerWidth,h=innerHeight;
   for(const t of tags){
-    const p=tagPos[t.k].clone().project(camera); const vis=tagVisible(t.k,cur,camD)&&p.z<1&&Math.abs(p.x)<1.1&&Math.abs(p.y)<1.1;
+    const isC=t.k.startsWith('c-'); if(isC!==(world===0)){t.el.style.opacity=0;continue;}
+    const p=(isC?tagPosC[t.k]:tagPos[t.k]).clone().project(camera); const vis=(isC?tagVisibleC(t.k,cur,camD):tagVisible(t.k,c2,camD))&&p.z<1&&Math.abs(p.x)<1.1&&Math.abs(p.y)<1.1;
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  renderer.render(scene,camera);
+  renderer.render(world===0?sceneC:scene,camera);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTimeout(()=>l.hidden=true,700);});
