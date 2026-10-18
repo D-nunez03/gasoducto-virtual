@@ -720,8 +720,9 @@ function tbox(g,w,h,d,mat,x,y,z){const m=new THREE.Mesh(new THREE.BoxGeometry(w,
 // ---- modelos 3D (GLB)
 const GL=new THREE.GLTFLoader(), GLC={};
 function prepMat(o,scan){o.traverse(m=>{if(!m.isMesh)return;const mats=Array.isArray(m.material)?m.material:[m.material];
-  mats.forEach(mt=>{if(!m.geometry.attributes.normal)mt.flatShading=true;if('metalness' in mt){mt.metalness=0;mt.roughness=Math.max(0.6,mt.roughness||0.8);}
-    if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.45;}mt.needsUpdate=true;});});}
+  mats.forEach(mt=>{if(mt.userData.prep)return;mt.userData.prep=1;if(!m.geometry.attributes.normal)mt.flatShading=true;if('metalness' in mt){mt.metalness=0;mt.roughness=Math.max(0.6,mt.roughness||0.8);}
+    if(mt.color)mt.color.convertLinearToSRGB(); if(mt.emissive)mt.emissive.convertLinearToSRGB(); [mt.map,mt.emissiveMap].forEach(t=>{if(t)t.encoding=THREE.LinearEncoding;});
+    if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}mt.needsUpdate=true;});});}
 function glb(name,scan){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC){res(null);return;}GL.load('m/'+name+'.glb',g=>{const o=g.scene;prepMat(o,scan);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
 const _b3=new THREE.Box3();
 // coloca un modelo dentro de un polígono MODELOS: centro, giro hacia el FRENTE, escala proporcional
@@ -912,34 +913,54 @@ function runInline(a,b,c){return glb('run').then(o=>{if(!o)return;const L=a.dist
   const half=sz.z*s/2, d=b.clone().sub(a).normalize(); const p1=g.position.clone().addScaledVector(d,-half*0.96), p2=g.position.clone().addScaledVector(d,half*0.96);
   tubeW([a.clone().setY(0.25),p1.clone().setY(0.25)],0.11,c); tubeW([p2.clone().setY(0.25),b.clone().setY(0.25)],0.11,c);});}
 
-// ERP centrada en el predio (polígono MODELOS): prueba 4 orientaciones y elige la que deja entrada y salida más cerca de las redes
-function erpPlaced(md,tapW,outW){
+// ERP a escala real (operable por una persona) dentro de una caseta con muros bajos, rejilla de ventilación y techo
+const ERP_S=0.042, ROOFS=[];
+const BARS=texMat((c,w,h)=>{c.clearRect(0,0,w,h);c.fillStyle='#1e3fa8';for(let x=0;x<w;x+=12)c.fillRect(x,0,4,h);c.fillRect(0,0,w,5);c.fillRect(0,h-5,w,5);},96,64,1,1);
+BARS.transparent=true; BARS.alphaTest=0.3; BARS.side=THREE.DoubleSide;
+function stationHouse(md,tapW,outW){
   return glb('erp').then(o=>{if(!o)return null; let best=null;
-    for(const fr of ['z','-z'])for(const mr of [1,-1]){const g=placeIn(o,md,{front:fr,fill:0.92}); const pre=g.children[0]; pre.scale.x*=mr; g.updateMatrixWorld(true); const inner=pre.children[0];
+    for(const fr of ['z','-z','x','-x'])for(const mr of [1,-1]){const g=placeIn(o,md,{front:fr,scale:ERP_S}); const pre=g.children[0]; pre.scale.x*=mr; g.updateMatrixWorld(true); const inner=pre.children[0];
       const iw=inner.localToWorld(ERP_I.clone()), ow=inner.localToWorld(ERP_O.clone()); const cost=Math.hypot(iw.x-tapW.x,iw.z-tapW.z)+Math.hypot(ow.x-outW.x,ow.z-outW.z);
       if(!best||cost<best.cost){if(best)sceneC.remove(best.g);best={g,inner,iw,ow,cost};}else sceneC.remove(g);}
     const {g,inner,iw,ow}=best; const idir=inner.localToWorld(ERP_I.clone().addScaledVector(ERP_ID,12)).sub(iw).setY(0).normalize(), odir=inner.localToWorld(ERP_O.clone().addScaledVector(ERP_OD,12)).sub(ow).setY(0).normalize();
-    _b3.setFromObject(g); return {g,iw,ow,idir,odir,box:_b3.clone()};});
+    // caja de la ERP en el marco del predio
+    _b3.setFromObject(g.children[0]); const lb=new THREE.Box3(); const cs=[_b3.min,_b3.max]; for(const x of [0,1])for(const y of [0,1])for(const z of [0,1])lb.expandByPoint(g.worldToLocal(new THREE.Vector3(cs[x].x,cs[y].y,cs[z].z)));
+    const m=1.3, L=lb.max.x-lb.min.x+2*m, D=lb.max.z-lb.min.z+2*m, cx=(lb.max.x+lb.min.x)/2, cz=(lb.max.z+lb.min.z)/2, Hh=3.2;
+    const hs=new THREE.Group(); hs.position.set(cx,0,cz); g.add(hs);
+    box(hs,L,0.15,D,'#cfccc4',0,0,0);
+    const wall=(x,z,w,d,door)=>{ // muro bajo de mampostería + rejilla azul hasta el techo
+      const horiz=d<w, S=horiz?w:d, segs=door?[[-S/2,-1.0],[1.0,S/2]]:[[-S/2,S/2]];
+      segs.forEach(([a,b])=>{const len=b-a, mid=(a+b)/2; const px=horiz?x+mid:x, pz=horiz?z:z+mid;
+        const lw=new THREE.Mesh(new THREE.BoxGeometry(horiz?len:0.2,1.1,horiz?0.2:len),WHITEWALL); lw.position.set(px,0.7,pz); hs.add(lw);
+        const gm=BARS.clone(); gm.map=BARS.map.clone(); gm.map.needsUpdate=true; gm.map.repeat.set(len/0.9,1);
+        const gr=new THREE.Mesh(new THREE.PlaneGeometry(len,1.85),gm); gr.position.set(px,2.18,pz); if(!horiz)gr.rotation.y=Math.PI/2; hs.add(gr);});
+      if(door){const dr=new THREE.Mesh(new THREE.BoxGeometry(horiz?1.0:0.06,2.3,horiz?0.06:1.0),M('#1e3fa8'));dr.position.set(horiz?x-0.5:x+0.55,1.3,horiz?z+0.55:z-0.5);dr.rotation.y=horiz?-1.1:1.1;hs.add(dr);} };
+    wall(0,D/2,L,0.2,true); wall(0,-D/2,L,0.2,false); wall(-L/2,0,0.2,D,false); wall(L/2,0,0.2,D,false);
+    for(const sx of [-1,1])for(const sz of [-1,1])box(hs,0.3,Hh,0.3,'#f1f1ed',sx*(L/2),0,sz*(D/2));
+    const roof=new THREE.Mesh(new THREE.BoxGeometry(L+1.0,0.22,D+1.0),new THREE.MeshLambertMaterial({color:'#e3e6e8',transparent:true,opacity:1})); roof.position.y=Hh+0.11; hs.add(roof);
+    g.updateMatrixWorld(true); ROOFS.push({m:roof,p:hs.getWorldPosition(new THREE.Vector3())});
+    const W=p=>g.localToWorld(new THREE.Vector3(cx+p[0],p[1],cz+p[2]));
+    return {g,iw,ow,idir,odir,L,D,W};});
 }
-// ---- City Gate Ternera II: ERP real ajustada al predio, conectada al transporte y a la red de acero
+// cerca perimetral con baranda superior
+function fenceRail(md,pad,gate){fenceC(md,pad,2.2,gate); const P=md.poly.slice(0,-1),c=md.c; const pts=P.map(p=>{const dx=p[0]-c[0],dy=p[1]-c[1],L=Math.hypot(dx,dy);return V(p[0]+dx/L*pad,p[1]+dy/L*pad,2.2);}); pts.push(pts[0]); for(let i=0;i<pts.length-1;i++)tubeW([pts[i],pts[i+1]],0.03,'#7d878d');}
+
+// ---- City Gate Ternera II: caseta con la ERP, conectada al transporte y a la red de acero
 const cgM=MD.CITYGATE, cc=CM.cgConn, cgW=V(cgM.c[0],cgM.c[1],2), techCGw=cgW.clone(); let cgFlowCurve=null;
-cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.32,'#1f5aa6','#b46bff',6,4));
-cc.ac.forEach(pl=>flowTube(polyPts(pl,0.45),0.22,'#3f93d8','#a052ff',5,3.5));
-erpPlaced(cgM,V(cc.tap[0],cc.tap[1]),V(cc.acp[0],cc.acp[1])).then(r=>{if(!r)return; const {iw,ow,idir,odir}=r;
-  const tapL=V(cc.tap[0],cc.tap[1],0.45), tapU=tapL.clone().setY(iw.y), acp=V(cc.acp[0],cc.acp[1],0.45);
-  const inPts=[tapL,tapU,iw.clone().addScaledVector(idir,1.2),iw];
-  const o1=ow.clone().addScaledVector(odir,0.9), o2=o1.clone().setY(0.45);
+fenceRail(cgM,0.8,cgM.f);
+cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.25,'#1f5aa6','#b46bff',6,4));
+cc.ac.forEach(pl=>flowTube(polyPts(pl,0.4),0.16,'#3f93d8','#a052ff',5,3.5));
+stationHouse(cgM,V(cc.tap[0],cc.tap[1]),V(cc.acp[0],cc.acp[1])).then(r=>{if(!r)return; const {iw,ow,idir,odir,W,L,D}=r;
+  const tapL=V(cc.tap[0],cc.tap[1],0.45), acp=V(cc.acp[0],cc.acp[1],0.4);
+  const inPts=[tapL,tapL.clone().setY(iw.y),iw.clone().addScaledVector(idir,0.8),iw];
+  const o1=ow.clone().addScaledVector(odir,0.6), o2=o1.clone().setY(0.4);
   const outPts=[ow,o1,o2,acp];
-  flowTube(inPts,0.2,'#1f5aa6','#b46bff',2.5,2); flowTube(outPts,0.17,'#3f93d8','#a052ff',2.5,2);
-  // tee y bridas
-  cyl(sceneC,0.42,0.5,'#1a4f93',tapL.x,0.45,tapL.z); cyl(sceneC,0.3,0.4,'#2f7fc4',acp.x,0.45,acp.z);
-  const midIn=iw.clone().lerp(ow,0.5).setY(Math.max(iw.y,ow.y)*0.7);
+  flowTube(inPts,0.11,'#1f5aa6','#b46bff',1.2,1); flowTube(outPts,0.09,'#3f93d8','#a052ff',1.2,1);
+  cyl(sceneC,0.32,0.4,'#1a4f93',tapL.x,0.45,tapL.z); cyl(sceneC,0.22,0.3,'#2f7fc4',acp.x,0.4,acp.z);
   cgFlowCurve=[new THREE.CatmullRomCurve3(inPts,false,'centripetal'),new THREE.CatmullRomCurve3(outPts,false,'centripetal')];
-  // operadores
-  const t1=techFig('field'), t2=techFig('field'); const c=V(cgM.c[0],cgM.c[1]); const fw=V(cgM.f[0],cgM.f[1]);
-  t1.position.copy(c.clone().lerp(fw,0.45)).add(new THREE.Vector3(odir.z,0,-odir.x).multiplyScalar(1.6)); t1.lookAt(ow.clone().setY(0));
-  t2.position.copy(c.clone().lerp(iw.clone().setY(0),0.4)).addScaledVector(idir,-1.5); t2.lookAt(c);
-  sceneC.add(t1,t2); techCGw.copy(t1.position).setY(1.4);
+  const t1=techFig('field'), t2=techFig('field');
+  t1.position.copy(W([L*0.18,0.15,D/2-0.65])); t1.lookAt(W([L*0.18,0.15,0])); t2.position.copy(W([-L/2+0.65,0.15,-D*0.1])); t2.lookAt(W([0,0.15,-D*0.1]));
+  sceneC.add(t1,t2); techCGw.copy(t1.position).setY(1.3);
 });
 const cgFlow=new THREE.InstancedMesh(new THREE.SphereGeometry(0.09,8,6),new THREE.MeshBasicMaterial({color:0xa052ff,fog:false}),40); cgFlow.visible=false; sceneC.add(cgFlow);
 
@@ -954,10 +975,7 @@ glb('fabrica2').then(o=>placeIn(o,MD.INDUSTRIA2,{hmax:34,copies:3,fill:0.94}));
 
 // ---- Comercio · McDonald's Bocagrande
 const mcM=MD.MCDONALDS, mcdW=V(mcM.c[0],mcM.c[1],6), mcAz=Math.atan2(Math.cos(mcM.a),-Math.sin(mcM.a));
-glb('mcd').then(o=>{if(!o)return; o.traverse(m=>{if(m.isMesh&&m.geometry.boundingBox){const b=m.geometry.boundingBox.clone().applyMatrix4(m.matrixWorld), s=b.getSize(new THREE.Vector3());if(s.y<0.7&&s.x>4&&s.z>4){m.material=m.material.clone();m.material.color.set('#8f8d86');m.material.map=null;}}});
-  const g=placeIn(o,mcM,{front:'x',fill:0.92}); const {s,sz}=g.userData; g.children.forEach(k=>k.scale.y=s*Math.min(1,(mcM.h||8)*1.6/(sz.y*s)));});
-(function(){const fx=Math.cos(mcM.a),fy=Math.sin(mcM.a),tx=-fy,ty=fx; const rr=mulberry(5);
-  for(let i=0;i<6;i++){const u=(i-2.5)*5.5+rr()*2, v=mcM.d/2+2.5+rr()*3; const p=person(PEOPLE[i%PEOPLE.length],1.6+rr()*0.2); p.position.copy(V(mcM.c[0]+fx*v+tx*u,mcM.c[1]+fy*v+ty*u)); p.rotation.y=rr()*6.28; sceneC.add(p);}})();
+glb('mcd').then(o=>placeIn(o,mcM,{front:'x',fill:0.85}));
 
 // ---- Hotel Santa Clara (comercio · Centro Histórico)
 const scR=CM.rects.santaclara, scW=V(scR[0],scR[1],8);
@@ -980,17 +998,14 @@ const scR=CM.rects.santaclara, scW=V(scR[0],scR[1],8);
 // ---- Estación distrital Pie de la Popa: ERP real entre la red de acero y la de polietileno
 const dsM=MD.DISTRITAL, dcn=CM.distConn, distW=V(dsM.c[0],dsM.c[1],2), dsAz=Math.atan2(Math.cos(dsM.a),-Math.sin(dsM.a));
 dcn.ac.forEach(pl=>flowTube(polyPts(pl,0.45),0.2,'#3f93d8','#a052ff',5,3.5));
-erpStation(dsM,dcn,0.06,0.075).then(r=>{if(!r)return; const {iw,ow,idir,odir}=r;
-  const acp=V(dcn.acp[0],dcn.acp[1],0.45), pep=V(dcn.pep[0],dcn.pep[1],0.3);
-  flowTube([acp,acp.clone().setY(iw.y),iw.clone().addScaledVector(idir,1.0),iw],0.15,'#3f93d8','#a052ff',2,1.6);
-  const o1=ow.clone().addScaledVector(odir,0.8), o2=o1.clone().setY(0.3);
-  flowTube([ow,o1,o2],0.12,'#8fd0f5','#8a3dff',1.5,1.2);
-  if(o2.distanceTo(pep)>5)runInline(o2,pep,'#8fd0f5'); else flowTube([o2,pep],0.12,'#8fd0f5','#8a3dff',1.5,1.2);
-  cyl(sceneC,0.3,0.4,'#2f7fc4',acp.x,0.45,acp.z);
-  // patín de tuberías modulares al otro lado del predio
-  glb('rack').then(o=>{if(!o)return; const c=V(dsM.c[0],dsM.c[1]); const bc=r.box.getCenter(new THREE.Vector3()); const p=c.clone().multiplyScalar(2).sub(bc).setY(0);
-    const g=new THREE.Group(); g.position.copy(p.lerp(c,0.35)); g.rotation.y=Math.atan2(Math.cos(dsM.a),-Math.sin(dsM.a))+Math.PI/2; const k=o.clone(); _b3.setFromObject(k); const ct=_b3.getCenter(new THREE.Vector3()); k.position.set(-ct.x,0,-ct.z); const s=new THREE.Group(); s.scale.setScalar(0.5); s.add(k); g.add(s); sceneC.add(g);});
-  const t=techFig('field'); const c=V(dsM.c[0],dsM.c[1]); t.position.copy(c.clone().lerp(V(dsM.f[0],dsM.f[1]),0.5)); t.lookAt(iw.clone().setY(0)); sceneC.add(t);
+fenceRail(dsM,0.6,dsM.f);
+stationHouse(dsM,V(dcn.acp[0],dcn.acp[1]),V(dcn.pep[0],dcn.pep[1])).then(r=>{if(!r)return; const {iw,ow,idir,odir,W,L,D}=r;
+  const acp=V(dcn.acp[0],dcn.acp[1],0.4), pep=V(dcn.pep[0],dcn.pep[1],0.25);
+  flowTube([acp,acp.clone().setY(iw.y),iw.clone().addScaledVector(idir,0.8),iw],0.09,'#3f93d8','#a052ff',1.2,1);
+  const o1=ow.clone().addScaledVector(odir,0.6), o2=o1.clone().setY(0.25);
+  flowTube([ow,o1,o2,pep],0.07,'#8fd0f5','#8a3dff',1,0.8);
+  cyl(sceneC,0.22,0.3,'#2f7fc4',acp.x,0.4,acp.z);
+  const t=techFig('field'); t.position.copy(W([L*0.2,0.15,D/2-0.65])); t.lookAt(W([L*0.2,0.15,0])); sceneC.add(t);
 });
 
 // ---- Vivienda: trabajo vario (cambio de regulador) · casa real del barrio, frente a la red de polietileno
@@ -1124,21 +1139,21 @@ const KC=[
  {s:0.00,t:MIDC,d:21000,az:0.3,el:1.05,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0},
  {s:0.60,t:MIDC,d:18000,az:0.45,el:0.9},
  {s:1.05,t:cgW,d:520,az:0.8,el:0.62},
- {s:1.45,t:cgW,d:48,az:1.1,el:0.55},
- {s:1.85,t:techCGw,d:11,az:2.5,el:0.3},
+ {s:1.45,t:cgW,d:30,az:1.1,el:0.62},
+ {s:1.85,t:techCGw,d:8,az:2.5,el:0.45},
  {s:1.97,t:cgW,d:700,az:2.0,el:0.85},
  {s:2.15,t:V(400,-1200),d:15500,az:0.6,el:0.95,ac:0},
  {s:2.75,t:V(400,-1200),d:16000,az:0.4,el:0.97,ac:AM},
  {s:2.95,t:V(400,-1200),d:16000,az:0.35,el:0.97},
  {s:3.20,t:argW,d:1500,az:argAz+0.5,el:0.75},
- {s:3.55,t:argW,d:620,az:argAz+0.25,el:0.42},
- {s:3.80,t:argMR,d:40,az:argAz+0.9,el:0.4},
+ {s:3.55,t:argW,d:640,az:argAz+0.25,el:0.45},
+ {s:3.80,t:argW,d:700,az:argAz+0.05,el:0.5},
  {s:3.97,t:argW,d:2500,az:argAz,el:0.95},
  {s:4.20,t:mcdW,d:1400,az:mcAz+0.3,el:0.85},
  {s:4.55,t:mcdW,d:150,az:mcAz+0.25,el:0.42},
  {s:4.85,t:mcdW,d:85,az:mcAz-0.3,el:0.28},
  {s:4.97,t:mcdW,d:2200,az:mcAz,el:0.95},
- {s:5.18,t:cpop,d:75,az:dsAz+0.35,el:0.6,pe:0},
+ {s:5.18,t:cpop,d:34,az:dsAz+0.35,el:0.62,pe:0},
  {s:5.55,t:cpop,d:3800,az:0.4,el:0.95,pe:PM*0.55},
  {s:5.88,t:cpop,d:4300,az:0.3,el:1.0,pe:PM},
  {s:6.05,t:heroCw,d:260,az:hiAz+0.3,el:0.9},
@@ -1181,7 +1196,7 @@ const tagPosC={'c-cg':cgW.clone().setY(16),'c-argos':argW.clone().setY(140),'c-s
 function tagVisibleC(k,s,d){
   if(k==='c-cg')return (s>0.95&&s<1.7)||(s<0.9)||(s>2.1&&s<2.98);
   if(k==='c-argos')return (s>2.3&&s<2.98)||(s>3.1&&s<3.6);
-  if(k==='c-mr')return s>3.62&&s<3.95;
+  if(k==='c-mr')return false;
   if(k==='c-sc')return (s>2.3&&s<2.98)||(s>4.1&&s<4.97);
   if(k==='c-reg2')return false;
   if(k==='c-popa')return s>5.1&&s<5.9;
@@ -1201,6 +1216,7 @@ function updateC(S,time,camD,s){
   cgFlow.visible=!!cgFlowCurve&&s>0.95&&s<2.1&&camD<700;
   if(cgFlow.visible){const n=cgFlow.count;for(let i=0;i<n;i++){cgFlowCurve[i&1].getPointAt(((i/n)+time*0.12)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();cgFlow.setMatrixAt(i,dummy.matrix);}cgFlow.instanceMatrix.needsUpdate=true;}
   FLOWMATS.forEach(m=>m.uniforms.uT.value=time);
+  ROOFS.forEach(r=>{const near=camD<160&&S.t.distanceTo(r.p)<60; const op=near?clamp((camD-12)/150,0.12,1):1; r.m.material.opacity=op; r.m.material.depthWrite=op>0.9;});
   if(peRib)peRib.visible=!(camD<240&&S.t.distanceTo(heroCw)<300);
   // cambio de regulador
   if(regSwap){const r=S.reg, {old,nw,home,toolL}=regSwap;
