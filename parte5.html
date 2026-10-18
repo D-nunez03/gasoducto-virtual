@@ -735,11 +735,12 @@ function tbox(g,w,h,d,mat,x,y,z){const m=new THREE.Mesh(new THREE.BoxGeometry(w,
 
 // ---- modelos 3D (GLB)
 const GL=new THREE.GLTFLoader(), GLC={};
-function prepMat(o,scan){o.traverse(m=>{if(!m.isMesh)return;const mats=Array.isArray(m.material)?m.material:[m.material];
+function prepMat(o,scan,bright){o.traverse(m=>{if(!m.isMesh)return;const mats=Array.isArray(m.material)?m.material:[m.material];
   mats.forEach(mt=>{if(mt.userData.prep)return;mt.userData.prep=1;if(!m.geometry.attributes.normal)mt.flatShading=true;if('metalness' in mt){mt.metalness=0;mt.roughness=Math.max(0.6,mt.roughness||0.8);}
     if(mt.color)mt.color.convertLinearToSRGB(); if(mt.emissive)mt.emissive.convertLinearToSRGB(); [mt.map,mt.emissiveMap].forEach(t=>{if(t)t.encoding=THREE.LinearEncoding;});
-    if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}mt.needsUpdate=true;});});}
-function glb(name,scan){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC){res(null);return;}GL.load('m/'+name+'.glb',g=>{const o=g.scene;prepMat(o,scan);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
+    if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}
+    if(bright&&mt.color){if(mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.45;}else mt.emissive=mt.color.clone().multiplyScalar(0.45).add(mt.emissive||new THREE.Color(0));}mt.needsUpdate=true;});});}
+function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC){res(null);return;}GL.load('m/'+name+'.glb',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
 const _b3=new THREE.Box3();
 // coloca un modelo dentro de un polígono MODELOS: centro, giro hacia el FRENTE, escala proporcional
 // front: eje del modelo que mira al frente ('z' o 'x'); hmax: altura máxima; fill: fracción del predio; copies: copias a lo largo
@@ -904,14 +905,14 @@ function flowTube(pts,r,base,pulse,sp,sv){const cu=new THREE.CatmullRomCurve3(pt
 // cerca perimetral (malla) alrededor del predio
 const MESH=texMat((c,w,h)=>{c.clearRect(0,0,w,h);c.strokeStyle='rgba(150,160,166,0.9)';c.lineWidth=1.4;for(let i=-h;i<w;i+=8){c.beginPath();c.moveTo(i,0);c.lineTo(i+h,h);c.stroke();c.beginPath();c.moveTo(i+h,0);c.lineTo(i,h);c.stroke();}},64,64,1,1);
 MESH.transparent=true; MESH.opacity=0.45; MESH.alphaTest=0.05; MESH.side=THREE.DoubleSide; MESH.depthWrite=false;
-function fenceC(md,pad,h,gate){
+function fenceC(md,pad,h,gate,noMesh){
   const P=md.poly.slice(0,-1), c=md.c; const pts=P.map(p=>{const dx=p[0]-c[0],dy=p[1]-c[1],L=Math.hypot(dx,dy);return [p[0]+dx/L*pad,p[1]+dy/L*pad];});
   for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);
     const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2; const gd=gate?Math.hypot(mx-gate[0],my-gate[1]):1e9;
     const segs=gd<L/2+2?[[0,0.5-2.4/L],[0.5+2.4/L,1]]:[[0,1]];
     segs.forEach(([u0,u1])=>{if(u1<=u0)return;const x0=a[0]+(b[0]-a[0])*u0,y0=a[1]+(b[1]-a[1])*u0,x1=a[0]+(b[0]-a[0])*u1,y1=a[1]+(b[1]-a[1])*u1,l=L*(u1-u0);
       const mat=MESH.clone();mat.map=MESH.map.clone();mat.map.needsUpdate=true;mat.map.repeat.set(l/1.2,h/1.2);
-      const pl=new THREE.Mesh(new THREE.PlaneGeometry(l,h),mat);pl.position.copy(V((x0+x1)/2,(y0+y1)/2,h/2));pl.rotation.y=Math.atan2(-(y1-y0),x1-x0);sceneC.add(pl);
+      if(!noMesh){const pl=new THREE.Mesh(new THREE.PlaneGeometry(l,h),mat);pl.position.copy(V((x0+x1)/2,(y0+y1)/2,h/2));pl.rotation.y=Math.atan2(-(y1-y0),x1-x0);sceneC.add(pl);}
       for(let k=0;k<=Math.ceil(l/3);k++){const t=Math.min(1,k*3/l);const p=V(x0+(x1-x0)*t,y0+(y1-y0)*t,h/2);cyl(sceneC,0.04,h,'#6b757b',p.x,p.y,p.z);} });}
 }
 // estación con ERP real: entrada y salida medidas sobre el modelo (unidades del GLB)
@@ -959,7 +960,7 @@ function stationHouse(md,tapW,outW){
     return {g,iw,ow,idir,odir,L,D,W};});
 }
 // cerca perimetral con baranda superior
-function fenceRail(md,pad,gate){fenceC(md,pad,2.2,gate); const P=md.poly.slice(0,-1),c=md.c; const pts=P.map(p=>{const dx=p[0]-c[0],dy=p[1]-c[1],L=Math.hypot(dx,dy);return V(p[0]+dx/L*pad,p[1]+dy/L*pad,2.2);}); pts.push(pts[0]); for(let i=0;i<pts.length-1;i++)tubeW([pts[i],pts[i+1]],0.03,'#7d878d');}
+function fenceRail(md,pad,gate){fenceC(md,pad,2.2,gate,true); const P=md.poly.slice(0,-1),c=md.c; const pts=P.map(p=>{const dx=p[0]-c[0],dy=p[1]-c[1],L=Math.hypot(dx,dy);return V(p[0]+dx/L*pad,p[1]+dy/L*pad,2.2);}); pts.push(pts[0]); for(let i=0;i<pts.length-1;i++){tubeW([pts[i],pts[i+1]],0.035,'#7d878d');tubeW([pts[i].clone().setY(1.1),pts[i+1].clone().setY(1.1)],0.025,'#7d878d');}}
 
 // ---- City Gate Ternera II: caseta con la ERP, conectada al transporte y a la red de acero
 const cgM=MD.CITYGATE, cc=CM.cgConn, cgW=V(cgM.c[0],cgM.c[1],2), techCGw=cgW.clone(); let cgFlowCurve=null;
@@ -991,7 +992,7 @@ glb('fabrica2').then(o=>placeIn(o,MD.INDUSTRIA2,{hmax:34,copies:3,fill:0.94}));
 
 // ---- Comercio · McDonald's Bocagrande
 const mcM=MD.MCDONALDS, mcdW=V(mcM.c[0],mcM.c[1],6), mcAz=Math.atan2(Math.cos(mcM.a),-Math.sin(mcM.a));
-glb('mcd').then(o=>placeIn(o,mcM,{front:'x',fill:0.85}));
+glb('mcd',false,true).then(o=>placeIn(o,mcM,{front:'x',fill:0.85}));
 
 // ---- Hotel Santa Clara (comercio · Centro Histórico)
 const scR=CM.rects.santaclara, scW=V(scR[0],scR[1],8);
