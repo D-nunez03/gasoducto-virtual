@@ -740,7 +740,7 @@ function prepMat(o,scan,bright){o.traverse(m=>{if(!m.isMesh)return;const mats=Ar
     if(mt.color)mt.color.convertLinearToSRGB(); if(mt.emissive)mt.emissive.convertLinearToSRGB(); [mt.map,mt.emissiveMap].forEach(t=>{if(t)t.encoding=THREE.LinearEncoding;});
     if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}
     if(bright&&mt.color){if(mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.45;}else mt.emissive=mt.color.clone().multiplyScalar(0.45).add(mt.emissive||new THREE.Color(0));}mt.needsUpdate=true;});});}
-function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC){res(null);return;}GL.load('m/'+name+'.glb',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
+function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC){res(null);return;}GL.load('m/'+name+'.glb?v=1792384364',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
 const _b3=new THREE.Box3();
 // coloca un modelo dentro de un polígono MODELOS: centro, giro hacia el FRENTE, escala proporcional
 // front: eje del modelo que mira al frente ('z' o 'x'); hmax: altura máxima; fill: fracción del predio; copies: copias a lo largo
@@ -839,16 +839,16 @@ let peRib=null; const RIBS=[];
 const ORTHO=[]; const OC0=[843000,1642000];
 function orthoMat(){const m=new THREE.MeshBasicMaterial({color:'#ffffff',depthWrite:false,depthTest:false,fog:true});
   m.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n if(dot(diffuseColor.rgb,vec3(1.0))<0.07) discard;');}; return m;}
-if(WC) fetch('ctg/ortho/ortho.json?v=3').then(r=>r.json()).then(L=>L.forEach(b=>{const x0=b.x0-OC0[0],y0=b.y0-OC0[1],w=b.x1-b.x0,h=b.y1-b.y0;
+if(WC) fetch('ctg/ortho/ortho.json?v=1792384364').then(r=>r.json()).then(L=>L.forEach(b=>{const x0=b.x0-OC0[0],y0=b.y0-OC0[1],w=b.x1-b.x0,h=b.y1-b.y0;
   ORTHO.push({f:b.f,c:V(x0+w/2,y0+h/2),x0,y0,w,h,m:null});})).catch(()=>{});
 function orthoUpdate(t,camD){ const on=camD<3000; ORTHO.forEach(o=>{if(o.m&&o.m.material.map)o.m.visible=on;}); if(camD>5000)return; ORTHO.forEach(o=>{if(o.m||o.c.distanceTo(t)>Math.max(2600,camD*3.5))return;
   const m=new THREE.Mesh(new THREE.PlaneGeometry(o.w,o.h),orthoMat()); m.rotation.x=-Math.PI/2; m.position.set(o.x0+o.w/2,0,-(o.y0+o.h/2)); m.renderOrder=-3; m.visible=false; sceneC.add(m); o.m=m;
-  texL.load('ctg/ortho/'+o.f+'?v=3',tx=>{tx.anisotropy=Math.min(8,maxAn);m.material.map=tx;m.material.needsUpdate=true;},undefined,()=>{});});}
+  texL.load('ctg/ortho/'+o.f+'?v=1792384364',tx=>{tx.anisotropy=Math.min(8,maxAn);m.material.map=tx;m.material.needsUpdate=true;},undefined,()=>{});});}
 
 // ---- edificaciones
 const H=CM.hero, MD=CM.models, panC=(()=>{let x=0,y=0;CM.panel.forEach(p=>{x+=p[0];y+=p[1]});return [x/CM.panel.length,y/CM.panel.length];})();
 const CGC=MD.CITYGATE.c;
-if(WC) fetch('ctg/ctg.json').then(r=>r.json()).then(D=>{
+if(WC) fetch('ctg/ctg.json?v=1792384364').then(r=>r.json()).then(D=>{
   D.tiles.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,2500,2500,-5));
   D.dets.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,800,800,-4));
   const nearCG=s=>Math.hypot(s[0]-CGC[0],s[1]-CGC[1])<40&&Math.hypot(s[2]-CGC[0],s[3]-CGC[1])<40;
@@ -856,7 +856,7 @@ if(WC) fetch('ctg/ctg.json').then(r=>r.json()).then(D=>{
   tr.renderOrder=2; ac.renderOrder=3; pe.renderOrder=4; sceneC.add(tr,ac,pe); peRib=pe; RIBS.push(tr,ac,pe,p1,bc);
   towersC(D.towers); housesC(D.houses||[]);
   if(/nobld/.test(location.search))return null;
-  return fetch('ctg/bld.bin').then(r=>r.arrayBuffer());
+  return fetch('ctg/bld.bin?v=1792384364').then(r=>r.arrayBuffer());
 }).then(buf=>{
   if(!buf)return;
   const n=new Uint32Array(buf,0,1)[0]; let o=4;
@@ -1156,9 +1156,9 @@ function logoMat(){const cv=document.createElement('canvas');cv.width=1024;cv.he
   if(logoImg.complete&&logoImg.width)draw(); else logoImg.addEventListener('load',draw);
   return new THREE.MeshBasicMaterial({map:tx,transparent:true,alphaTest:0.1,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2});}
 function surtigasVan(name,len){const g=new THREE.Group(); glb(name).then(o=>{if(!o)return; const u=unitObj(o,len,'z'); g.add(u); const sz=u.userData.size;
-  const mat=logoMat(); for(const s of [-1,1]){const p=new THREE.Mesh(new THREE.PlaneGeometry(sz.z*0.42,sz.z*0.42*420/1024),mat); p.position.set(s*(sz.x/2+0.02),sz.y*0.66,-sz.z*0.1); p.rotation.y=s*Math.PI/2; g.add(p);}
+  const mat=logoMat(); for(const s of []){const p=new THREE.Mesh(new THREE.PlaneGeometry(sz.z*0.42,sz.z*0.42*420/1024),mat); p.position.set(s*(sz.x/2+0.02),sz.y*0.66,-sz.z*0.1); p.rotation.y=s*Math.PI/2; g.add(p);}
   const roof=new THREE.Mesh(new THREE.PlaneGeometry(sz.x*0.9,sz.x*0.9*420/1024),mat); roof.rotation.x=-Math.PI/2; roof.rotation.z=Math.PI/2; roof.scale.setScalar(1.9); roof.position.set(0,sz.y+0.03,-sz.z*0.12); g.add(roof);
-  const band=new THREE.Mesh(new THREE.BoxGeometry(sz.x+0.04,0.12,sz.z*0.9),M('#0086ce')); band.position.set(0,sz.y*0.36,0); g.add(band);}); return g;}
+}); return g;}
 (function(){
   const dir=[dAl[0],dAl[1]], nrm=[dN[0],dN[1]], E=(a,b)=>[dg.x+dAl[0]*a+dN[0]*b, dg.y+dAl[1]*a+dN[1]*b];
   // retroexcavadora con brazo articulado
@@ -1285,13 +1285,14 @@ const KC=[
  {s:6.82,t:meterCw,d:4.0,az:hiAz+0.3,el:0.15,reg:1},
  {s:7.00,t:meterCw,d:4.0,az:hiAz+0.25,el:0.15},
  // parte 2: prevención de daños
- {s:7.01,t:digW,d:2600,az:dAz,el:1.0,dig:0},
- {s:7.25,t:digW,d:150,az:dAz+0.4,el:0.7},
- {s:7.60,t:digW,d:40,az:dAz+0.3,el:0.5,dig:0.55},
- {s:7.95,t:digW,d:45,az:dAz+0.2,el:0.5,dig:0.66},
- {s:8.30,t:digW.clone().setY(4),d:60,az:dAz+0.1,el:0.55,dig:0.86},
- {s:8.70,t:digW,d:26,az:dAz-0.15,el:0.55,dig:1},
- {s:9.00,t:digW,d:24,az:dAz-0.25,el:0.5},
+ {s:7.01,t:digW,d:320,az:dAz,el:0.85,dig:0},
+ {s:7.25,t:digW,d:30,az:dAz+0.25,el:0.5,dig:0.02},
+ {s:7.75,t:digW,d:24,az:dAz+0.3,el:0.45,dig:0.45},
+ {s:7.95,t:digW,d:24,az:dAz+0.25,el:0.45,dig:0.56},
+ {s:8.20,t:digW,d:30,az:dAz+0.2,el:0.5,dig:0.66},
+ {s:8.55,t:digW.clone().setY(4),d:46,az:dAz+0.1,el:0.55,dig:0.86},
+ {s:8.80,t:digW,d:26,az:dAz-0.1,el:0.5,dig:1},
+ {s:9.00,t:digW,d:28,az:dAz-0.2,el:0.48},
  // parte 3: metrología
  {s:9.01,t:sedeW,d:2600,az:0.5,el:1.0,lab:0},
  {s:9.30,t:sedeFront,d:110,az:2.75,el:0.3},
