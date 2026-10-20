@@ -581,8 +581,8 @@ scene.add(truck);
 if(PART===5) new THREE.GLTFLoader().load('m/scania.glb',gl=>{const o=gl.scene; o.traverse(m=>{if(m.isMesh){const ms=Array.isArray(m.material)?m.material:[m.material];ms.forEach(mt=>{if('metalness' in mt){mt.metalness=0.1;mt.roughness=0.6;}});}});
   const k=new THREE.Group(); k.add(o); k.updateMatrixWorld(true); const bb=new THREE.Box3().setFromObject(k), sz=bb.getSize(new THREE.Vector3()), ct=bb.getCenter(new THREE.Vector3());
   const L=17.6, sc=L/sz.z; o.scale.setScalar(sc); o.position.set(-ct.x*sc,-bb.min.y*sc,-ct.z*sc);
-  const W=sz.x*sc, Hh=sz.y*sc; const mat=logoMat();
-  for(const sd of [-1,1]){const p=new THREE.Mesh(new THREE.PlaneGeometry(L*0.42,L*0.42*420/1024),mat); p.position.set(sd*(W/2+0.03),Hh*0.62,-L*0.1); p.rotation.y=sd*Math.PI/2; k.add(p);}
+  const W=sz.x*sc, Hh=sz.y*sc; const ptx=new THREE.TextureLoader().load('petromil.png'); ptx.anisotropy=8; const mat=new THREE.MeshBasicMaterial({map:ptx,transparent:true,alphaTest:0.1,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2});
+  for(const sd of [-1,1]){const p=new THREE.Mesh(new THREE.PlaneGeometry(Hh*0.5*0.73,Hh*0.5),mat); p.position.set(sd*(W/2+0.03),Hh*0.62,-L*0.1); p.rotation.y=sd*Math.PI/2; k.add(p);}
   const r=new THREE.Group(); r.rotation.y=Math.PI/2; r.add(k); truckBody.children.forEach(c=>c.visible=false); truckBody.add(r);},undefined,()=>{});
 
 // ---------- partículas de gas ----------
@@ -732,7 +732,7 @@ function prepMat(o,scan,bright){o.traverse(m=>{if(!m.isMesh)return;const mats=Ar
     if(mt.color)mt.color.convertLinearToSRGB(); if(mt.emissive)mt.emissive.convertLinearToSRGB(); [mt.map,mt.emissiveMap].forEach(t=>{if(t)t.encoding=THREE.LinearEncoding;});
     if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}
     if(bright&&mt.color){if(mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.45;}else mt.emissive=mt.color.clone().multiplyScalar(0.45).add(mt.emissive||new THREE.Color(0));}mt.needsUpdate=true;});});}
-function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC&&!/^(trabmed|cwork|tecnico)$/.test(name)){res(null);return;}GL.load('m/'+name+'.glb?v=1792384364',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
+function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC&&!/^(trabmed|trab2|cwork|tecnico)$/.test(name)){res(null);return;}GL.load('m/'+name+'.glb?v=1792384364',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
 const _b3=new THREE.Box3();
 // coloca un modelo dentro de un polígono MODELOS: centro, giro hacia el FRENTE, escala proporcional
 // front: eje del modelo que mira al frente ('z' o 'x'); hmax: altura máxima; fill: fracción del predio; copies: copias a lo largo
@@ -1372,7 +1372,7 @@ function updateC(S,time,camD,s){
 }
 // =================== fin capítulo 1 ===================
 // ---- Canalete: inspector de revisión periódica junto al medidor (contador digital)
-const techR=techFig('insp'); techR.position.set(0.85,0.15,0.75); techR.rotation.y=-Math.PI*0.6; heroGroup.userData.mg.add(techR); techR.visible=false;
+const techR=person('trab2',1.76); techR.position.set(0.85,0.15,0.75); techR.rotation.y=-Math.PI*0.6; heroGroup.userData.mg.add(techR); techR.visible=false;
 // ---------- labels ----------
 const tags=[...document.querySelectorAll('.tag')].map(el=>({el,k:el.dataset.k}));
 const tagPos={cg:tw(CG[0],CG[1],20),vc:tw(0,0,14),town:tw(TOWN[0],TOWN[1]+380,10),mon:tw(802900,0,0),...(window.__partsNew||window.__parts)};
