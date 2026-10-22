@@ -24,11 +24,11 @@ html,body{background:var(--sky);color:var(--paper)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden}
 #scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 #tags{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-.tag{position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper);background:color-mix(in srgb,var(--ink) 86%,transparent);padding:3px 9px 2px;border-radius:3px;transition:opacity .35s;opacity:0}
+.tag{position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper);background:color-mix(in srgb,var(--ink) 88%,transparent);padding:5px 12px 4px;border-radius:3px;transition:opacity .35s;opacity:0}
 .tag::after{content:"";position:absolute;left:50%;bottom:-14px;width:1px;height:14px;background:var(--paper);opacity:.8}
-.tag small{display:block;font-family:var(--f-mono);font-weight:400;font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--muted)}
+.tag small{display:block;font-family:var(--f-mono);font-weight:400;font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--muted)}
 .tag.cg{border-left:3px solid var(--truck)}
-.tag.part{font-size:13px;padding:2px 7px;border-left:3px solid var(--flow)}
+.tag.part{font-size:17px;padding:4px 10px;border-left:3px solid var(--flow)}
 .tag.vc{border-left:3px solid var(--flow)}
 .tag.town{border-left:3px solid var(--pe)}
 
@@ -104,6 +104,9 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
   <div class="tag cg" data-k="c-dig">¡Rotura por obra!<small>gas escapando a la atmósfera</small></div>
   <div class="tag vc" data-k="c-sede">Sede Surtigas<small>Cartagena</small></div>
   <div class="tag vc" data-k="c-lab">Laboratorio de metrología<small>acreditado por ONAC</small></div>
+  <div class="tag cg" data-k="c-em">Fuga de gas<small>el usuario llama al 164</small></div>
+  <div class="tag vc" data-k="c-base">Base de operaciones<small>salida de la cuadrilla</small></div>
+  <div class="tag cg" data-k="c-valv">Válvula automatizada<small>cierre remoto del sector</small></div>
   <div class="tag cg" data-k="c-byp">Bypass ilegal<small>el gas no pasa por el medidor</small></div>
   <div class="tag" data-k="c-fr">Vivienda<small>Cartagena</small></div>
   <div class="tag cg" data-k="c-bal">Consumos atípicos<small>balance del sector</small></div>
@@ -731,7 +734,7 @@ function sample(s){
 }
 
 // =================== CAPÍTULO 1 · CARTAGENA (red convencional) ===================
-const CM = {"sites":{"cg":[5445.6,-2337.2],"popa":[-1950.0,1648.9],"santaclara":[-4039.0,3425.5],"surtigas":[337.7,973.4],"argos":[808.8,-6488.4]},"hero":{"x":-1784.6,"y":1667.9,"depth":14.6,"width":9.0,"nx":0.9379,"ny":-0.3469,"mx":-1777.7,"my":1665.5,"along":0.2,"px":-1775.5,"py":1664.7},"dig":{"x":-1355.4,"y":-651.3,"ang":3.043,"net":"pe"},"panel":[[-2072.7,1863.9],[-1979.1,1841.9],[-2010.5,1787.3],[-2089.0,1816.8],[-2072.7,1863.9]],"acMax":16680,"peMax":16849,"rects":{"cg":[5436.5,-2345.1,32,20,-0.857],"popa":[-1962.0,1662.9,16,11,0.05],"surtigas":[317.7,997.4,52,40,0.08],"santaclara":[-4017.0,3410.5,95,70,1.745],"argos":[781.7,-6841.2,465.2,323.8,0.403]},"argosPoly":[[538.2,-6863.2],[590.9,-6790.3],[609.8,-6755.2],[664.5,-6715.2],[715.8,-6758.7],[746.7,-6748.8],[811.2,-6708.1],[857.6,-6670.2],[908.1,-6611.3],[954.4,-6653.4],[974.8,-6714.5],[988.1,-6781.1],[980.4,-6848.5],[979.7,-6932.7],[845.6,-6927.1],[719.3,-6932.7],[715.1,-7000.8],[698.2,-7028.2],[538.2,-6863.2]],"argosMR":[908.1,-6611.3],"models":{"CITYGATE":{"c":[5454.5,-2341.5],"a":0.7014,"d":16.3,"w":15.9,"f":[5460.7,-2336.3],"poly":[[5443.5,-2340.4],[5455.9,-2330.4],[5465.7,-2342.5],[5453.2,-2352.6],[5443.5,-2340.4]],"h":null,"glb":["modular_pipes_erp","modular_pipes","modular_pipes(2)","trabajadorcitygate","trabajadorcitygate(2)"]},"MCDONALDS":{"c":[-4634.2,853.3],"a":-0.6295,"d":35.8,"w":47.7,"f":[-4620.9,843.7],"poly":[[-4661.4,846.4],[-4632.1,881.3],[-4607.0,860.2],[-4636.3,825.4],[-4661.4,846.4]],"h":8.0,"glb":["mc_donalds"]},"DISTRITAL":{"c":[-1970.3,1654.5],"a":-1.4992,"d":22.4,"w":32.5,"f":[-1969.8,1645.7],"poly":[[-1954.1,1656.3],[-1958.1,1644.1],[-1977.3,1646.7],[-1986.3,1651.1],[-1980.5,1665.0],[-1954.1,1656.3]],"h":null,"glb":["modular_pipes_erp","modular_pipes","modular_pipes(2)","trabajadorcitygate","trabajadorcitygate(2)"]},"CEMENTOS ARGOS":{"c":[764.0,-6783.6],"a":0.5605,"d":463.1,"w":262.2,"f":[947.2,-6662.6],"poly":[[902.7,-6612.8],[994.9,-6715.8],[875.3,-6808.9],[842.9,-6784.4],[770.3,-6866.8],[783.1,-6890.3],[670.3,-6997.2],[542.8,-6866.8],[597.7,-6770.7],[666.4,-6709.9],[780.1,-6618.7],[830.1,-6678.5],[902.7,-6612.8]],"h":null,"glb":["cement_plant"]},"INDUSTRIA":{"c":[895.4,-6911.7],"a":0.0551,"d":219.2,"w":193.8,"f":[998.8,-6905.1],"poly":[[999.8,-6813.9],[997.8,-7003.1],[789.9,-6990.4],[789.9,-6916.8],[796.8,-6877.6],[856.6,-6816.8],[999.8,-6813.9]],"h":null,"glb":["factory (2)"]},"INDUSTRIA2":{"c":[822.6,-7141.4],"a":0.0504,"d":259.7,"w":112.5,"f":[949.8,-7132.5],"poly":[[949.8,-7085.5],[949.8,-7191.4],[694.8,-7186.5],[698.7,-7091.4],[949.8,-7085.5]],"h":null,"glb":["factory"]}},"cgConn":{"tap":[5450.9,-2344.4],"inl":[5452.2,-2343.4],"outl":[5459.2,-2337.6],"acp":[5458.0,-2338.7],"tr":[[[5481.6,-2377.4],[5476.6,-2375.3],[5467.8,-2367.1],[5424.2,-2308.4]],[[5459.4,-2338.6],[5490.0,-2369.2]]],"ac":[[[5445.6,-2337.2],[5452.3,-2332.5],[5488.0,-2372.2]],[[5457.6,-2293.7],[5454.2,-2321.3],[5457.6,-2332.2],[5456.7,-2334.2]]]},"distConn":{"acp":[-1979.9,1636.5],"inl":[-1975.9,1648.1],"outl":[-1958.1,1654.6],"pep":[-1959.9,1648.4],"ac":[[[-1935.3,1630.3],[-1940.5,1631.1],[-1964.1,1632.5],[-1991.2,1639.3],[-2007.5,1646.1],[-2021.0,1654.6]]]},"argConn":{"trp":[588.0,-6762.9],"mr":[606.8,-6771.7],"d":12.4},"heroPE":[[[-1750.7,1624.6],[-1768.4,1624.8],[-1754.4,1662.0],[-1741.8,1693.6],[-1741.2,1694.8],[-1737.9,1693.5]],[[-1794.1,1718.5],[-1761.4,1705.1],[-1778.3,1656.6],[-1773.8,1655.0]],[[-1833.8,1643.3],[-1804.5,1719.1]],[[-1799.1,1720.9],[-1794.1,1718.5]],[[-1819.9,1625.7],[-1784.1,1621.8],[-1754.6,1621.8]],[[-1839.0,1659.8],[-1818.5,1711.2]],[[-1823.2,1628.7],[-1808.6,1627.1]],[[-1792.7,1722.2],[-1794.1,1718.5]]],"mcd":[-4634.2,853.3],"torGLB":[{"c":[-5301.3,-425.6],"a":1.5155,"d":171.2,"w":173.5,"poly":[[-5343.6,-323.9],[-5268.6,-365.0],[-5216.8,-391.4],[-5207.8,-406.3],[-5209.1,-446.7],[-5227.3,-501.5],[-5308.6,-496.2],[-5385.4,-493.0],[-5382.7,-443.6],[-5375.0,-382.7],[-5377.6,-369.5],[-5343.6,-323.9]],"glb":"marriot","h":null},{"c":[-5570.6,-14.0],"a":0.3964,"d":77.2,"w":94.3,"poly":[[-5558.3,40.1],[-5521.9,-47.0],[-5536.7,-46.6],[-5544.4,-46.7],[-5553.3,-48.5],[-5562.0,-51.4],[-5570.1,-55.5],[-5577.7,-60.5],[-5622.0,-7.6],[-5610.6,2.8],[-5558.3,40.1]],"glb":"hotel_playa","h":null}],"keys":[[-1784.6,1667.9],[-37.6,551.6],[-3884.0,2307.7],[-1970.3,1654.5],[-4634.2,853.3],[5454.5,-2341.5],[317.7,997.4],[-1355.4,-651.3]],"digNet":[["ac",[[-1351.8,-749.2],[-1348.6,-660.4],[-1345.5,-649.4],[-1347.4,-636.4],[-1339.4,-547.1],[-1336.9,-492.5]]],["pe",[[-1207.7,-661.5],[-1212.4,-664.7],[-1228.3,-663.9],[-1416.6,-645.2],[-1443.6,-644.5],[-1441.9,-634.8],[-1455.8,-633.0]]],["pe",[[-1353.0,-494.5],[-1360.6,-636.8],[-1364.2,-639.3],[-1390.7,-634.8],[-1453.8,-630.3]]],["pe",[[-1454.7,-776.6],[-1430.0,-741.6],[-1421.5,-719.8],[-1416.6,-650.5],[-1399.8,-651.9]]],["pe",[[-1220.6,-565.3],[-1225.0,-627.7],[-1257.5,-623.9],[-1258.4,-640.1]]],["pe",[[-1463.1,-769.4],[-1437.8,-733.6],[-1427.1,-649.7]]],["pe",[[-1332.2,-495.2],[-1341.8,-640.2]]],["pe",[[-1367.5,-671.7],[-1375.0,-809.6]]],["pe",[[-1207.7,-661.5],[-1211.4,-719.5],[-1210.9,-719.5]]],["pe",[[-1204.6,-704.2],[-1202.5,-669.6],[-1196.6,-669.6]]],["pe",[[-1256.7,-750.6],[-1232.0,-753.1]]],["pe",[[-1225.7,-744.6],[-1223.5,-677.0]]],["pe",[[-1345.7,-749.5],[-1278.5,-754.0],[-1268.5,-758.7],[-1257.1,-759.7]]],["pe",[[-1207.7,-661.5],[-1208.7,-595.8],[-1220.6,-594.7],[-1219.5,-582.9]]],["pe",[[-1345.3,-739.5],[-1349.0,-736.9],[-1346.9,-672.1]]],["pe",[[-1455.8,-633.0],[-1454.0,-620.6],[-1496.0,-615.3],[-1497.4,-628.5]]],["pe",[[-1455.8,-633.0],[-1457.4,-645.7],[-1499.1,-641.5],[-1497.4,-628.5]]],["pe",[[-1354.1,-811.2],[-1350.6,-750.6],[-1345.7,-749.5]]],["pe",[[-1508.7,-631.6],[-1504.7,-634.9],[-1506.9,-650.1],[-1514.7,-666.0]]],["pe",[[-1256.7,-750.6],[-1264.5,-749.9],[-1284.5,-741.2],[-1306.2,-740.5]]],["pe",[[-1397.4,-652.1],[-1366.5,-654.8],[-1367.5,-671.7]]],["pe",[[-1508.7,-631.6],[-1509.2,-638.1],[-1514.7,-638.0]]],["pe",[[-1513.4,-627.6],[-1508.7,-631.6]]],["pe",[[-1353.0,-494.5],[-1352.6,-491.4]]],["pe",[[-1257.1,-759.7],[-1239.6,-761.6]]],["pe",[[-1375.0,-809.6],[-1367.7,-810.7]]],["pe",[[-1332.2,-495.2],[-1353.0,-494.5]]],["pe",[[-1367.5,-671.7],[-1346.9,-672.1]]],["pe",[[-1497.4,-628.5],[-1508.3,-627.4],[-1508.7,-631.6]]],["pe",[[-1345.3,-739.5],[-1332.1,-740.3]]],["pe",[[-1345.7,-749.5],[-1345.3,-739.5]]],["pe",[[-1257.1,-759.7],[-1256.7,-750.6]]],["pe",[[-1346.9,-672.1],[-1346.6,-663.4]]]],"fraud":{"x":-37.6,"y":551.6,"depth":15.4,"width":9.4,"nx":-0.928,"ny":0.3726,"mx":-44.4,"my":555.4,"along":-1.0,"px":-46.4,"py":556.5,"nb":[[-122.0,666.3],[23.1,485.5],[84.7,619.4],[-97.7,658.7],[13.4,462.3],[-116.3,616.8],[-132.1,638.3],[-75.8,473.5],[-37.6,696.7],[72.5,443.6],[-93.3,663.5],[-111.8,458.8],[58.3,574.8],[-0.7,605.6],[-55.4,430.5],[-104.7,439.8],[5.1,412.0],[46.6,629.3],[-5.9,615.1],[-95.0,600.3],[19.6,478.1],[-11.3,404.9],[39.8,653.6],[71.1,607.5],[33.3,510.7],[-21.3,488.6],[24.7,588.3],[-44.6,627.6],[65.0,586.7],[-87.7,669.1],[-129.6,469.3],[80.5,518.7],[112.8,593.8],[72.2,537.3],[-75.6,612.1],[71.9,490.6],[-13.9,447.2],[-21.7,644.5],[-191.7,514.8],[88.6,480.6]]},"fraudPE":[[[-49.2,497.9],[-57.9,531.0],[-54.4,541.0],[-24.2,599.3],[-12.8,594.1],[-13.9,591.5],[11.4,576.5]],[[-40.6,603.2],[-37.3,601.2],[-65.9,545.8]],[[-86.2,577.3],[-65.9,545.8]],[[-89.7,569.0],[-70.2,538.1]],[[-61.1,502.0],[-66.3,520.5],[-71.4,519.3],[-75.9,512.2]],[[15.5,537.4],[3.9,515.6]],[[-70.2,538.1],[-81.6,518.8]],[[-65.9,545.8],[-70.2,538.1]],[[-45.5,606.0],[-40.6,603.2]],[[-38.8,606.6],[-40.6,603.2]]],"emer":{"x":-3884.0,"y":2307.7,"depth":14.6,"width":11.1,"nx":-0.7542,"ny":-0.6567,"mx":-3888.8,"my":2302.2,"along":1.0,"px":-3890.5,"py":2300.4},"emerPE":[[[-3856.6,2260.1],[-3935.1,2328.1]],[[-3865.9,2277.6],[-3930.4,2337.1]],[[-3840.0,2300.4],[-3894.0,2361.8]],[[-3844.1,2300.8],[-3897.2,2361.1]],[[-3829.9,2317.3],[-3835.9,2312.5],[-3877.5,2362.3]],[[-3863.3,2280.0],[-3865.2,2282.2],[-3844.1,2300.8]],[[-3841.5,2297.9],[-3845.4,2294.3],[-3859.6,2283.3],[-3863.3,2280.0]],[[-3865.9,2277.6],[-3850.4,2264.3]],[[-3829.4,2314.2],[-3838.7,2306.7],[-3838.5,2302.9],[-3840.0,2300.4]],[[-3837.7,2293.7],[-3849.6,2283.1]],[[-3831.6,2291.2],[-3840.0,2300.4]],[[-3837.7,2293.7],[-3832.5,2288.6]]]};
+const CM = {"sites":{"cg":[5445.6,-2337.2],"popa":[-1950.0,1648.9],"santaclara":[-4039.0,3425.5],"surtigas":[337.7,973.4],"argos":[808.8,-6488.4]},"hero":{"x":-1784.6,"y":1667.9,"depth":14.6,"width":9.0,"nx":0.9379,"ny":-0.3469,"mx":-1777.7,"my":1665.5,"along":0.2,"px":-1775.5,"py":1664.7},"dig":{"x":-1355.4,"y":-651.3,"ang":3.043,"net":"pe"},"panel":[[-2072.7,1863.9],[-1979.1,1841.9],[-2010.5,1787.3],[-2089.0,1816.8],[-2072.7,1863.9]],"acMax":16680,"peMax":16849,"rects":{"cg":[5436.5,-2345.1,32,20,-0.857],"popa":[-1962.0,1662.9,16,11,0.05],"surtigas":[317.7,997.4,52,40,0.08],"santaclara":[-4017.0,3410.5,95,70,1.745],"argos":[781.7,-6841.2,465.2,323.8,0.403]},"argosPoly":[[538.2,-6863.2],[590.9,-6790.3],[609.8,-6755.2],[664.5,-6715.2],[715.8,-6758.7],[746.7,-6748.8],[811.2,-6708.1],[857.6,-6670.2],[908.1,-6611.3],[954.4,-6653.4],[974.8,-6714.5],[988.1,-6781.1],[980.4,-6848.5],[979.7,-6932.7],[845.6,-6927.1],[719.3,-6932.7],[715.1,-7000.8],[698.2,-7028.2],[538.2,-6863.2]],"argosMR":[908.1,-6611.3],"models":{"CITYGATE":{"c":[5454.5,-2341.5],"a":0.7014,"d":16.3,"w":15.9,"f":[5460.7,-2336.3],"poly":[[5443.5,-2340.4],[5455.9,-2330.4],[5465.7,-2342.5],[5453.2,-2352.6],[5443.5,-2340.4]],"h":null,"glb":["modular_pipes_erp","modular_pipes","modular_pipes(2)","trabajadorcitygate","trabajadorcitygate(2)"]},"MCDONALDS":{"c":[-4634.2,853.3],"a":-0.6295,"d":35.8,"w":47.7,"f":[-4620.9,843.7],"poly":[[-4661.4,846.4],[-4632.1,881.3],[-4607.0,860.2],[-4636.3,825.4],[-4661.4,846.4]],"h":8.0,"glb":["mc_donalds"]},"DISTRITAL":{"c":[-1970.3,1654.5],"a":-1.4992,"d":22.4,"w":32.5,"f":[-1969.8,1645.7],"poly":[[-1954.1,1656.3],[-1958.1,1644.1],[-1977.3,1646.7],[-1986.3,1651.1],[-1980.5,1665.0],[-1954.1,1656.3]],"h":null,"glb":["modular_pipes_erp","modular_pipes","modular_pipes(2)","trabajadorcitygate","trabajadorcitygate(2)"]},"CEMENTOS ARGOS":{"c":[764.0,-6783.6],"a":0.5605,"d":463.1,"w":262.2,"f":[947.2,-6662.6],"poly":[[902.7,-6612.8],[994.9,-6715.8],[875.3,-6808.9],[842.9,-6784.4],[770.3,-6866.8],[783.1,-6890.3],[670.3,-6997.2],[542.8,-6866.8],[597.7,-6770.7],[666.4,-6709.9],[780.1,-6618.7],[830.1,-6678.5],[902.7,-6612.8]],"h":null,"glb":["cement_plant"]},"INDUSTRIA":{"c":[895.4,-6911.7],"a":0.0551,"d":219.2,"w":193.8,"f":[998.8,-6905.1],"poly":[[999.8,-6813.9],[997.8,-7003.1],[789.9,-6990.4],[789.9,-6916.8],[796.8,-6877.6],[856.6,-6816.8],[999.8,-6813.9]],"h":null,"glb":["factory (2)"]},"INDUSTRIA2":{"c":[822.6,-7141.4],"a":0.0504,"d":259.7,"w":112.5,"f":[949.8,-7132.5],"poly":[[949.8,-7085.5],[949.8,-7191.4],[694.8,-7186.5],[698.7,-7091.4],[949.8,-7085.5]],"h":null,"glb":["factory"]}},"cgConn":{"tap":[5450.9,-2344.4],"inl":[5452.2,-2343.4],"outl":[5459.2,-2337.6],"acp":[5458.0,-2338.7],"tr":[[[5481.6,-2377.4],[5476.6,-2375.3],[5467.8,-2367.1],[5424.2,-2308.4]],[[5459.4,-2338.6],[5490.0,-2369.2]]],"ac":[[[5445.6,-2337.2],[5452.3,-2332.5],[5488.0,-2372.2]],[[5457.6,-2293.7],[5454.2,-2321.3],[5457.6,-2332.2],[5456.7,-2334.2]]]},"distConn":{"acp":[-1979.9,1636.5],"inl":[-1975.9,1648.1],"outl":[-1958.1,1654.6],"pep":[-1959.9,1648.4],"ac":[[[-1935.3,1630.3],[-1940.5,1631.1],[-1964.1,1632.5],[-1991.2,1639.3],[-2007.5,1646.1],[-2021.0,1654.6]]]},"argConn":{"trp":[588.0,-6762.9],"mr":[606.8,-6771.7],"d":12.4},"heroPE":[[[-1750.7,1624.6],[-1768.4,1624.8],[-1754.4,1662.0],[-1741.8,1693.6],[-1741.2,1694.8],[-1737.9,1693.5]],[[-1794.1,1718.5],[-1761.4,1705.1],[-1778.3,1656.6],[-1773.8,1655.0]],[[-1833.8,1643.3],[-1804.5,1719.1]],[[-1799.1,1720.9],[-1794.1,1718.5]],[[-1819.9,1625.7],[-1784.1,1621.8],[-1754.6,1621.8]],[[-1839.0,1659.8],[-1818.5,1711.2]],[[-1823.2,1628.7],[-1808.6,1627.1]],[[-1792.7,1722.2],[-1794.1,1718.5]]],"mcd":[-4634.2,853.3],"torGLB":[{"c":[-5301.3,-425.6],"a":1.5155,"d":171.2,"w":173.5,"poly":[[-5343.6,-323.9],[-5268.6,-365.0],[-5216.8,-391.4],[-5207.8,-406.3],[-5209.1,-446.7],[-5227.3,-501.5],[-5308.6,-496.2],[-5385.4,-493.0],[-5382.7,-443.6],[-5375.0,-382.7],[-5377.6,-369.5],[-5343.6,-323.9]],"glb":"marriot","h":null},{"c":[-5570.6,-14.0],"a":0.3964,"d":77.2,"w":94.3,"poly":[[-5558.3,40.1],[-5521.9,-47.0],[-5536.7,-46.6],[-5544.4,-46.7],[-5553.3,-48.5],[-5562.0,-51.4],[-5570.1,-55.5],[-5577.7,-60.5],[-5622.0,-7.6],[-5610.6,2.8],[-5558.3,40.1]],"glb":"hotel_playa","h":null}],"keys":[[-1784.6,1667.9],[-37.6,551.6],[-3884.0,2307.7],[-1970.3,1654.5],[-4634.2,853.3],[5454.5,-2341.5],[317.7,997.4],[-1355.4,-651.3]],"digNet":[["ac",[[-1351.8,-749.2],[-1348.6,-660.4],[-1345.5,-649.4],[-1347.4,-636.4],[-1339.4,-547.1],[-1336.9,-492.5]]],["pe",[[-1207.7,-661.5],[-1212.4,-664.7],[-1228.3,-663.9],[-1416.6,-645.2],[-1443.6,-644.5],[-1441.9,-634.8],[-1455.8,-633.0]]],["pe",[[-1353.0,-494.5],[-1360.6,-636.8],[-1364.2,-639.3],[-1390.7,-634.8],[-1453.8,-630.3]]],["pe",[[-1454.7,-776.6],[-1430.0,-741.6],[-1421.5,-719.8],[-1416.6,-650.5],[-1399.8,-651.9]]],["pe",[[-1220.6,-565.3],[-1225.0,-627.7],[-1257.5,-623.9],[-1258.4,-640.1]]],["pe",[[-1463.1,-769.4],[-1437.8,-733.6],[-1427.1,-649.7]]],["pe",[[-1332.2,-495.2],[-1341.8,-640.2]]],["pe",[[-1367.5,-671.7],[-1375.0,-809.6]]],["pe",[[-1207.7,-661.5],[-1211.4,-719.5],[-1210.9,-719.5]]],["pe",[[-1204.6,-704.2],[-1202.5,-669.6],[-1196.6,-669.6]]],["pe",[[-1256.7,-750.6],[-1232.0,-753.1]]],["pe",[[-1225.7,-744.6],[-1223.5,-677.0]]],["pe",[[-1345.7,-749.5],[-1278.5,-754.0],[-1268.5,-758.7],[-1257.1,-759.7]]],["pe",[[-1207.7,-661.5],[-1208.7,-595.8],[-1220.6,-594.7],[-1219.5,-582.9]]],["pe",[[-1345.3,-739.5],[-1349.0,-736.9],[-1346.9,-672.1]]],["pe",[[-1455.8,-633.0],[-1454.0,-620.6],[-1496.0,-615.3],[-1497.4,-628.5]]],["pe",[[-1455.8,-633.0],[-1457.4,-645.7],[-1499.1,-641.5],[-1497.4,-628.5]]],["pe",[[-1354.1,-811.2],[-1350.6,-750.6],[-1345.7,-749.5]]],["pe",[[-1508.7,-631.6],[-1504.7,-634.9],[-1506.9,-650.1],[-1514.7,-666.0]]],["pe",[[-1256.7,-750.6],[-1264.5,-749.9],[-1284.5,-741.2],[-1306.2,-740.5]]],["pe",[[-1397.4,-652.1],[-1366.5,-654.8],[-1367.5,-671.7]]],["pe",[[-1508.7,-631.6],[-1509.2,-638.1],[-1514.7,-638.0]]],["pe",[[-1513.4,-627.6],[-1508.7,-631.6]]],["pe",[[-1353.0,-494.5],[-1352.6,-491.4]]],["pe",[[-1257.1,-759.7],[-1239.6,-761.6]]],["pe",[[-1375.0,-809.6],[-1367.7,-810.7]]],["pe",[[-1332.2,-495.2],[-1353.0,-494.5]]],["pe",[[-1367.5,-671.7],[-1346.9,-672.1]]],["pe",[[-1497.4,-628.5],[-1508.3,-627.4],[-1508.7,-631.6]]],["pe",[[-1345.3,-739.5],[-1332.1,-740.3]]],["pe",[[-1345.7,-749.5],[-1345.3,-739.5]]],["pe",[[-1257.1,-759.7],[-1256.7,-750.6]]],["pe",[[-1346.9,-672.1],[-1346.6,-663.4]]]],"fraud":{"x":-37.6,"y":551.6,"depth":15.4,"width":9.4,"nx":-0.928,"ny":0.3726,"mx":-44.4,"my":555.4,"along":-1.0,"px":-46.4,"py":556.5,"nb":[[-122.0,666.3],[23.1,485.5],[84.7,619.4],[-97.7,658.7],[13.4,462.3],[-116.3,616.8],[-132.1,638.3],[-75.8,473.5],[-37.6,696.7],[72.5,443.6],[-93.3,663.5],[-111.8,458.8],[58.3,574.8],[-0.7,605.6],[-55.4,430.5],[-104.7,439.8],[5.1,412.0],[46.6,629.3],[-5.9,615.1],[-95.0,600.3],[19.6,478.1],[-11.3,404.9],[39.8,653.6],[71.1,607.5],[33.3,510.7],[-21.3,488.6],[24.7,588.3],[-44.6,627.6],[65.0,586.7],[-87.7,669.1],[-129.6,469.3],[80.5,518.7],[112.8,593.8],[72.2,537.3],[-75.6,612.1],[71.9,490.6],[-13.9,447.2],[-21.7,644.5],[-191.7,514.8],[88.6,480.6]]},"fraudPE":[[[-49.2,497.9],[-57.9,531.0],[-54.4,541.0],[-24.2,599.3],[-12.8,594.1],[-13.9,591.5],[11.4,576.5]],[[-40.6,603.2],[-37.3,601.2],[-65.9,545.8]],[[-86.2,577.3],[-65.9,545.8]],[[-89.7,569.0],[-70.2,538.1]],[[-61.1,502.0],[-66.3,520.5],[-71.4,519.3],[-75.9,512.2]],[[15.5,537.4],[3.9,515.6]],[[-70.2,538.1],[-81.6,518.8]],[[-65.9,545.8],[-70.2,538.1]],[[-45.5,606.0],[-40.6,603.2]],[[-38.8,606.6],[-40.6,603.2]]],"emer":{"x":-3884.0,"y":2307.7,"depth":14.6,"width":11.1,"nx":-0.7542,"ny":-0.6567,"mx":-3888.8,"my":2302.2,"along":1.0,"px":-3890.5,"py":2300.4},"emerPE":[[[-3856.6,2260.1],[-3935.1,2328.1]],[[-3865.9,2277.6],[-3930.4,2337.1]],[[-3840.0,2300.4],[-3894.0,2361.8]],[[-3844.1,2300.8],[-3897.2,2361.1]],[[-3829.9,2317.3],[-3835.9,2312.5],[-3877.5,2362.3]],[[-3863.3,2280.0],[-3865.2,2282.2],[-3844.1,2300.8]],[[-3841.5,2297.9],[-3845.4,2294.3],[-3859.6,2283.3],[-3863.3,2280.0]],[[-3865.9,2277.6],[-3850.4,2264.3]],[[-3829.4,2314.2],[-3838.7,2306.7],[-3838.5,2302.9],[-3840.0,2300.4]],[[-3837.7,2293.7],[-3849.6,2283.1]],[[-3831.6,2291.2],[-3840.0,2300.4]],[[-3837.7,2293.7],[-3832.5,2288.6]]],"emerRoute":[[-3650.0,3629.3],[-3645.4,3619.9],[-3663.2,3607.9],[-3620.0,3544.2],[-3639.3,3525.3],[-3678.0,3471.4],[-3703.6,3428.5],[-3726.9,3441.1],[-3764.0,3381.7],[-3745.1,3332.5],[-3746.3,3322.2],[-3715.2,3241.8],[-3716.8,3226.4],[-3714.5,3219.2],[-3718.5,3197.7],[-3726.2,3190.7],[-3726.3,3172.3],[-3761.7,3133.1],[-3757.2,3126.5],[-3774.1,3102.5],[-3822.5,3069.1],[-3807.0,3034.7],[-3754.2,2883.8],[-3770.7,2876.9],[-3751.7,2713.6],[-3736.5,2533.8],[-3726.6,2532.5],[-3731.0,2512.8],[-3777.5,2379.6],[-3793.1,2343.6],[-3838.7,2306.7],[-3838.5,2302.9],[-3845.4,2294.3],[-3863.3,2280.0],[-3864.4,2281.3]],"emerValve":[-3750.3,2457.6]};
 const WC = PART!==5;
 const sceneC=new THREE.Scene(); sceneC.background=SKY; sceneC.fog=new THREE.Fog(SKY,1000,8000);
 sceneC.add(new THREE.HemisphereLight(0xe8f2ff,0x5a6b3a,0.8));
@@ -1237,7 +1240,7 @@ const FR=CM.fraud, frAz=Math.atan2(FR.nx,-FR.ny), frCw=new THREE.Vector3(), frMw
   const legal=new THREE.CatmullRomCurve3([tap,mid,under,...mg.userData.flow.map(W2)],false,'centripetal');
   const fraud=new THREE.CatmullRomCurve3([tap,mid,under,W2([-0.24,0.05,0.16]),W2([-0.24,0.26,0.16]),...BP.map(W2),W2([0.14,1.12,0.02])],false,'centripetal');
   // vecinas del sector (balance): marcadores verdes y algunos con consumo atípico en rojo
-  const ringG=new THREE.RingGeometry(2.2,3.2,32); const okM=new THREE.MeshBasicMaterial({color:'#3fbf6f',transparent:true,opacity:0.85,depthTest:false,side:THREE.DoubleSide}), badM=new THREE.MeshBasicMaterial({color:'#e23b2e',transparent:true,opacity:0.9,depthTest:false,side:THREE.DoubleSide});
+  const ringG=new THREE.RingGeometry(1.4,3.8,32); const okM=new THREE.MeshBasicMaterial({color:'#00e05a',transparent:true,opacity:1,depthTest:false,side:THREE.DoubleSide}), badM=new THREE.MeshBasicMaterial({color:'#ff1a1a',transparent:true,opacity:1,depthTest:false,side:THREE.DoubleSide});
   const marks=new THREE.Group(); marks.visible=false; sceneC.add(marks); const bad=[];
   [[FR.x,FR.y],...FR.nb].forEach((p,i)=>{const isBad=i===0||i%7===3; const m=new THREE.Mesh(ringG,isBad?badM:okM); m.rotation.x=-Math.PI/2; m.position.copy(V(p[0],p[1],0.4)); m.renderOrder=15; marks.add(m); if(isBad)bad.push(m);});
   // cuadrilla de control de pérdidas
@@ -1256,10 +1259,72 @@ function updateFraud(S,time,camD,s){
   frFlow.visible=on&&camD<40;
   if(frFlow.visible){const n=frFlow.count;for(let i=0;i<n;i++){FX.cur.getPointAt(((i/n)+time*0.07)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();frFlow.setMatrixAt(i,dummy.matrix);}frFlow.instanceMatrix.needsUpdate=true;}
   if(on&&!illegal&&frFlow.visible){FX.v+=0.004;FX.mg.userData.draw(FX.v);}
-  FX.marks.visible=on&&bal>0.05; if(FX.marks.visible){const k=Math.min(1,bal*1.4); FX.marks.children.forEach((m,i)=>{m.visible=i/FX.marks.children.length<=k; m.scale.setScalar(Math.max(1,camD/220));}); FX.bad.forEach(m=>m.material.opacity=0.55+0.45*Math.sin(time*6));}
+  FX.marks.visible=on&&bal>0.05; if(FX.marks.visible){const k=Math.min(1,bal*1.4); FX.marks.children.forEach((m,i)=>{m.visible=i/FX.marks.children.length<=k; m.scale.setScalar(Math.max(1,camD/220));}); FX.bad.forEach(m=>{m.material.opacity=0.75+0.25*Math.sin(time*6);m.scale.multiplyScalar(1+0.18*Math.sin(time*6));});}
   FX.alert.visible=on&&nm>0.05&&nm<0.6; FX.alert.material.opacity=0.6+0.4*Math.sin(time*7); FX.alert.scale.setScalar(Math.max(1.6,camD*0.05));
   FX.vg.visible=on&&nm>0.1; if(FX.vg.visible){const off=-6-36*(1-smooth(clamp((nm-0.1)/0.35,0,1))); FX.vg.position.copy(V(FX.base[0]+FX.t[0]*off,FX.base[1]+FX.t[1]*off)); FX.vg.rotation.y=Math.atan2(FX.t[1],FX.t[0]);}
   FX.t1.visible=on&&nm>0.45;
+}
+
+// ---- Parte 7 · atención de emergencias: fuga en vivienda, llamada al 164, despacho, válvula y restablecimiento
+const EM=CM.emer, emAz=Math.atan2(EM.nx,-EM.ny), emCw=new THREE.Vector3(), emMw=new THREE.Vector3(); let EX=null;
+const ER=(CM.emerRoute||[]).map(p=>V(p[0],p[1],0.3)), erCurve=ER.length>1?new THREE.CatmullRomCurve3(ER,false,'centripetal',0.2):null;
+const evW=CM.emerValve?V(CM.emerValve[0],CM.emerValve[1],0.5):emCw.clone();
+const erMid=(()=>{const b=new THREE.Box3();ER.forEach(p=>b.expandByPoint(p));return b.isEmpty()?emCw.clone():b.getCenter(new THREE.Vector3());})();
+const erSpan=(()=>{const b=new THREE.Box3();ER.forEach(p=>b.expandByPoint(p));const s=b.getSize(new THREE.Vector3());return Math.max(300,Math.hypot(s.x,s.z));})();
+function textSprite(txt,bg,fg,w){const cv=document.createElement('canvas');cv.width=w||512;cv.height=160;const c=cv.getContext('2d');c.fillStyle=bg;const r=36;c.beginPath();c.moveTo(r,0);c.arcTo(cv.width,0,cv.width,cv.height,r);c.arcTo(cv.width,cv.height,0,cv.height,r);c.arcTo(0,cv.height,0,0,r);c.arcTo(0,0,cv.width,0,r);c.fill();c.fillStyle=fg;c.font='bold 92px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText(txt,cv.width/2,86);
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false,transparent:true})); s.renderOrder=22; s.scale.set(3.2*cv.width/512,1,1); s.visible=false; sceneC.add(s); return s;}
+(function(){
+  const g=new THREE.Group(), W=Math.min(EM.width,10), D=Math.min(EM.depth,15), Hh=3.3, MS=1.25;
+  const WALLE=texMat((c,w,h)=>{c.fillStyle='#d9e6ea';c.fillRect(0,0,w,h);c.fillStyle='rgba(0,0,0,0.05)';for(let y=0;y<h;y+=6)c.fillRect(0,y,w,1);},64,64,3,2);
+  tbox(g,W,Hh,D,WALLE,0,0,0);
+  const roof=new THREE.Mesh(roofGeo,M('#c06a45'));roof.scale.set(W+0.8,1.8,D+0.8);roof.position.y=Hh;g.add(roof);
+  box(g,1.1,2.2,0.08,'#6b4226',-W/2+1.6,0,D/2+0.01); box(g,1.5,1.2,0.08,'#3c5b6b',-W/2+3.6,1.0,D/2+0.01);
+  box(g,W+2,0.15,2.0,'#cfc9bb',0,0,D/2+1.0);
+  const along=clamp(EM.along,-W/2+1.2,W/2-1.0);
+  const mg=procMeter(); mg.scale.setScalar(MS); mg.position.set(along,0.15,D/2+0.02); g.add(mg);
+  g.position.copy(V(EM.x,EM.y)); g.rotation.y=emAz; sceneC.add(g); g.updateMatrixWorld(true);
+  emCw.copy(g.position).setY(2); emMw.copy(mg.localToWorld(new THREE.Vector3(0.03,0.6,0.15)));
+  (CM.emerPE||[]).forEach(pl=>flowTube(polyPts(pl,0.12),0.09,'#e8b931','#8a3dff',1.6,1.1));
+  const tap=V(EM.px,EM.py,0.12), rb=mg.localToWorld(new THREE.Vector3(-0.24,0.0,0.16)), under=rb.clone().setY(0.12), mid=tap.clone().lerp(under,0.5);
+  tubeW([tap,mid,under,rb],0.035,YEL); cyl(sceneC,0.13,0.18,'#c99a1e',tap.x,0.12,tap.z);
+  // fuga: nube de gas en el centro de medición
+  const cvs=document.createElement('canvas');cvs.width=cvs.height=64;const c=cvs.getContext('2d');const gr=c.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.5,'rgba(235,225,250,0.5)');gr.addColorStop(1,'rgba(235,225,250,0)');c.fillStyle=gr;c.fillRect(0,0,64,64);
+  const NC=160,pos=new Float32Array(NC*3),geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const leak=new THREE.Points(geo,new THREE.PointsMaterial({map:new THREE.CanvasTexture(cvs),size:0.9,transparent:true,depthWrite:false,opacity:0,color:'#e6dcfb'})); leak.userData.seed=[...Array(NC)].map(()=>[Math.random(),Math.random()*6.283,0.6+Math.random()]); leak.visible=false; sceneC.add(leak);
+  const leakO=mg.localToWorld(new THREE.Vector3(-0.24,0.62,0.3));
+  // llamada al 164
+  const call=textSprite('☎ 164','#e23b2e','#ffffff',560); call.position.copy(g.position).setY(Hh+3.5);
+  // ruta del despacho (línea luminosa que se dibuja) y camioneta
+  let trail=null; if(erCurve){const tg=new THREE.TubeGeometry(erCurve,Math.max(60,ER.length*12),4,8,false); trail=new THREE.Mesh(tg,new THREE.MeshBasicMaterial({color:'#ff4d3a',transparent:true,opacity:0.95,depthTest:false})); trail.renderOrder=12; trail.visible=false; sceneC.add(trail);}
+  const van=surtigasVan('van1',5.7); const vg=new THREE.Group(); van.rotation.y=Math.PI/2; vg.add(van); vg.visible=false; sceneC.add(vg);
+  const beacon=new THREE.Mesh(new THREE.SphereGeometry(0.25,10,8),new THREE.MeshBasicMaterial({color:'#ff3b2e'})); beacon.position.set(0,2.35,0); vg.add(beacon);
+  const timer=textSprite('00:00','#0b2a4a','#ffffff',560);
+  // base de operaciones (inicio de la ruta)
+  if(ER.length){const b0=ER[0];const base=new THREE.Group();base.position.copy(b0).setY(0);sceneC.add(base);box(base,10,3.4,7,'#f2f2ee',0,0,-9);box(base,10.4,0.4,7.4,'#0086ce',0,3.4,-9);}
+  // válvula de seccionamiento automatizada
+  const vv=new THREE.Group(); vv.position.copy(evW).setY(0); sceneC.add(vv);
+  box(vv,1.6,0.9,1.2,'#5d6a70',0,0,0); const wh=new THREE.Mesh(new THREE.TorusGeometry(0.45,0.07,8,24),M('#c0392b')); wh.position.set(0,1.25,0); wh.rotation.x=Math.PI/2; vv.add(wh); cyl(vv,0.05,0.4,'#c0392b',0,1.0,0);
+  box(vv,0.5,0.6,0.4,'#e8e8e8',0.9,0,0.5); const ant=cyl(vv,0.02,1.2,'#333',0.9,1.2,0.5);
+  const vRing=new THREE.Mesh(new THREE.RingGeometry(3,3.8,40),new THREE.MeshBasicMaterial({color:'#ff3b2e',transparent:true,opacity:0,depthTest:false,side:THREE.DoubleSide})); vRing.rotation.x=-Math.PI/2; vRing.position.copy(evW).setY(0.4); vRing.renderOrder=14; sceneC.add(vRing);
+  const vLabel=textSprite('CERRADA','#e23b2e','#ffffff',560); vLabel.position.copy(evW).setY(5.5);
+  // cuadrilla en sitio
+  const crewE=[person('trab1',1.76),person('trab2',1.76)]; crewE[0].position.set(along+0.7,0.15,D/2+0.9); crewE[0].rotation.y=Math.PI*1.1; crewE[1].position.set(along-1.0,0.15,D/2+1.3); crewE[1].rotation.y=Math.PI*0.85; crewE.forEach(p=>{p.visible=false;g.add(p);});
+  const cn=new THREE.Group(); for(let i=0;i<5;i++){const a=i/5*6.283;const cc=new THREE.Group();const m=new THREE.Mesh(new THREE.ConeGeometry(0.18,0.55,12),M('#ff6a1a'));m.position.y=0.3;cc.add(m);cc.position.set(along+Math.cos(a)*2.4,0.15,D/2+2.2+Math.sin(a)*1.2);cn.add(cc);} cn.visible=false; g.add(cn);
+  const okS=textSprite('✔ SERVICIO RESTABLECIDO','#2e9e5b','#ffffff',1400); okS.scale.set(8.75,1,1); okS.position.copy(g.position).setY(Hh+3.5);
+  EX={mg,leak,leakO,call,trail,vg,beacon,timer,vv,wh,vRing,vLabel,crewE,cn,okS,endT:ER.length?ER[ER.length-1]:emCw};
+})();
+function updateEmer(S,time,camD,s){
+  if(!EX)return; const on=s>16.9, lk=S.lk, dr=S.dr, vc=S.vc, fx=S.fx;
+  const amt=on?clamp(lk,0,1)*(1-clamp(fx*1.4,0,1))*(1-0.6*clamp(vc,0,1)):0;
+  EX.leak.visible=amt>0.02&&camD<120; EX.leak.material.opacity=0.7*amt;
+  if(EX.leak.visible){const p=EX.leak.geometry.attributes.position.array, sd=EX.leak.userData.seed, o=EX.leakO; for(let i=0;i<sd.length;i++){const [ph,an,sp]=sd[i];const a=(ph+time*0.3*sp)%1;const rr=a*1.4*sp;p[i*3]=o.x+Math.cos(an)*rr;p[i*3+1]=o.y+a*a*3.5*sp;p[i*3+2]=o.z+Math.sin(an)*rr;} EX.leak.geometry.attributes.position.needsUpdate=true;}
+  EX.call.visible=on&&lk>0.4&&dr<0.05; EX.call.material.opacity=0.7+0.3*Math.sin(time*8); EX.call.scale.set(3.5*Math.max(1,camD/30),Math.max(1,camD/30),1);
+  if(EX.trail){EX.trail.visible=on&&dr>0.01; const n=EX.trail.geometry.index.count; EX.trail.geometry.setDrawRange(0,Math.floor(n*clamp(dr,0,1))); EX.trail.scale.set(1,1,1); }
+  EX.vg.visible=on&&dr>0.01; if(EX.vg.visible&&erCurve){const u=clamp(dr,0,1); erCurve.getPointAt(u,_v); const t2=erCurve.getTangentAt(Math.min(u,0.999)); EX.vg.position.copy(_v).setY(0); EX.vg.rotation.y=Math.atan2(-t2.z,t2.x); EX.vg.scale.setScalar(Math.max(1,camD/90)); EX.beacon.visible=Math.sin(time*12)>0;}
+  EX.timer.visible=on&&dr>0.01&&fx<0.3; if(EX.timer.visible){const mins=Math.round(32*clamp(dr,0,1)*60); const tx=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0'); if(EX.timer.userData.t!==tx){EX.timer.userData.t=tx;const c=EX.timer.material.map.image.getContext('2d');c.fillStyle='#0b2a4a';c.fillRect(20,20,520,120);c.fillStyle='#fff';c.font='bold 92px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText('⏱ '+tx,280,86);EX.timer.material.map.needsUpdate=true;}
+    EX.timer.position.copy(EX.vg.position).setY(6*Math.max(1,camD/90)); EX.timer.scale.set(3.5*Math.max(1,camD/40),Math.max(1,camD/40),1);}
+  EX.wh.rotation.z=clamp(vc,0,1)*Math.PI*3; EX.vRing.material.opacity=on&&vc>0.05?0.5+0.4*Math.sin(time*6):0; EX.vLabel.visible=on&&vc>0.6&&fx<0.6; EX.vLabel.scale.set(3.5*Math.max(1,camD/40),Math.max(1,camD/40),1);
+  EX.crewE.forEach(p=>p.visible=on&&fx>0.1); EX.cn.visible=on&&fx>0.1; EX.okS.visible=on&&fx>0.8; EX.okS.scale.set(8.75*Math.max(1,camD/30),Math.max(1,camD/30),1);
 }
 
 // ---- Sede Surtigas y laboratorio de metrología
@@ -1326,7 +1391,7 @@ let solar, solarN=0, panW;
 // ---- keyframes globales del capítulo 1 (las partes 1-4 usan tramos de esta línea)
 const bocW=V(-4850,650,30), MIDC=V(500,-300,0), AM=CM.acMax, PM=CM.peMax, cpop=distW, hiAz=hAz, argAz=Math.atan2(Math.cos(argM.a),-Math.sin(argM.a));
 const KC=[
- {s:0.00,t:MIDC,d:21000,az:0.3,el:1.05,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0,bc:0,fr:0,bal:0,nm:0},
+ {s:0.00,t:MIDC,d:21000,az:0.3,el:1.05,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0,bc:0,fr:0,bal:0,nm:0,lk:0,dr:0,vc:0,fx:0},
  {s:0.60,t:MIDC,d:18000,az:0.45,el:0.9},
  {s:1.05,t:cgW,d:520,az:0.8,el:0.62},
  {s:1.45,t:cgW,d:36,az:1.1,el:0.62},
@@ -1336,8 +1401,8 @@ const KC=[
  {s:2.75,t:V(400,-1200),d:16000,az:0.4,el:0.97,ac:AM},
  {s:2.95,t:V(400,-1200),d:16000,az:0.35,el:0.97},
  {s:3.20,t:argW,d:1500,az:argAz+0.5,el:0.75},
- {s:3.55,t:argW,d:1100,az:argAz+0.25,el:0.5},
- {s:3.80,t:argW,d:1250,az:argAz+0.05,el:0.52},
+ {s:3.55,t:argW,d:820,az:argAz+0.25,el:0.5},
+ {s:3.80,t:argW,d:700,az:argAz+0.05,el:0.52},
  {s:3.97,t:argW,d:2500,az:argAz,el:0.95},
  {s:4.20,t:bocW,d:2000,az:0.9,el:0.8,bc:0},
  {s:4.55,t:bocW,d:1050,az:0.95,el:0.58,bc:1800},
@@ -1386,17 +1451,29 @@ const KC=[
  {s:16.25,t:frCw,d:34,az:frAz+0.6,el:0.5,bal:0,nm:0.45},
  {s:16.70,t:frMw,d:4.2,az:frAz+0.4,el:0.2,nm:0.9},
  {s:17.00,t:frMw,d:4.2,az:frAz+0.35,el:0.2,nm:1},
+ // parte 7: emergencias
+ {s:17.01,t:emCw,d:1500,az:emAz+0.5,el:1.0,fr:0,bal:0,nm:0,lk:0,dr:0,vc:0,fx:0},
+ {s:17.45,t:emCw,d:24,az:emAz+0.45,el:0.42,lk:0.6},
+ {s:17.95,t:emMw,d:7,az:emAz+0.35,el:0.25,lk:1,dr:0},
+ {s:18.25,t:erMid,d:erSpan*1.25,az:emAz+0.3,el:1.05,dr:0.02},
+ {s:18.85,t:erMid,d:erSpan*1.2,az:emAz+0.2,el:1.05,dr:0.75,vc:0},
+ {s:19.25,t:evW,d:45,az:emAz+0.4,el:0.6,dr:0.8,vc:1},
+ {s:19.70,t:emCw,d:60,az:emAz+0.5,el:0.75,dr:1,fx:0},
+ {s:20.30,t:emCw,d:26,az:emAz+0.45,el:0.45,fx:0.7},
+ {s:20.75,t:emMw,d:8,az:emAz+0.3,el:0.3,fx:1},
+ {s:21.00,t:emMw,d:8,az:emAz+0.25,el:0.3},
 ];
 for(let i=1;i<KC.length;i++)for(const k of Object.keys(KC[0]))if(KC[i][k]===undefined)KC[i][k]=KC[i-1][k];
 function sampleC(s){
   let i=0; while(i<KC.length-2&&s>KC[i+1].s)i++;
   const a=KC[i],b=KC[i+1]; const e=smooth(clamp((s-a.s)/(b.s-a.s),0,1)); const o={};
-  ['az','el','ac','pe','reg','dig','lab','sol','bc','fr','bal','nm'].forEach(k=>o[k]=lerp(a[k],b[k],e));
+  ['az','el','ac','pe','reg','dig','lab','sol','bc','fr','bal','nm','lk','dr','vc','fx'].forEach(k=>o[k]=lerp(a[k],b[k],e));
   o.d=Math.exp(lerp(Math.log(a.d),Math.log(b.d),e)); o.t=a.t.clone().lerp(b.t,e);
   const D=Math.hypot(a.t.x-b.t.x,a.t.z-b.t.z); if(D>250){const k=Math.sin(Math.PI*e), w=clamp(D/1500,0,1); o.d=Math.max(o.d,k*D*1.15); o.el=lerp(o.el,Math.max(o.el,1.2),k*w);}
   return o;
 }
 const tagPosC={'c-cg':cgW.clone().setY(16),'c-argos':argW.clone().setY(140),'c-sc':bocW.clone().setY(140),'c-popa':cpop.clone().setY(12),'c-sede':sedeW.clone().setY(18),'c-lab':labW.clone().setY(5),'c-sol':panW.clone().setY(22),'c-reg':meterCw.clone().add(new THREE.Vector3(0,0.85,0)),'c-dig':digW.clone().setY(9),'c-mr':argMR.clone().setY(4),'c-fr':frCw.clone().setY(8),'c-bal':frCw.clone().setY(30)};
+tagPosC['c-base']=(ER[0]||emCw).clone().setY(12); tagPosC['c-valv']=evW.clone().setY(3); tagPosC['c-em']=emCw.clone().setY(9);
 tagPosC['c-byp']=frMw.clone().add(new THREE.Vector3(0,0.7,0));
 function tagVisibleC(k,s,d){
   if(k==='c-cg')return (s>0.95&&s<1.7)||(s<0.9)||(s>2.1&&s<2.98);
@@ -1413,6 +1490,9 @@ function tagVisibleC(k,s,d){
   if(k==='c-byp')return s>14.2&&s<14.95&&d<6;
   if(k==='c-fr')return s>13.05&&s<13.5;
   if(k==='c-bal')return s>15.2&&s<15.95;
+  if(k==='c-base')return s>18.2&&s<18.9;
+  if(k==='c-valv')return s>19.0&&s<19.5;
+  if(k==='c-em')return s>17.05&&s<17.5;
   return false;
 }
 const _v=new THREE.Vector3(), _m=new THREE.Matrix4(), _q=new THREE.Quaternion(), _sc=new THREE.Vector3(), _p=new THREE.Vector3();
@@ -1459,7 +1539,7 @@ function updateC(S,time,camD,s){
   labFlow.visible=lb>0.5&&camD<120;
   if(labFlow.visible){const n=labFlow.count;for(let i=0;i<n;i++){labFlowCurve.getPointAt(((i/n)+time*0.06)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();labFlow.setMatrixAt(i,dummy.matrix);}labFlow.instanceMatrix.needsUpdate=true;}
   solar.count=Math.floor(solarN*clamp(S.sol,0,1));
-  updateFraud(S,time,camD,s);
+  updateFraud(S,time,camD,s); updateEmer(S,time,camD,s);
 }
 // =================== fin capítulo 1 ===================
 // ---- Canalete: inspector de revisión periódica junto al medidor (contador digital)
@@ -1503,7 +1583,7 @@ addEventListener('resize',resize);resize();
 // ---------- loop ----------
 const clock=new THREE.Clock(); const tmp=new THREE.Vector3();
 let lastRail=-1;
-const PMAP={1:[[0,0],[7,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]]}[PART];
+const PMAP={1:[[0,0],[7,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]],7:[[0,17],[1,17.95],[2,18.95],[3,19.5],[4,21]]}[PART];
 function mapPart(l){for(let i=0;i<PMAP.length-1;i++){const a=PMAP[i],b=PMAP[i+1];if(l<=b[0]||i===PMAP.length-2)return a[1]+(b[1]-a[1])*clamp((l-a[0])/(b[0]-a[0]),0,1);}return PMAP[0][1];}
 const CAMO=(location.search.match(/cam=([^&]+)/)||[])[1];
 function frame(){
