@@ -832,7 +832,7 @@ const cP1Mat=ribbonMaterial({color:'#8fd0f5',pulse:'#a052ff',front:120,spacing:5
 const cBcMat=ribbonMaterial({color:'#e8b931',pulse:'#8a3dff',front:90,spacing:28,speed:28,pulseAmt:1,layer:-5});
 [cTrMat,cAcMat,cPeMat,cP1Mat,cBcMat].forEach(m=>{m.depthWrite=false;m.userData.sp=m.uniforms.uSpacing.value;m.userData.sv=m.uniforms.uSpeed.value;});
 cTrMat.uniforms.uProg.value=1e9;
-let peRib=null; const RIBS=[];
+let peRib=null; const RIBS=[], BLDM=[], TWM=[]; let CALM=false;
 // ortofoto 2022 (15 cm, exportada a 25-50 cm): se carga por bloques cuando la cámara se acerca; el negro (sin cobertura) se descarta
 const ORTHO=[]; const OC0=[843000,1642000];
 function orthoMat(){const m=new THREE.MeshBasicMaterial({color:'#ffffff',depthWrite:false,depthTest:false,fog:true});
@@ -875,7 +875,7 @@ if(WC) fetch('ctg/ctg.json?v=1792384364').then(r=>r.json()).then(D=>{
       bm.setColorAt(i,col.set(f===2?(rr()<0.5?'#d8c29a':'#a8693f'):f===1?WALL[(rr()*WALL.length)|0]:BIG[(rr()*BIG.length)|0]));
       if(f===1){dummy.position.y=h;dummy.scale.set(l2+0.5,clamp(l2*0.22,0.9,2.2),l1+0.5);dummy.updateMatrix();rm.setMatrixAt(nr,dummy.matrix);rm.setColorAt(nr,col.set(RF[(rr()*RF.length)|0]));nr++;}
     });
-    rm.count=nr; sceneC.add(bm); if(nr)sceneC.add(rm);
+    rm.count=nr; sceneC.add(bm); BLDM.push(bm); if(nr){sceneC.add(rm);BLDM.push(rm);}
   });
 }).catch(e=>console.warn(e));
 // casas 3D (modelos de baja resolución) alrededor de los sitios que la cámara visita de cerca
@@ -925,7 +925,7 @@ function towersC(list){
       const norm=new THREE.Matrix4().makeScale(1/sz.x,1/sz.y,1/sz.z).multiply(new THREE.Matrix4().makeTranslation(-ct.x,-_b3.min.y,-ct.z));
       o.traverse(m=>{if(!m.isMesh)return; const base=norm.clone().multiply(m.matrixWorld); const im=new THREE.InstancedMesh(m.geometry,m.material,L.length);
         L.forEach(([x,y,l1,l2,a,h],i)=>{const rot=Math.atan2(Math.cos(a),-Math.sin(a)); dummy.position.copy(V(x,y)); dummy.rotation.set(0,rot,0); dummy.scale.set(Math.max(14,l2*0.95),h,Math.max(14,l1*0.95)); dummy.updateMatrix(); im.setMatrixAt(i,dummy.matrix.clone().multiply(base));});
-        im.frustumCulled=false; sceneC.add(im);});
+        im.frustumCulled=false; sceneC.add(im); TWM.push(im);});
     });
   });
 }
@@ -1442,7 +1442,7 @@ const KC=[
  {s:17.95,t:emMw,d:7,az:emAz+0.35,el:0.25,lk:1,dr:0},
  {s:18.25,t:erMid,d:erSpan*1.25,az:emAz+0.3,el:1.05,dr:0.02},
  {s:18.85,t:erMid,d:erSpan*1.2,az:emAz+0.2,el:1.05,dr:0.75,vc:0},
- {s:19.25,t:evW,d:45,az:emAz+0.4,el:0.6,dr:0.8,vc:1},
+ {s:19.25,t:evW,d:28,az:emAz+0.4,el:0.6,dr:0.8,vc:1},
  {s:19.70,t:emCw,d:60,az:emAz+0.5,el:0.75,dr:1,fx:0},
  {s:20.30,t:emCw,d:26,az:emAz+0.45,el:0.45,fx:0.7},
  {s:20.75,t:emMw,d:8,az:emAz+0.3,el:0.3,fx:1},
@@ -1489,7 +1489,10 @@ function updateC(S,time,camD,s){
   cgFlow.visible=!!cgFlowCurve&&s>0.95&&s<2.1&&camD<700;
   if(cgFlow.visible){const n=cgFlow.count;for(let i=0;i<n;i++){cgFlowCurve[i&1].getPointAt(((i/n)+time*0.12)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();cgFlow.setMatrixAt(i,dummy.matrix);}cgFlow.instanceMatrix.needsUpdate=true;}
   FLOWMATS.forEach(m=>m.uniforms.uT.value=time); { const nearDig=camD<450&&S.t.distanceTo(digW)<400; RIBS.forEach(r=>r.visible=!nearDig); } orthoUpdate(S.t,camD);
-  const farH=camD>2500, rH=Math.max(1400,camD*4); HCELLS.forEach(c=>{const sh=!farH&&c.ready&&c.c.distanceTo(S.t)<rH; if(c.sh!==sh){c.sh=sh;c.house.forEach(m=>m.visible=sh);c.box.forEach(m=>m.visible=!sh);}});
+  // parte 7: despacho y válvula sin edificios 3D ni redes (solo ortofoto, ruta y válvula)
+  const calm=PART===7&&s>18.02&&s<19.62; if(calm)RIBS.forEach(r=>r.visible=false);
+  if(calm!==CALM){CALM=calm; BLDM.forEach(m=>m.visible=!calm); TWM.forEach(m=>m.visible=!calm); HCELLS.forEach(c=>{c.sh=undefined; if(calm){c.house.forEach(m=>m.visible=false);c.box.forEach(m=>m.visible=false);}});}
+  const farH=camD>2500, rH=Math.max(1400,camD*4); if(!calm)HCELLS.forEach(c=>{const sh=!farH&&c.ready&&c.c.distanceTo(S.t)<rH; if(c.sh!==sh){c.sh=sh;c.house.forEach(m=>m.visible=sh);c.box.forEach(m=>m.visible=!sh);}});
   ROOFS.forEach(r=>{const near=camD<160&&S.t.distanceTo(r.p)<60; const op=near?clamp((camD-12)/150,0.12,1):1; r.m.material.opacity=op; r.m.material.depthWrite=op>0.9;});
   if(peRib)peRib.visible=peRib.visible&&!(camD<240&&S.t.distanceTo(heroCw)<300);
   // cambio de regulador
