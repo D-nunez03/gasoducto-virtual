@@ -736,12 +736,20 @@ const GL=new THREE.GLTFLoader(), GLC={};
 // cada parte descarga solo los modelos que muestra
 if(/[?&]fps/.test(location.search))window.__C={get cam(){return camera},get BLDM(){return BLDM},get HB(){return HB},get HCELLS(){return HCELLS},get TWM(){return TWM},sceneC};
 const P1M=/^(cemento|fabrica1|fabrica2|mcd|mcd2|erp|rack|run|orange|cwork)$/, P2M=/^(jcb|jcb2|escombro|skidder|duo|conos|senales)$/;
+// normales suaves para escaneos sin normales (evita el aspecto facetado): promedia por posición, ignorando costuras de UV
+function smoothN(g){ if(g.attributes.normal)return; const P=g.attributes.position, n=P.count, I=g.index?g.index.array:null, key=new Int32Array(n), map=new Map();
+  for(let i=0;i<n;i++){const k=Math.round(P.getX(i)*4096)+'_'+Math.round(P.getY(i)*4096)+'_'+Math.round(P.getZ(i)*4096); let id=map.get(k); if(id===undefined){id=map.size;map.set(k,id);} key[i]=id;}
+  const acc=new Float32Array(map.size*3), a=new THREE.Vector3(), b=new THREE.Vector3(), c=new THREE.Vector3(), nm=new THREE.Vector3(), F=I?I.length/3:n/3;
+  for(let f=0;f<F;f++){const i0=I?I[f*3]:f*3, i1=I?I[f*3+1]:f*3+1, i2=I?I[f*3+2]:f*3+2; a.fromBufferAttribute(P,i0); b.fromBufferAttribute(P,i1); c.fromBufferAttribute(P,i2); nm.subVectors(c,b).cross(a.clone().sub(b));
+    for(const i of [i0,i1,i2]){const j=key[i]*3; acc[j]+=nm.x; acc[j+1]+=nm.y; acc[j+2]+=nm.z;}}
+  const N=new Float32Array(n*3); for(let i=0;i<n;i++){const j=key[i]*3; nm.set(acc[j],acc[j+1],acc[j+2]).normalize(); N[i*3]=nm.x; N[i*3+1]=nm.y; N[i*3+2]=nm.z;}
+  g.setAttribute('normal',new THREE.BufferAttribute(N,3));}
 function prepMat(o,scan,bright){o.traverse(m=>{if(!m.isMesh)return;const mats=Array.isArray(m.material)?m.material:[m.material];
-  mats.forEach(mt=>{if(mt.userData.prep)return;mt.userData.prep=1;if(!m.geometry.attributes.normal)mt.flatShading=true;if('metalness' in mt){mt.metalness=0;mt.roughness=Math.max(0.6,mt.roughness||0.8);}
+  mats.forEach(mt=>{if(mt.userData.prep)return;mt.userData.prep=1;if(!m.geometry.attributes.normal){if(scan)smoothN(m.geometry);else mt.flatShading=true;}if('metalness' in mt){mt.metalness=0;mt.roughness=Math.max(0.6,mt.roughness||0.8);}
     if(mt.color)mt.color.convertLinearToSRGB(); if(mt.emissive)mt.emissive.convertLinearToSRGB(); [mt.map,mt.emissiveMap].forEach(t=>{if(t)t.encoding=THREE.LinearEncoding;});
     if(scan&&mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.3;}
     if(bright&&mt.color){if(mt.map){mt.emissive=new THREE.Color('#ffffff');mt.emissiveMap=mt.map;mt.emissiveIntensity=0.45;}else mt.emissive=mt.color.clone().multiplyScalar(0.45).add(mt.emissive||new THREE.Color(0));}mt.needsUpdate=true;});});}
-function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC&&!/^(trabmed|trab2|cwork|tecnico)$/.test(name)){res(null);return;} if(WC&&((PART!==1&&P1M.test(name))||(PART!==2&&P2M.test(name)))){res(null);return;}GL.load('m/'+name+'.glb?v=1792384364',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
+function glb(name,scan,bright){return GLC[name]||(GLC[name]=new Promise(res=>{if(!WC&&!/^(trabmed|trab2|cwork|tecnico)$/.test(name)){res(null);return;} if(WC&&((PART!==1&&P1M.test(name))||(PART!==2&&P2M.test(name)))){res(null);return;}GL.load('m/'+name+'.glb?v=1792720545',g=>{const o=g.scene;prepMat(o,scan,bright);o.updateMatrixWorld(true);res(o);},undefined,()=>res(null));}));}
 const _b3=new THREE.Box3();
 // coloca un modelo dentro de un polígono MODELOS: centro, giro hacia el FRENTE, escala proporcional
 // front: eje del modelo que mira al frente ('z' o 'x'); hmax: altura máxima; fill: fracción del predio; copies: copias a lo largo
@@ -783,10 +791,35 @@ function person(name,h,scan){
   const g=new THREE.Group(); g.userData.ppl=name;
   glb(name,scan!==false).then(o=>{if(!o)return; const q=uprightOf(name,o); const a=new THREE.Group(); a.quaternion.copy(q); const c=o.clone(); a.add(c); a.updateMatrixWorld(true);
     _b3.setFromObject(a); const sz=_b3.getSize(new THREE.Vector3()), ct=_b3.getCenter(new THREE.Vector3()); const k=(h||1.72)/sz.y;
-    const s=new THREE.Group(); s.scale.setScalar(k); s.add(a); a.position.set(-ct.x,-_b3.min.y,-ct.z); g.add(s);});
+    const s=new THREE.Group(); s.scale.setScalar(k); s.add(a); a.position.set(-ct.x,-_b3.min.y,-ct.z); g.add(s);
+    if(WORKERS.test(name)){backLogo(name,c); ANIMP.push({g,s,k,ph:ANIMP.length*1.7});}});
   return g;
 }
 let _fieldN=0;
+// trabajadores: logo de Surtigas en la espalda del chaleco y un leve movimiento en reposo
+const WORKERS=/^(trab1|trab2|trabmed|cwork)$/, ANIMP=[], BACKP={};
+function qv(P,i,v){v.fromBufferAttribute(P,i); if(P.normalized){const A=P.array; v.divideScalar(A instanceof Int16Array?32767:A instanceof Int8Array?127:A instanceof Uint16Array?65535:255);} return v;}
+let _patchMat=null;
+function patchMat(){ if(_patchMat)return _patchMat; const cv=document.createElement('canvas'); cv.width=512; cv.height=230; const c=cv.getContext('2d'); const tx=new THREE.CanvasTexture(cv); tx.anisotropy=8;
+  const draw=()=>{c.clearRect(0,0,512,230); c.fillStyle='#ffffff'; const r=34; c.beginPath(); c.moveTo(r,0); c.arcTo(512,0,512,230,r); c.arcTo(512,230,0,230,r); c.arcTo(0,230,0,0,r); c.arcTo(0,0,512,0,r); c.fill();
+    const L=new Image(); L.onload=()=>{const k=Math.min(470/L.width,200/L.height); c.drawImage(L,(512-L.width*k)/2,(230-L.height*k)/2,L.width*k,L.height*k); tx.needsUpdate=true;}; L.src='logo.png';};
+  draw(); return _patchMat=new THREE.MeshLambertMaterial({map:tx,transparent:true,alphaTest:0.2,polygonOffset:true,polygonOffsetFactor:-4,emissive:new THREE.Color('#ffffff'),emissiveMap:tx,emissiveIntensity:0.25});}
+function backLogo(name,root){ // el modelo mira a +Z: la espalda es el lado -Z a la altura del pecho
+  root.updateMatrixWorld(true); const inv=new THREE.Matrix4().copy(root.matrixWorld).invert(), rel=new THREE.Matrix4();
+  if(!BACKP[name]){ let y0=1e9,y1=-1e9; const pts=[], v=new THREE.Vector3();
+    root.traverse(m=>{if(!m.isMesh||m.userData.patch)return; rel.multiplyMatrices(inv,m.matrixWorld); const P=m.geometry.attributes.position; for(let i=0;i<P.count;i++){qv(P,i,v).applyMatrix4(rel); pts.push(v.x,v.y,v.z); y0=Math.min(y0,v.y); y1=Math.max(y1,v.y);}});
+    const H=y1-y0, yc=y0+H*0.74, band=[]; let zb=1e9;
+    for(let i=0;i<pts.length;i+=3)if(Math.abs(pts[i+1]-yc)<H*0.05){band.push(pts[i],pts[i+2]); zb=Math.min(zb,pts[i+2]);}
+    const bk=[]; for(let i=0;i<band.length;i+=2)if(band[i+1]<zb+H*0.035)bk.push(band[i],band[i+1]);
+    let cx=0; for(let i=0;i<bk.length;i+=2)cx+=bk[i]; cx/=Math.max(1,bk.length/2);
+    let sx=0,sz=0,sxx=0,sxz=0,n=0; for(let i=0;i<band.length;i+=2){const x=band[i],z=band[i+1]; if(Math.abs(x-cx)<H*0.09&&z<zb+H*0.06){sx+=x;sz+=z;sxx+=x*x;sxz+=x*z;n++;}}
+    const sl=n>5?(n*sxz-sx*sz)/Math.max(1e-9,n*sxx-sx*sx):0, z0=n?(sz-sl*sx)/n:zb;
+    BACKP[name]={x:cx,y:yc,z:Math.min(z0+sl*cx,zb+H*0.02),yaw:-Math.atan(clamp(sl,-1,1)),w:H*0.13}; }
+  const b=BACKP[name]; if(!isFinite(b.z))return;
+  const pl=new THREE.Mesh(new THREE.PlaneGeometry(b.w,b.w*230/512),patchMat()); pl.position.set(b.x,b.y,b.z-b.w*0.1); pl.rotation.y=Math.PI-b.yaw; pl.userData.patch=1; root.add(pl);}
+function animPeople(time,camD){ if(camD>160)return; ANIMP.forEach(p=>{ if(!p.g.visible)return; const t=time+p.ph;
+  p.s.rotation.z=0.018*Math.sin(t*0.8); p.s.rotation.x=0.012*Math.sin(t*0.55+1); p.s.rotation.y=0.16*Math.sin(t*0.23)+0.05*Math.sin(t*0.71);
+  p.s.scale.set(p.k*(1-0.004*Math.sin(t*2.1)),p.k*(1+0.007*Math.sin(t*2.1)),p.k); });}
 function techFig(mode){
   if(mode==='lab')return person('tecnico',1.74);
   if(mode==='insp'||mode==='meter')return person('trabmed',1.76);
@@ -840,16 +873,16 @@ let peRib=null; const RIBS=[], BLDM=[], TWM=[]; let CALM=false; const _fru=new T
 const ORTHO=[]; const OC0=[843000,1642000];
 function orthoMat(){const m=new THREE.MeshBasicMaterial({color:'#ffffff',depthWrite:false,depthTest:false,fog:true});
   m.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n if(dot(diffuseColor.rgb,vec3(1.0))<0.07) discard;');}; return m;}
-if(WC) fetch('ctg/ortho/ortho.json?v=1792384364').then(r=>r.json()).then(L=>L.forEach(b=>{const x0=b.x0-OC0[0],y0=b.y0-OC0[1],w=b.x1-b.x0,h=b.y1-b.y0;
+if(WC) fetch('ctg/ortho/ortho.json?v=1792720545').then(r=>r.json()).then(L=>L.forEach(b=>{const x0=b.x0-OC0[0],y0=b.y0-OC0[1],w=b.x1-b.x0,h=b.y1-b.y0;
   ORTHO.push({f:b.f,c:V(x0+w/2,y0+h/2),x0,y0,w,h,m:null});})).catch(()=>{});
 function orthoUpdate(t,camD){ const on=camD<3000; ORTHO.forEach(o=>{if(o.m&&o.m.material.map)o.m.visible=on;}); if(camD>5000)return; ORTHO.forEach(o=>{if(o.m||o.c.distanceTo(t)>Math.max(2600,camD*3.5))return;
   const m=new THREE.Mesh(new THREE.PlaneGeometry(o.w,o.h),orthoMat()); m.rotation.x=-Math.PI/2; m.position.set(o.x0+o.w/2,0,-(o.y0+o.h/2)); m.renderOrder=-3; m.visible=false; sceneC.add(m); o.m=m;
-  texL.load('ctg/ortho/'+o.f+'?v=1792384364',tx=>{tx.anisotropy=Math.min(8,maxAn);m.material.map=tx;m.material.needsUpdate=true;},undefined,()=>{});});}
+  texL.load('ctg/ortho/'+o.f+'?v=1792720545',tx=>{tx.anisotropy=Math.min(8,maxAn);m.material.map=tx;m.material.needsUpdate=true;},undefined,()=>{});});}
 
 // ---- edificaciones
 const H=CM.hero, MD=CM.models, panC=(()=>{let x=0,y=0;CM.panel.forEach(p=>{x+=p[0];y+=p[1]});return [x/CM.panel.length,y/CM.panel.length];})();
 const CGC=MD.CITYGATE.c;
-if(WC) fetch('ctg/ctg.json?v=1792384364').then(r=>r.json()).then(D=>{
+if(WC) fetch('ctg/ctg.json?v=1792720545').then(r=>r.json()).then(D=>{
   D.tiles.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,2500,2500,-5));
   D.dets.forEach(([x,y,f])=>plateC('ctg/'+f,x,y,800,800,-4));
   const nearCG=s=>Math.hypot(s[0]-CGC[0],s[1]-CGC[1])<40&&Math.hypot(s[2]-CGC[0],s[3]-CGC[1])<40;
@@ -857,7 +890,7 @@ if(WC) fetch('ctg/ctg.json?v=1792384364').then(r=>r.json()).then(D=>{
   tr.renderOrder=2; ac.renderOrder=3; pe.renderOrder=4; sceneC.add(tr,ac,pe); peRib=pe; RIBS.push(tr,ac,pe,p1,bc);
   towersC(D.towers); housesC(D.houses||[]);
   if(/nobld/.test(location.search))return null;
-  return fetch('ctg/bld.bin?v=1792384364').then(r=>r.arrayBuffer());
+  return fetch('ctg/bld.bin?v=1792720545').then(r=>r.arrayBuffer());
 }).then(buf=>{
   if(!buf)return;
   const n=new Uint32Array(buf,0,1)[0]; let o=4;
@@ -1556,7 +1589,7 @@ function updateC(S,time,camD,s){
   labFlow.visible=lb>0.5&&camD<120;
   if(labFlow.visible){const n=labFlow.count;for(let i=0;i<n;i++){labFlowCurve.getPointAt(((i/n)+time*0.06)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();labFlow.setMatrixAt(i,dummy.matrix);}labFlow.instanceMatrix.needsUpdate=true;}
   solar.count=Math.floor(solarN*clamp(S.sol,0,1));
-  updateFraud(S,time,camD,s); updateEmer(S,time,camD,s);
+  updateFraud(S,time,camD,s); updateEmer(S,time,camD,s); animPeople(time,camD);
 }
 // =================== fin capítulo 1 ===================
 // ---- Canalete: inspector de revisión periódica junto al medidor (contador digital)
