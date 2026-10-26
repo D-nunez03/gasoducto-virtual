@@ -24,6 +24,9 @@ html,body{background:var(--sky);color:var(--paper)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden}
 #scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 #tags{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.legend{position:fixed;left:16px;bottom:30px;z-index:5;font:12px/1.5 var(--f-mono,monospace);color:#e9eef2;background:rgba(11,30,52,.72);padding:8px 12px;border-radius:6px;pointer-events:none;transition:opacity .4s}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:8px;vertical-align:middle}
+@media (max-width:640px){.legend{bottom:44px;font-size:11px}}
 .tag{position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper);background:color-mix(in srgb,var(--ink) 88%,transparent);padding:5px 12px 4px;border-radius:3px;transition:opacity .35s;opacity:0}
 .tag::after{content:"";position:absolute;left:50%;bottom:-14px;width:1px;height:14px;background:var(--paper);opacity:.8}
 .tag small{display:block;font-family:var(--f-mono);font-weight:400;font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--muted)}
@@ -169,6 +172,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <p>Cambio de regulador, reubicación de medidores y mantenimiento de gasodomésticos.</p>
   </div></section>
 </main>
+<div class="legend" id="legend"><div><i style="background:#21b35e"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
 <div class="credit">Geometría: SIG Surtigas · Imagen: Esri World Imagery · Edificaciones: Google Open Buildings (alturas estimadas)</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -894,10 +898,10 @@ plateC(null,-90000,-90000,180000,180000,-7).material.color.set('#2f5566');
 plateC('ctg/region2_ctg.jpg',-31000,-30000,60000,52000,-6);
 
 // ---- redes: tubería azul, gas morado
-const cTrMat=ribbonMaterial({color:'#1f5aa6',pulse:'#b46bff',front:1,spacing:90,speed:70,pulseAmt:1,layer:-3});
+const cTrMat=ribbonMaterial({color:'#21b35e',pulse:'#b46bff',front:1,spacing:90,speed:70,pulseAmt:1,layer:-3});
 const cAcMat=ribbonMaterial({color:'#3f93d8',pulse:'#a052ff',front:150,spacing:70,speed:55,pulseAmt:1,layer:-4});
 const cPeMat=ribbonMaterial({color:'#e8b931',pulse:'#8a3dff',front:90,spacing:28,speed:28,pulseAmt:1,layer:-5});
-const cP1Mat=ribbonMaterial({color:'#8fd0f5',pulse:'#a052ff',front:120,spacing:50,speed:40,pulseAmt:1,layer:-4});
+const cP1Mat=ribbonMaterial({color:'#ff5fa8',pulse:'#a052ff',front:120,spacing:50,speed:40,pulseAmt:1,layer:-4});
 const cBcMat=ribbonMaterial({color:'#e8b931',pulse:'#8a3dff',front:90,spacing:28,speed:28,pulseAmt:1,layer:-5});
 [cTrMat,cAcMat,cPeMat,cP1Mat,cBcMat].forEach(m=>{m.depthWrite=false;m.userData.sp=m.uniforms.uSpacing.value;m.userData.sv=m.uniforms.uSpeed.value;});
 cTrMat.uniforms.uProg.value=1e9;
@@ -1101,14 +1105,14 @@ function fenceRail(md,pad,gate){fenceC(md,pad,2.2,gate,true); const P=md.poly.sl
 // ---- City Gate Ternera II: caseta con la ERP, conectada al transporte y a la red de acero
 const cgM=MD.CITYGATE, cc=CM.cgConn, cgW=V(cgM.c[0],cgM.c[1],2), techCGw=cgW.clone(); let cgFlowCurve=null;
 fenceRail(cgM,0.8,cgM.f);
-cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.25,'#1f5aa6','#b46bff',6,4));
+cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.25,'#21b35e','#b46bff',6,4));
 cc.ac.forEach(pl=>flowTube(polyPts(pl,0.4),0.16,'#3f93d8','#a052ff',5,3.5));
 stationHouse(cgM,V(cc.tap[0],cc.tap[1]),V(cc.acp[0],cc.acp[1])).then(r=>{if(!r)return; const {iw,ow,idir,odir,W,L,D}=r;
   const tapL=V(cc.tap[0],cc.tap[1],0.45), acp=V(cc.acp[0],cc.acp[1],0.4);
   const inPts=[tapL,tapL.clone().setY(iw.y),iw.clone().addScaledVector(idir,0.8),iw];
   const o1=ow.clone().addScaledVector(odir,0.6), o2=o1.clone().setY(0.4);
   const outPts=[ow,o1,o2,acp];
-  flowTube(inPts,0.11,'#1f5aa6','#b46bff',1.2,1); flowTube(outPts,0.09,'#3f93d8','#a052ff',1.2,1);
+  flowTube(inPts,0.11,'#21b35e','#b46bff',1.2,1); flowTube(outPts,0.09,'#3f93d8','#a052ff',1.2,1);
   cyl(sceneC,0.32,0.4,'#1a4f93',tapL.x,0.45,tapL.z); cyl(sceneC,0.22,0.3,'#2f7fc4',acp.x,0.4,acp.z);
   cgFlowCurve=[new THREE.CatmullRomCurve3(inPts,false,'centripetal'),new THREE.CatmullRomCurve3(outPts,false,'centripetal')];
   const t1=person('orange',1.8,false); t1.position.copy(W([L*0.15,0.15,D/2-0.6])); t1.lookAt(W([L*0.15,0.15,0])); sceneC.add(t1); techCGw.copy(t1.position).setY(1.3);
@@ -1271,7 +1275,7 @@ function surtigasVan(name,len){const g=new THREE.Group(); glb(name).then(o=>{if(
   const duo=person('duo',1.78,false); const pd=E(2.8,4.2); duo.position.copy(V(pd[0],pd[1])); duo.rotation.y=azOf(-nrm[0],-nrm[1])+0.6; P2.add(duo);
 })();
 // redes alrededor de la obra en tubos 3D (sin cintas superpuestas); el P80 se corta donde se rompe
-(function(){const C={tr:['#1f5aa6','#b46bff',0.26,0.45],ac:['#3f93d8','#a052ff',0.18,0.4],p1:['#8fd0f5','#a052ff',0.13,0.3],pe:['#e8b931','#8a3dff',0.09,0.15]};
+(function(){const C={tr:['#21b35e','#b46bff',0.26,0.45],ac:['#3f93d8','#a052ff',0.18,0.4],p1:['#ff5fa8','#a052ff',0.13,0.3],pe:['#e8b931','#8a3dff',0.09,0.15]};
   (CM.digNet||[]).forEach(([k,pl])=>{const [c1,c2,r,y]=C[k]; const pts=[]; for(let i=0;i<pl.length-1;i++){const a=pl[i],b=pl[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(L/0.5));for(let j=0;j<n;j++)pts.push([a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n]);} pts.push(pl[pl.length-1]);
     let run=[]; const flush=()=>{if(run.length>1)flowTube(run.map(p=>V(p[0],p[1],y)),r,c1,c2,k==='pe'?1.6:3,k==='pe'?1.1:2);run=[];};
     pts.forEach(p=>{if(k==='pe'&&Math.hypot(p[0]-dg.x,p[1]-dg.y)<1.45)flush();else run.push(p);}); flush();});})();
@@ -1478,7 +1482,7 @@ let solar=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBas
 function glowSprite(col){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const c=cv.getContext('2d'); const g=c.createRadialGradient(64,64,0,64,64,64);
   g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.18,col); g.addColorStop(0.45,col.replace('1)','0.35)')); g.addColorStop(1,col.replace('1)','0)')); c.fillStyle=g; c.fillRect(0,0,128,128);
   const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending})); sp.renderOrder=20; sp.visible=false; sceneC.add(sp); return sp;}
-const CGS=(CM.citygates||[]).map((c,i)=>{const sp=glowSprite('rgba(90,190,255,1)'); sp.position.copy(V(c.x,c.y,30)); sp.userData.ph=i*1.3; return sp;});
+const CGS=(CM.citygates||[]).map((c,i)=>{const sp=glowSprite('rgba(255,70,50,1)'); sp.position.copy(V(c.x,c.y,30)); sp.userData.ph=i*1.3; return sp;});
 function updateCGs(s,camD,time){ const on=PART===1&&s<0.98; CGS.forEach(sp=>{sp.visible=on; if(!on)return; const k=camD*0.045*(1+0.18*Math.sin(time*2.2+sp.userData.ph)); sp.scale.set(k,k,1); sp.material.opacity=0.75+0.25*Math.sin(time*2.2+sp.userData.ph);});}
 const cgC=(()=>{const b=new THREE.Box3(); (CM.citygates||[]).forEach(c=>b.expandByPoint(V(c.x,c.y,0))); return b.isEmpty()?V(500,-300,0):b.getCenter(new THREE.Vector3());})();
 // ---- keyframes globales del capítulo 1 (las partes 1-4 usan tramos de esta línea)
@@ -1768,6 +1772,7 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
+  $('legend').style.opacity=(world===0&&PART!==4)?1:0;
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);
