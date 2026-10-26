@@ -155,7 +155,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="stat"><div><strong class="c-pe">1.250</strong><span>medidores con tecnología AMI</span></div></div>
   </div></section>
 </main>
-<div class="legend" id="legend"><div><i style="background:#21b35e"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
+<div class="legend" id="legend"><div><i style="background:#d93a2b"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
 <div class="credit">Geometría: SIG Surtigas · Imagen: Esri World Imagery · Edificaciones: Google Open Buildings (alturas estimadas)</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -881,7 +881,7 @@ plateC(null,-90000,-90000,180000,180000,-7).material.color.set('#2f5566');
 plateC('ctg/region2_ctg.jpg',-31000,-30000,60000,52000,-6);
 
 // ---- redes: tubería azul, gas morado
-const cTrMat=ribbonMaterial({color:'#21b35e',pulse:'#b46bff',front:1,spacing:90,speed:70,pulseAmt:1,layer:-3});
+const cTrMat=ribbonMaterial({color:'#d93a2b',pulse:'#4fb0ff',front:1,spacing:90,speed:70,pulseAmt:1,layer:-3});
 const cAcMat=ribbonMaterial({color:'#3f93d8',pulse:'#a052ff',front:150,spacing:70,speed:55,pulseAmt:1,layer:-4});
 const cPeMat=ribbonMaterial({color:'#e8b931',pulse:'#8a3dff',front:90,spacing:28,speed:28,pulseAmt:1,layer:-5});
 const cP1Mat=ribbonMaterial({color:'#ff5fa8',pulse:'#a052ff',front:120,spacing:50,speed:40,pulseAmt:1,layer:-4});
@@ -1088,14 +1088,14 @@ function fenceRail(md,pad,gate){fenceC(md,pad,2.2,gate,true); const P=md.poly.sl
 // ---- City Gate Ternera II: caseta con la ERP, conectada al transporte y a la red de acero
 const cgM=MD.CITYGATE, cc=CM.cgConn, cgW=V(cgM.c[0],cgM.c[1],2), techCGw=cgW.clone(); let cgFlowCurve=null;
 fenceRail(cgM,0.8,cgM.f);
-cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.25,'#21b35e','#b46bff',6,4));
+cc.tr.forEach(pl=>flowTube(polyPts(pl,0.45),0.25,'#d93a2b','#4fb0ff',6,4));
 cc.ac.forEach(pl=>flowTube(polyPts(pl,0.4),0.16,'#3f93d8','#a052ff',5,3.5));
 stationHouse(cgM,V(cc.tap[0],cc.tap[1]),V(cc.acp[0],cc.acp[1])).then(r=>{if(!r)return; const {iw,ow,idir,odir,W,L,D}=r;
   const tapL=V(cc.tap[0],cc.tap[1],0.45), acp=V(cc.acp[0],cc.acp[1],0.4);
   const inPts=[tapL,tapL.clone().setY(iw.y),iw.clone().addScaledVector(idir,0.8),iw];
   const o1=ow.clone().addScaledVector(odir,0.6), o2=o1.clone().setY(0.4);
   const outPts=[ow,o1,o2,acp];
-  flowTube(inPts,0.11,'#21b35e','#b46bff',1.2,1); flowTube(outPts,0.09,'#3f93d8','#a052ff',1.2,1);
+  flowTube(inPts,0.11,'#d93a2b','#4fb0ff',1.2,1); flowTube(outPts,0.09,'#3f93d8','#a052ff',1.2,1);
   cyl(sceneC,0.32,0.4,'#1a4f93',tapL.x,0.45,tapL.z); cyl(sceneC,0.22,0.3,'#2f7fc4',acp.x,0.4,acp.z);
   cgFlowCurve=[new THREE.CatmullRomCurve3(inPts,false,'centripetal'),new THREE.CatmullRomCurve3(outPts,false,'centripetal')];
   const t1=person('orange',1.8,false); t1.position.copy(W([L*0.15,0.15,D/2-0.6])); t1.lookAt(W([L*0.15,0.15,0])); sceneC.add(t1); techCGw.copy(t1.position).setY(1.3);
@@ -1258,7 +1258,7 @@ function surtigasVan(name,len){const g=new THREE.Group(); glb(name).then(o=>{if(
   const duo=person('duo',1.78,false); const pd=E(2.8,4.2); duo.position.copy(V(pd[0],pd[1])); duo.rotation.y=azOf(-nrm[0],-nrm[1])+0.6; P2.add(duo);
 })();
 // redes alrededor de la obra en tubos 3D (sin cintas superpuestas); el P80 se corta donde se rompe
-(function(){const C={tr:['#21b35e','#b46bff',0.26,0.45],ac:['#3f93d8','#a052ff',0.18,0.4],p1:['#ff5fa8','#a052ff',0.13,0.3],pe:['#e8b931','#8a3dff',0.09,0.15]};
+(function(){const C={tr:['#d93a2b','#4fb0ff',0.26,0.45],ac:['#3f93d8','#a052ff',0.18,0.4],p1:['#ff5fa8','#a052ff',0.13,0.3],pe:['#e8b931','#8a3dff',0.09,0.15]};
   (CM.digNet||[]).forEach(([k,pl])=>{const [c1,c2,r,y]=C[k]; const pts=[]; for(let i=0;i<pl.length-1;i++){const a=pl[i],b=pl[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(L/0.5));for(let j=0;j<n;j++)pts.push([a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n]);} pts.push(pl[pl.length-1]);
     let run=[]; const flush=()=>{if(run.length>1)flowTube(run.map(p=>V(p[0],p[1],y)),r,c1,c2,k==='pe'?1.6:3,k==='pe'?1.1:2);run=[];};
     pts.forEach(p=>{if(k==='pe'&&Math.hypot(p[0]-dg.x,p[1]-dg.y)<1.45)flush();else run.push(p);}); flush();});})();
@@ -1583,7 +1583,7 @@ function tagVisibleC(k,s,d){
 const _v=new THREE.Vector3(), _m=new THREE.Matrix4(), _q=new THREE.Quaternion(), _sc=new THREE.Vector3(), _p=new THREE.Vector3();
 function updateC(S,time,camD,s){
   [cTrMat,cAcMat,cPeMat,cP1Mat,cBcMat].forEach(m=>m.uniforms.uTime.value=time);
-  cAcMat.uniforms.uProg.value=S.ac; cP1Mat.uniforms.uProg.value=S.ac; cPeMat.uniforms.uProg.value=S.pe; cBcMat.uniforms.uProg.value=Math.max(S.bc,0); cP1Mat.uniforms.uW.value=clamp(camD*0.0024,0.2,16); cBcMat.uniforms.uW.value=clamp(camD*0.0022,0.2,16);
+  cAcMat.uniforms.uProg.value=S.ac; cP1Mat.uniforms.uProg.value=S.ac; cPeMat.uniforms.uProg.value=S.pe; cBcMat.uniforms.uProg.value=Math.max(S.bc,0); cP1Mat.uniforms.uW.value=clamp(camD*0.0048,0.35,30); cBcMat.uniforms.uW.value=clamp(camD*0.0022,0.2,16);
   cTrMat.uniforms.uW.value=clamp(camD*0.0022,0.4,30); cAcMat.uniforms.uW.value=clamp(camD*0.0042,0.3,70); cPeMat.uniforms.uW.value=clamp(camD*0.0016,0.15,12);
   const dT=camD<350; [cTrMat,cAcMat,cPeMat,cP1Mat,cBcMat].forEach(m=>{m.depthTest=dT;m.uniforms.uSpacing.value=Math.max(m.userData.sp,camD*0.012);m.uniforms.uSpeed.value=Math.max(m.userData.sv,camD*0.01);});
   cgFlow.visible=!!cgFlowCurve&&s>0.95&&s<2.1&&camD<700;
