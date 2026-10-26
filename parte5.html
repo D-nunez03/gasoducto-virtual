@@ -1378,13 +1378,10 @@ function textSprite(txt,bg,fg,w){const cv=document.createElement('canvas');cv.wi
   const cn=new THREE.Group(); for(let i=0;i<5;i++){const a=i/5*6.283;const cc=new THREE.Group();const m=new THREE.Mesh(new THREE.ConeGeometry(0.18,0.55,12),M('#ff6a1a'));m.position.y=0.3;cc.add(m);cc.position.set(along+Math.cos(a)*2.4,0.15,D/2+2.2+Math.sin(a)*1.2);cn.add(cc);} cn.visible=false; g.add(cn);
   const okS=textSprite('✔ SERVICIO RESTABLECIDO','#2e9e5b','#ffffff',1400); okS.scale.set(8.75,1,1); okS.position.copy(g.position).setY(Hh+3.5);
   // cuadrillas repartidas por la ciudad: TOA asigna la más cercana (la primera de la lista)
-  const crews=(CM.crews||[]).map((c,i)=>{const g=new THREE.Group(); g.position.copy(V(c[0],c[1],0)); const col=i?'#1e88e5':'#ff3b2e';
-    const beam=new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.85,depthTest:false})); beam.position.y=0.5; beam.renderOrder=13; g.add(beam);
-    const dot=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:col,depthTest:false})); dot.renderOrder=14; g.add(dot);
-    g.userData={beam,dot}; g.visible=false; sceneC.add(g); return g;});
+  const crews=(CM.crews||[]).map((c,i)=>{const sp=glowSprite(i?'rgba(90,190,255,1)':'rgba(255,70,50,1)'); sp.position.copy(V(c[0],c[1],20)); sp.userData.ph=i*0.9; return sp;});
   const lp=[]; (CM.crews||[]).forEach(c=>{lp.push(V(c[0],c[1],2),emCw.clone().setY(2));});
-  const links=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(lp),new THREE.LineBasicMaterial({color:'#ffffff',transparent:true,opacity:0.7,depthTest:false})); links.renderOrder=12; links.visible=false; sceneC.add(links);
-  const nearL=new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp.slice(0,2)),new THREE.LineBasicMaterial({color:'#ff3b2e',depthTest:false})); nearL.renderOrder=13; nearL.visible=false; sceneC.add(nearL);
+  const links=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(lp),new THREE.LineBasicMaterial({color:'#bfe6ff',transparent:true,opacity:0.18,depthTest:false})); links.renderOrder=12; links.visible=false; sceneC.add(links);
+  const nearL=new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp.slice(0,2)),new THREE.LineBasicMaterial({color:'#ff6a50',transparent:true,opacity:0.6,depthTest:false})); nearL.renderOrder=13; nearL.visible=false; sceneC.add(nearL);
   EX={mg,leak,leakO,call,trail,vg,beacon,timer,vv,wh,vRing,vLabel,crewE,cn,okS,crews,links,nearL,endT:ER.length?ER[ER.length-1]:emCw};
 })();
 function updateEmer(S,time,camD,s){
@@ -1398,8 +1395,8 @@ function updateEmer(S,time,camD,s){
   EX.timer.visible=on&&dr>0.01&&fx<0.3; if(EX.timer.visible){const mins=Math.round(16*clamp(dr,0,1)*60); const tx=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0'); if(EX.timer.userData.t!==tx){EX.timer.userData.t=tx;const c=EX.timer.material.map.image.getContext('2d');c.fillStyle='#0b2a4a';c.fillRect(20,20,520,120);c.fillStyle='#fff';c.font='bold 92px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText('⏱ '+tx,280,86);EX.timer.material.map.needsUpdate=true;}
     EX.timer.position.copy(EX.vg.position).setY(6*Math.max(1,camD/90)); EX.timer.scale.set(3.5*Math.max(1,camD/40),Math.max(1,camD/40),1);}
   const showC=on&&s>17.97&&s<18.95, kS=camD/60;
-  EX.crews.forEach((g,i)=>{g.visible=showC&&!(i===0&&dr>0.02); if(!g.visible)return; const h=kS*(i?6:9); g.userData.beam.scale.set(kS*0.35,h,kS*0.35); g.userData.dot.scale.setScalar(kS*(i?0.9:1.3)*(i?1:1+0.25*Math.sin(time*6))); g.userData.dot.position.y=h;});
-  EX.links.visible=on&&s>18.1&&s<18.5; EX.links.material.opacity=0.35+0.25*Math.sin(time*4); EX.nearL.visible=on&&s>18.25&&s<18.55;
+  EX.crews.forEach((sp,i)=>{sp.visible=showC&&!(i===0&&dr>0.02); if(!sp.visible)return; const k=camD*(i?0.04:0.058)*(1+(i?0.12:0.25)*Math.sin(time*(i?2:3.2)+sp.userData.ph)); sp.scale.set(k,k,1);});
+  EX.links.visible=on&&s>18.1&&s<18.45; EX.nearL.visible=on&&s>18.25&&s<18.55;
   EX.wh.rotation.z=clamp(vc,0,1)*Math.PI*3; EX.vRing.material.opacity=on&&vc>0.05?0.5+0.4*Math.sin(time*6):0; EX.vRing.scale.setScalar(Math.max(1,camD/45)); EX.vv.scale.setScalar(clamp(camD/60,1,3)); EX.vLabel.visible=on&&vc>0.6&&fx<0.6; EX.vLabel.scale.set(3.5*Math.max(1,camD/40),Math.max(1,camD/40),1);
   const arr=on&&dr>0.97; EX.crewE.forEach(p=>p.visible=arr); EX.cn.visible=arr; EX.okS.visible=on&&fx>0.8; EX.okS.scale.set(8.75*Math.max(1,camD/30),Math.max(1,camD/30),1);
 }
@@ -1466,18 +1463,17 @@ let solar=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBas
 }:()=>{})();
 
 // ---- los 8 City Gates que alimentan Cartagena (6 sitios), visibles en la vista general de la parte 1
-const CGS=(CM.citygates||[]).map(c=>{const g=new THREE.Group(); g.position.copy(V(c.x,c.y,0));
-  const beam=new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,10),new THREE.MeshBasicMaterial({color:'#1f5aa6',transparent:true,opacity:0.9,depthTest:false})); beam.position.y=0.5; beam.renderOrder=13; g.add(beam);
-  const dot=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:'#2f8fe0',depthTest:false})); dot.renderOrder=14; g.add(dot);
-  const lb=textSprite('CG '+c.n,'#0b2a4a','#ffffff',Math.min(1600,140+c.n.length*54)); g.userData={beam,dot,lb,w:lb.scale.x}; g.visible=false; sceneC.add(g); return g;});
-function updateCGs(s,camD){ const on=PART===1&&s<0.98; CGS.forEach(g=>{g.visible=on; g.userData.lb.visible=on; if(!on)return; const k=camD/90, h=k*7;
-  g.userData.beam.scale.set(k*0.3,h,k*0.3); g.userData.dot.scale.setScalar(k*1.1); g.userData.dot.position.y=h; g.userData.lb.position.copy(g.position).setY(h+k*7); g.userData.lb.scale.set(g.userData.w*k*3.6,k*3.6,1); g.userData.lb.material.opacity=1;});}
+function glowSprite(col){ const cv=document.createElement('canvas'); cv.width=cv.height=128; const c=cv.getContext('2d'); const g=c.createRadialGradient(64,64,0,64,64,64);
+  g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.18,col); g.addColorStop(0.45,col.replace('1)','0.35)')); g.addColorStop(1,col.replace('1)','0)')); c.fillStyle=g; c.fillRect(0,0,128,128);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending})); sp.renderOrder=20; sp.visible=false; sceneC.add(sp); return sp;}
+const CGS=(CM.citygates||[]).map((c,i)=>{const sp=glowSprite('rgba(90,190,255,1)'); sp.position.copy(V(c.x,c.y,30)); sp.userData.ph=i*1.3; return sp;});
+function updateCGs(s,camD,time){ const on=PART===1&&s<0.98; CGS.forEach(sp=>{sp.visible=on; if(!on)return; const k=camD*0.045*(1+0.18*Math.sin(time*2.2+sp.userData.ph)); sp.scale.set(k,k,1); sp.material.opacity=0.75+0.25*Math.sin(time*2.2+sp.userData.ph);});}
 const cgC=(()=>{const b=new THREE.Box3(); (CM.citygates||[]).forEach(c=>b.expandByPoint(V(c.x,c.y,0))); return b.isEmpty()?V(500,-300,0):b.getCenter(new THREE.Vector3());})();
 // ---- keyframes globales del capítulo 1 (las partes 1-4 usan tramos de esta línea)
 const bocW=V(-4850,650,30), MIDC=V(500,-300,0), AM=CM.acMax, PM=CM.peMax, cpop=distW, hiAz=hAz, argAz=Math.atan2(Math.cos(argM.a),-Math.sin(argM.a));
 const KC=[
- {s:0.00,t:cgC.clone().add(V(0,1500,0)),d:40000,az:0.3,el:1.12,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0,bc:0,fr:0,bal:0,nm:0,lk:0,dr:0,vc:0,fx:0},
- {s:0.60,t:cgC.clone().add(V(0,1500,0)),d:37000,az:0.4,el:1.05},
+ {s:0.00,t:cgC.clone().add(V(0,1500,0)),d:36000,az:0.3,el:1.12,ac:0,pe:0,reg:0,dig:0,lab:0,sol:0,bc:0,fr:0,bal:0,nm:0,lk:0,dr:0,vc:0,fx:0},
+ {s:0.60,t:cgC.clone().add(V(0,1500,0)),d:33000,az:0.4,el:1.05},
  {s:1.05,t:cgW,d:520,az:0.8,el:0.62},
  {s:1.45,t:cgW,d:36,az:1.1,el:0.62},
  {s:1.85,t:cgW,d:34,az:2.2,el:0.6},
@@ -1643,7 +1639,7 @@ function updateC(S,time,camD,s){
   labFlow.visible=lb>0.5&&camD<120;
   if(labFlow.visible){const n=labFlow.count;for(let i=0;i<n;i++){labFlowCurve.getPointAt(((i/n)+time*0.06)%1,_v);dummy.position.copy(_v);dummy.rotation.set(0,0,0);dummy.scale.setScalar(1);dummy.updateMatrix();labFlow.setMatrixAt(i,dummy.matrix);}labFlow.instanceMatrix.needsUpdate=true;}
   solar.count=Math.floor(solarN*clamp(S.sol,0,1));
-  updateFraud(S,time,camD,s); updateEmer(S,time,camD,s); updateCGs(s,camD);
+  updateFraud(S,time,camD,s); updateEmer(S,time,camD,s); updateCGs(s,camD,time);
 }
 // =================== fin capítulo 1 ===================
 // ---- Canalete: inspector de revisión periódica junto al medidor (contador digital)
