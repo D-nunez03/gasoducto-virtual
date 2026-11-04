@@ -59,6 +59,21 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
 .stat div{display:flex;flex-direction:column}
 .stat strong{font-family:var(--f-display);font-size:34px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
 .stat span{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kcard{max-width:470px!important}
+.kpi-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.kpi-h .eyebrow{margin:0}
+.kpi-h small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.kpi-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px 14px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--paper) 12%,transparent)}
+.kpi-row:first-of-type{border-top:0}
+.kpi-n{font-size:14px;line-height:1.25;color:#d5e0e1}
+.kpi-n span{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:2px}
+.kpi-v{font-family:var(--f-display);font-size:30px;font-weight:600;line-height:1;color:var(--paper);font-variant-numeric:tabular-nums;text-align:right}
+.kpi-e{font-family:var(--f-mono);font-size:12.5px;font-weight:500;min-width:58px;text-align:center;padding:4px 8px;border-radius:999px;color:#08131d}
+.kpi-e.na{background:transparent!important;color:var(--muted);border:1px dashed var(--muted)}
+.kpi-f{margin-top:10px;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);line-height:1.5}
+.kpi-f i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 10px;vertical-align:0}
+.kpi-f i:first-child{margin-left:0}
+.kpi-p{display:inline-block;margin-top:8px;font-family:var(--f-mono);font-size:10.5px;color:#f3d27a;border:1px solid #f3d27a66;border-radius:3px;padding:2px 6px}
 .c-truck{color:var(--truck)}.c-pe{color:var(--pe)}.c-flow{color:var(--flow)}
 .hint{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
 .hint i{display:inline-block;width:14px;height:22px;border:1.5px solid var(--muted);border-radius:8px;position:relative}
@@ -154,6 +169,9 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <h2>Fuga controlada, servicio restablecido</h2>
     <p>Solución en la primera atención y seguridad para la comunidad.</p>
     <div class="stat"><div><strong class="c-pe">≥ 95 %</strong><span>emergencias atendidas en menos de 60 min · meta</span></div></div>
+  </div></section>
+  <section class="step"><div class="card kcard">
+    <div class="kpi" data-part="7"></div>
   </div></section>
 </main>
 <div class="legend" id="legend"><div><i style="background:#d93a2b"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
@@ -1756,12 +1774,31 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  $('legend').style.opacity=(world===0&&PART!==4)?1:0;
+  $('legend').style.opacity=(world===0&&PART!==4&&!(steps[steps.length-1].querySelector('.kcard')&&cur>steps.length-1.25))?1:0;
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTimeout(()=>l.hidden=true,700);});
+})();
+</script>
+<script>
+// indicadores de Junta Directiva: se leen de kpis.json (un solo archivo para actualizar todas las partes)
+(function(){
+  const el=document.querySelectorAll('.kpi[data-part],[data-kpi]'); if(!el.length)return;
+  fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
+    const col=e=>{if(e==null)return null; for(const [m,c] of K.semaforo)if(e>=m)return c; return K.semaforo[K.semaforo.length-1][1];};
+    const pct=e=>e==null?'—':(String(Math.round(e*10)/10).replace('.',',')+' %');
+    document.querySelectorAll('[data-kpi]').forEach(x=>{const k=K.kpis[x.dataset.kpi]; if(k&&k.real)x.textContent=k.real;});
+    document.querySelectorAll('.kpi[data-part]').forEach(box=>{
+      const ids=(K.partes[box.dataset.part]||[]);
+      const rows=ids.map(id=>{const k=K.kpis[id]; if(!k)return ''; const c=col(k.ejec);
+        return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}</span></div>`+
+               `<div class="kpi-v">${k.real??'—'}</div><div class="kpi-e${c?'':' na'}" style="${c?'background:'+c:''}">${c?pct(k.ejec):'pendiente'}</div></div>`;}).join('');
+      const leg=K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
+      box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>Corte ${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
+    });
+  }).catch(()=>{});
 })();
 </script>
 </body></html>

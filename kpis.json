@@ -1,0 +1,28 @@
+{
+  "corte": "Mayo 2026",
+  "pendiente": true,
+  "nota": "Valores del cuadro de mando de mayo 2026; se actualizan con el corte al 31 de octubre de 2026.",
+  "semaforo": [[98, "#2fb36b", "≥ 98 %"], [90, "#e8b931", "90 – 98 %"], [80, "#f08a24", "80 – 90 %"], [0, "#e5483a", "< 80 %"]],
+  "perspectivas": ["Financiera", "Mercado y negocios", "Foco cliente y calidad del servicio", "Procesos y sostenibilidad"],
+  "partes": {"5": ["msrp", "nrp", "mant"], "1": ["clientes", "capex", "cont", "irst", "tv"], "2": ["rotura", "emis", "ltifr"], "6": ["perd", "ami", "qr"], "7": ["emc", "emnc", "spv", "trest"]},
+  "kpis": {
+    "capex":    {"nombre": "Ejecución CAPEX", "unidad": "$M", "real": "7.126", "ppto": "5.206", "ejec": 137, "p": 0},
+    "clientes": {"nombre": "Clientes conectados", "unidad": "#", "real": "11.147", "ppto": "11.314", "ejec": 99, "p": 1},
+    "msrp":     {"nombre": "Market Share RP", "unidad": "%", "real": "93 %", "ppto": "95 %", "ejec": 98, "p": 1},
+    "nrp":      {"nombre": "Normalización usuarios RP", "unidad": "%", "real": "95,2 %", "ppto": "97 %", "ejec": 98, "p": 1},
+    "tv":       {"nombre": "Trabajos varios", "unidad": "%", "real": null, "ppto": null, "ejec": null, "p": 1},
+    "cont":     {"nombre": "Continuidad del servicio", "unidad": "%", "real": "100 %", "ppto": "99 %", "ejec": 101, "p": 2},
+    "irst":     {"nombre": "IRST", "unidad": "%", "real": "99,8 %", "ppto": "100 %", "ejec": 99.8, "p": 2},
+    "qr":       {"nombre": "QR imputables total GO", "unidad": "#", "real": "374", "ppto": "260", "ejec": 70, "inverso": true, "p": 2},
+    "trest":    {"nombre": "Tiempo promedio de restablecimiento", "unidad": "h", "real": "35,7", "ppto": "36,6", "ejec": 103, "inverso": true, "p": 2},
+    "emc":      {"nombre": "Atención emergencias controladas", "unidad": "h", "real": "5,4", "ppto": "10", "ejec": 185, "inverso": true, "p": 2},
+    "emnc":     {"nombre": "Atención emergencias no controladas", "unidad": "h", "real": "0,50", "ppto": "0,58", "ejec": 116, "inverso": true, "p": 2},
+    "spv":      {"nombre": "Solución en primera visita", "unidad": "%", "real": "44 %", "ppto": "40 %", "ejec": 110, "p": 2},
+    "mant":     {"nombre": "Plan de mantenimiento", "unidad": "%", "real": "99,7 %", "ppto": "98 %", "ejec": 102, "p": 3},
+    "rotura":   {"nombre": "Índice de rotura", "unidad": "", "real": "0,92", "ppto": "0,83", "ejec": 90, "inverso": true, "p": 3},
+    "ami":      {"nombre": "Medición avanzada", "unidad": "medidores", "real": "3.204", "ppto": "3.262", "ejec": 98, "p": 3},
+    "perd":     {"nombre": "Índice de pérdidas", "unidad": "%", "real": "3,1 %", "ppto": "< 3,5 %", "ejec": 113, "inverso": true, "p": 3},
+    "ltifr":    {"nombre": "Accidentalidad (LTIFR)", "unidad": "", "real": "0,1", "ppto": "0,2", "ejec": 100, "inverso": true, "p": 3},
+    "emis":     {"nombre": "Emisiones por roturas", "unidad": "t CO₂e", "real": "7.909", "ppto": "6.690", "ejec": 85, "inverso": true, "p": 3}
+  }
+}
