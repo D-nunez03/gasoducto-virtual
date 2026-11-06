@@ -64,9 +64,9 @@
   "capex": {
    "nombre": "Ejecución CAPEX",
    "unidad": "$M",
-   "real": "1.529,9",
-   "ppto": "1.709,5",
-   "ejec": 89.5,
+   "real": "10.171",
+   "ppto": "12.980",
+   "ejec": 78.4,
    "p": 0
   },
   "clientes": {
