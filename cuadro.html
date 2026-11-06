@@ -76,7 +76,7 @@ fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
         const t=document.createElement('div'); t.className='tile'; if(cc)t.style.setProperty('--c',cc);
         t.innerHTML=`<div class="tn">${k.nombre}</div><div class="tv"><strong>${k.real??'—'}${k.real?u:''}</strong>`+
           `<span class="pill${cc?'':' na'}">${cc?fmt(k.ejec):'pendiente'}</span></div>`+
-          `<div class="tp"><span>Ppto ${k.ppto??'—'}</span><span>${k.inverso?'menor es mejor':''}</span></div>`+
+          `<div class="tp"><span>Ppto ${k.ppto??'—'}</span><span>${k.nota?'<b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':(k.inverso?'menor es mejor':'')}</span></div>`+
           `<div class="bar"><i data-w="${k.ejec==null?0:Math.min(100,k.ejec)}"></i></div>`;
         T.appendChild(t);});
       B.appendChild(c);});

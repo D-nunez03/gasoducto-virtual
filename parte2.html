@@ -1782,7 +1782,7 @@ requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTim
     document.querySelectorAll('.kpi[data-part]').forEach(box=>{
       const ids=(K.partes[box.dataset.part]||[]);
       const rows=ids.map(id=>{const k=K.kpis[id]; if(!k)return ''; const c=col(k.ejec);
-        return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}</span></div>`+
+        return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}${k.nota?' · <b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':''}</span></div>`+
                `<div class="kpi-v">${k.real??'—'}</div><div class="kpi-e${c?'':' na'}" style="${c?'background:'+c:''}">${c?pct(k.ejec):'pendiente'}</div></div>`;}).join('');
       const leg=K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
       box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>Corte ${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
