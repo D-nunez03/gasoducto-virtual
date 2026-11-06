@@ -104,11 +104,10 @@
   "cont": {
    "nombre": "Continuidad del servicio",
    "unidad": "%",
-   "real": "100 %",
+   "real": "99,99 %",
    "ppto": "99 %",
    "ejec": 101,
-   "p": 2,
-   "nota": "dato de mayo"
+   "p": 2
   },
   "irst": {
    "nombre": "IRST",
