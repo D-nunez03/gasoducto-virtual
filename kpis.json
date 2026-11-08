@@ -205,14 +205,13 @@
    "p": 3
   },
   "emis": {
-   "nombre": "Emisiones por roturas",
+   "nombre": "Emisiones (huella descarbonizada)",
    "unidad": "t CO₂e",
-   "real": "7.909",
-   "ppto": "6.690",
-   "ejec": 85,
+   "real": "14.307",
+   "ppto": "13.381",
+   "ejec": 94,
    "inverso": true,
-   "p": 3,
-   "nota": "dato de mayo"
+   "p": 3
   }
  }
 }
