@@ -36,7 +36,7 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden
 .tag.town{border-left:3px solid var(--pe)}
 
 #story{position:relative;z-index:2;padding-inline:max(16px,5vw);padding-bottom:80vh;pointer-events:none}
-.step{min-height:200vh;display:flex;align-items:flex-start;padding-block:22vh 0}
+.step{min-height:260vh;display:flex;align-items:flex-start;padding-block:22vh 0}
 .step .card{position:sticky;top:22vh}
 .step:last-child{min-height:150vh}
 .card{pointer-events:auto;max-width:410px;background:color-mix(in srgb,var(--ink) 92%,transparent);border:1px solid var(--ink-2);border-radius:6px;padding:22px 24px 24px;box-shadow:0 18px 40px -18px rgba(5,15,20,.55);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:10px}
@@ -701,11 +701,11 @@ scene.add(heroGroup); heroGroup.updateMatrixWorld(true);
   const riserBase=L(-0.24,-0.05,0.16);
   const tap=V(heroF.pipe[0],heroF.pipe[1],0.55);
   // acometida a ras de piso (como en la red convencional): baja desde la red, corre por el andén y sube al centro de medición
-  const G=0.19, t0=new THREE.Vector3(tap.x,G,tap.z), rb0=riserBase.clone(); rb0.y=G;
+  const G=0.06, t0=new THREE.Vector3(tap.x,G,tap.z), rb0=riserBase.clone(); rb0.y=G;
   const t1=t0.clone().lerp(rb0,0.06), r1=rb0.clone().lerp(t0,0.06), mid=t0.clone().lerp(rb0,0.5), rb=L(-0.24,0.0,0.16);
   const tapD=new THREE.Vector3(tap.x,G+0.08,tap.z);
-  const ac=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([tap,tapD,t1,mid,r1,rb0,rb],false,'centripetal'),80,0.035,8,false),M(YEL)); scene.add(ac);
-  acoCurve=new THREE.CatmullRomCurve3([tap,tapD,t1,mid,r1,rb0,L(-0.24,0.05,0.16),L(-0.24,0.36,0.16),L(-0.24,0.6,0.16),L(-0.24,0.95,0.16),L(-0.16,1.0,0.16),L(-0.08,0.92,0.16),L(-0.08,0.7,0.13),L(0.03,0.55,0.13),L(0.14,0.7,0.13),L(0.14,1.08,0.13),L(0.14,1.12,0.02)],false,'centripetal');
+  const ac=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([t0,t1,mid,r1,rb0,rb],false,'centripetal'),80,0.035,8,false),M(YEL)); scene.add(ac);
+  acoCurve=new THREE.CatmullRomCurve3([t0,t1,mid,r1,rb0,L(-0.24,0.05,0.16),L(-0.24,0.36,0.16),L(-0.24,0.6,0.16),L(-0.24,0.95,0.16),L(-0.16,1.0,0.16),L(-0.08,0.92,0.16),L(-0.08,0.7,0.13),L(0.03,0.55,0.13),L(0.14,0.7,0.13),L(0.14,1.08,0.13),L(0.14,1.12,0.02)],false,'centripetal');
   acoMid=riserBase.clone().lerp(tap,0.5); acoMid.y=0.6;
   window.__parts={reg:L(-0.24,0.72,0.2),val:L(-0.24,0.42,0.22),med:L(0.03,0.86,0.2),aco:L(-0.24,0.12,0.2),int:L(0.14,1.18,0.1)};
 })();
@@ -1716,7 +1716,7 @@ function perf(){pfN++; const now=performance.now(); if(now-pfT<1500)return; cons
   if(FPSB){const i=renderer.info.render;FPSB.textContent=fps.toFixed(0)+' fps · res '+PR.toFixed(2)+'x · '+(i.triangles/1e6).toFixed(2)+' M tri · '+i.calls+' llamadas';}}
 function frame(){
   const dt=Math.min(clock.getDelta(),0.05), time=clock.elapsedTime;
-  cur+= (target-cur)*(reduce?1:1-Math.pow(0.12,dt));
+  {const dl=(target-cur)*(reduce?1:1-Math.pow(0.12,dt)), vmax=reduce?99:0.42*Math.min(dt,0.1)*10/10; cur+= reduce?dl:Math.max(-0.42*dt,Math.min(0.42*dt,dl));} // velocidad máxima de cámara: evita zooms bruscos
   const world=PART===5?1:0, gs=mapPart(cur), c2=gs;
   let camD;
   if(world===0){

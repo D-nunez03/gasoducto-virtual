@@ -36,7 +36,7 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden
 .tag.town{border-left:3px solid var(--pe)}
 
 #story{position:relative;z-index:2;padding-inline:max(16px,5vw);padding-bottom:80vh;pointer-events:none}
-.step{min-height:200vh;display:flex;align-items:flex-start;padding-block:22vh 0}
+.step{min-height:260vh;display:flex;align-items:flex-start;padding-block:22vh 0}
 .step .card{position:sticky;top:22vh}
 .step:last-child{min-height:150vh}
 .card{pointer-events:auto;max-width:410px;background:color-mix(in srgb,var(--ink) 92%,transparent);border:1px solid var(--ink-2);border-radius:6px;padding:22px 24px 24px;box-shadow:0 18px 40px -18px rgba(5,15,20,.55);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:10px}
@@ -1702,7 +1702,7 @@ function perf(){pfN++; const now=performance.now(); if(now-pfT<1500)return; cons
   if(FPSB){const i=renderer.info.render;FPSB.textContent=fps.toFixed(0)+' fps · res '+PR.toFixed(2)+'x · '+(i.triangles/1e6).toFixed(2)+' M tri · '+i.calls+' llamadas';}}
 function frame(){
   const dt=Math.min(clock.getDelta(),0.05), time=clock.elapsedTime;
-  cur+= (target-cur)*(reduce?1:1-Math.pow(0.12,dt));
+  {const dl=(target-cur)*(reduce?1:1-Math.pow(0.12,dt)), vmax=reduce?99:0.42*Math.min(dt,0.1)*10/10; cur+= reduce?dl:Math.max(-0.42*dt,Math.min(0.42*dt,dl));} // velocidad máxima de cámara: evita zooms bruscos
   const world=PART===5?1:0, gs=mapPart(cur), c2=gs;
   let camD;
   if(world===0){
