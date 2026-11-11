@@ -168,11 +168,13 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="eyebrow"><b>03</b> Industria · Mamonal</div>
     <h2>Energía para la industria</h2>
     <p>Plantas como Cementos Argos usan gas natural en sus procesos.</p>
+    <div class="stat"><div><strong class="c-flow">141</strong><span>clientes industriales activos</span></div></div>
   </div></section>
   <section class="step"><div class="card">
     <div class="eyebrow"><b>04</b> Comercio · Bocagrande</div>
     <h2>Restaurantes y comercios</h2>
     <p>Restaurantes, hoteles y locales de Bocagrande cocinan con gas natural.</p>
+    <div class="stat"><div><strong class="c-flow">9.644</strong><span>clientes comerciales activos</span></div></div>
     <div class="chip">Servicios de mantenimiento industriales y comerciales</div>
   </div></section>
   <section class="step"><div class="card">
@@ -182,12 +184,22 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="stat"><div><strong class="c-pe">25 – 60</strong><span>psig · red secundaria</span></div></div>
   </div></section>
   <section class="step"><div class="card">
-    <div class="eyebrow"><b>06</b> Trabajos varios</div>
-    <h2>Servicios asociados</h2>
-    <p>Cambio de regulador, reubicación de medidores y mantenimiento de gasodomésticos.</p>
+    <div class="eyebrow"><b>06</b> Hogares</div>
+    <h2>Gas natural en casa</h2>
+    <p>La red de polietileno llega hasta el medidor de cada vivienda.</p>
+    <div class="stat"><div><strong class="c-pe">816.024</strong><span>hogares activos</span></div><div><strong class="c-flow"><span data-kpi="clientes">23.020</span></strong><span>conectados en 2026 · meta <span data-kpi-ppto="clientes">23.279</span></span></div></div>
   </div></section>
   <section class="step"><div class="card kcard">
-    <div class="kpi" data-part="1"></div>
+    <div class="eyebrow"><b>07</b> Revisión periódica</div>
+    <h2>Una revisión cada 5 años</h2>
+    <p>Un inspector acreditado verifica la instalación y busca fugas (Res. CREG 059 de 2012). Si encuentra un defecto, se genera una orden de trabajo.</p>
+    <div class="kpi" data-part="1rp" data-bare="1"></div>
+  </div></section>
+  <section class="step"><div class="card kcard">
+    <div class="eyebrow"><b>08</b> Trabajos varios</div>
+    <h2>Servicios asociados</h2>
+    <p>De la revisión se derivan trabajos como el cambio de regulador, la reubicación de medidores y el mantenimiento de gasodomésticos.</p>
+    <div class="kpi" data-part="1" data-bare="1"></div>
   </div></section>
 </main>
 <div class="legend" id="legend"><div><i style="background:#d93a2b"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
@@ -1529,6 +1541,7 @@ const KC=[
  {s:6.05,t:heroCw,d:260,az:hiAz+0.3,el:0.9},
  {s:6.25,t:heroCw,d:26,az:hiAz+0.5,el:0.42},
  {s:6.45,t:meterCw,d:4.6,az:hiAz+0.5,el:0.18,reg:0},
+ {s:6.62,t:meterCw,d:4.4,az:hiAz+0.42,el:0.17,reg:0},
  {s:6.82,t:meterCw,d:4.0,az:hiAz+0.3,el:0.15,reg:1},
  {s:7.00,t:meterCw,d:4.0,az:hiAz+0.25,el:0.15},
  // parte 2: prevención de daños
@@ -1601,7 +1614,7 @@ function tagVisibleC(k,s,d){
   if(k==='c-sc')return (s>2.3&&s<2.98)||(s>4.1&&s<4.97);
   if(k==='c-reg2')return false;
   if(k==='c-popa')return s>5.1&&s<5.9;
-  if(k==='c-reg')return s>6.4&&s<7.0&&d<6;
+  if(k==='c-reg')return s>6.6&&s<7.0&&d<6;
   if(k==='c-dig')return s>7.5&&s<9.0;
   if(k==='c-sede')return s>9.1&&s<10.0;
   if(k==='c-lab')return s>10.2&&s<11.0;
@@ -1717,7 +1730,7 @@ addEventListener('resize',resize);resize();
 // ---------- loop ----------
 const clock=new THREE.Clock(); const tmp=new THREE.Vector3();
 let lastRail=-1;
-const PMAP={1:[[0,0],[7,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]],7:[[0,17],[1,17.95],[2,19.15],[3,19.62],[4,21]]}[PART];
+const PMAP={1:[[0,0],[5,5],[6,6.15],[7,6.35],[8,6.62],[9,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]],7:[[0,17],[1,17.95],[2,19.15],[3,19.62],[4,21]]}[PART];
 function mapPart(l){for(let i=0;i<PMAP.length-1;i++){const a=PMAP[i],b=PMAP[i+1];if(l<=b[0]||i===PMAP.length-2)return a[1]+(b[1]-a[1])*clamp((l-a[0])/(b[0]-a[0]),0,1);}return PMAP[0][1];}
 const CAMO=(location.search.match(/cam=([^&]+)/)||[])[1];
 // resolución adaptativa: si el equipo no sostiene ~40 fps baja la resolución de dibujo; si sobra, la sube (tope 1,5x)
@@ -1790,7 +1803,7 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  $('legend').style.opacity=(world===0&&PART!==4&&!(steps[steps.length-1].querySelector('.kcard')&&cur>steps.length-1.25))?1:0;
+  {const si=Math.min(steps.length-1,Math.floor(cur+0.25)); $('legend').style.opacity=(world===0&&PART!==4&&!steps[si].querySelector('.kcard'))?1:0;}
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);
@@ -1806,13 +1819,14 @@ requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTim
     const col=e=>{if(e==null)return null; for(const [m,c] of K.semaforo)if(e>=m)return c; return K.semaforo[K.semaforo.length-1][1];};
     const pct=e=>e==null?'—':(String(Math.round(e*10)/10).replace('.',',')+' %');
     document.querySelectorAll('[data-kpi]').forEach(x=>{const k=K.kpis[x.dataset.kpi]; if(k&&k.real)x.textContent=k.real;});
+    document.querySelectorAll('[data-kpi-ppto]').forEach(x=>{const k=K.kpis[x.dataset.kpiPpto]; if(k&&k.ppto)x.textContent=k.ppto;});
     document.querySelectorAll('.kpi[data-part]').forEach(box=>{
       const ids=(K.partes[box.dataset.part]||[]);
       const rows=ids.map(id=>{const k=K.kpis[id]; if(!k)return ''; const c=col(k.ejec);
         return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}${k.nota?' · <b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':''}</span></div>`+
                `<div class="kpi-v">${k.real??'—'}</div><div class="kpi-e${c?'':' na'}" style="${c?'background:'+c:''}">${c?pct(k.ejec):'pendiente'}</div></div>`;}).join('');
       const leg=K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
-      box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
+      box.innerHTML=(box.dataset.bare?`<div class="kpi-h" style="margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--paper) 18%,transparent)"><small>Indicadores · ${K.corte}</small></div>`:`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>${K.corte}</small></div>`)+`${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
     });
   }).catch(()=>{});
 })();

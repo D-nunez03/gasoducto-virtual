@@ -700,9 +700,12 @@ scene.add(heroGroup); heroGroup.updateMatrixWorld(true);
   meterWorld=L(-0.08,0.6,0.15);
   const riserBase=L(-0.24,-0.05,0.16);
   const tap=V(heroF.pipe[0],heroF.pipe[1],0.55);
-  const mid=riserBase.clone().lerp(tap,0.5);mid.y=0.4; const rb=riserBase.clone();rb.y=0.4;
-  const ac=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([tap,new THREE.Vector3(tap.x,0.4,tap.z),mid,rb,L(-0.24,0.0,0.16)]),50,0.035,8,false),M(YEL)); scene.add(ac);
-  acoCurve=new THREE.CatmullRomCurve3([tap,new THREE.Vector3(tap.x,0.4,tap.z),mid,rb,L(-0.24,0.05,0.16),L(-0.24,0.36,0.16),L(-0.24,0.6,0.16),L(-0.24,0.95,0.16),L(-0.16,1.0,0.16),L(-0.08,0.92,0.16),L(-0.08,0.7,0.13),L(0.03,0.55,0.13),L(0.14,0.7,0.13),L(0.14,1.08,0.13),L(0.14,1.12,0.02)],false,'centripetal');
+  // acometida a ras de piso (como en la red convencional): baja desde la red, corre por el andén y sube al centro de medición
+  const G=0.19, t0=new THREE.Vector3(tap.x,G,tap.z), rb0=riserBase.clone(); rb0.y=G;
+  const t1=t0.clone().lerp(rb0,0.06), r1=rb0.clone().lerp(t0,0.06), mid=t0.clone().lerp(rb0,0.5), rb=L(-0.24,0.0,0.16);
+  const tapD=new THREE.Vector3(tap.x,G+0.08,tap.z);
+  const ac=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([tap,tapD,t1,mid,r1,rb0,rb],false,'centripetal'),80,0.035,8,false),M(YEL)); scene.add(ac);
+  acoCurve=new THREE.CatmullRomCurve3([tap,tapD,t1,mid,r1,rb0,L(-0.24,0.05,0.16),L(-0.24,0.36,0.16),L(-0.24,0.6,0.16),L(-0.24,0.95,0.16),L(-0.16,1.0,0.16),L(-0.08,0.92,0.16),L(-0.08,0.7,0.13),L(0.03,0.55,0.13),L(0.14,0.7,0.13),L(0.14,1.08,0.13),L(0.14,1.12,0.02)],false,'centripetal');
   acoMid=riserBase.clone().lerp(tap,0.5); acoMid.y=0.6;
   window.__parts={reg:L(-0.24,0.72,0.2),val:L(-0.24,0.42,0.22),med:L(0.03,0.86,0.2),aco:L(-0.24,0.12,0.2),int:L(0.14,1.18,0.1)};
 })();
@@ -1774,7 +1777,7 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  $('legend').style.opacity=(world===0&&PART!==4&&!(steps[steps.length-1].querySelector('.kcard')&&cur>steps.length-1.25))?1:0;
+  {const si=Math.min(steps.length-1,Math.floor(cur+0.25)); $('legend').style.opacity=(world===0&&PART!==4&&!steps[si].querySelector('.kcard'))?1:0;}
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);

@@ -1774,7 +1774,7 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  $('legend').style.opacity=(world===0&&PART!==4&&!(steps[steps.length-1].querySelector('.kcard')&&cur>steps.length-1.25))?1:0;
+  {const si=Math.min(steps.length-1,Math.floor(cur+0.25)); $('legend').style.opacity=(world===0&&PART!==4&&!steps[si].querySelector('.kcard'))?1:0;}
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);
