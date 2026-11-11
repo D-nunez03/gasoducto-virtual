@@ -1712,7 +1712,7 @@ function perf(){pfN++; const now=performance.now(); if(now-pfT<1500)return; cons
   if(FPSB){const i=renderer.info.render;FPSB.textContent=fps.toFixed(0)+' fps · res '+PR.toFixed(2)+'x · '+(i.triangles/1e6).toFixed(2)+' M tri · '+i.calls+' llamadas';}}
 function frame(){
   const dt=Math.min(clock.getDelta(),0.05), time=clock.elapsedTime;
-  cur+= (target-cur)*(reduce?1:1-Math.pow(0.0025,dt));
+  cur+= (target-cur)*(reduce?1:1-Math.pow(0.12,dt));
   const world=PART===5?1:0, gs=mapPart(cur), c2=gs;
   let camD;
   if(world===0){
@@ -1795,7 +1795,7 @@ requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTim
         return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}${k.nota?' · <b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':''}</span></div>`+
                `<div class="kpi-v">${k.real??'—'}</div><div class="kpi-e${c?'':' na'}" style="${c?'background:'+c:''}">${c?pct(k.ejec):'pendiente'}</div></div>`;}).join('');
       const leg=K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
-      box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>Corte ${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
+      box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');
     });
   }).catch(()=>{});
 })();

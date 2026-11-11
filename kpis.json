@@ -1,5 +1,5 @@
 {
- "corte": "Octubre 2026",
+ "corte": "Acumulado 2026",
  "pendiente": false,
  "nota": "Corte al 31 de octubre de 2026 (acumulado del año).",
  "semaforo": [
@@ -31,27 +31,16 @@
   "Procesos y sostenibilidad"
  ],
  "partes": {
-  "5": [
-   "msrp",
-   "nrp",
-   "mant"
-  ],
   "1": [
-   "clientes",
-   "capex",
-   "cont",
-   "irst",
    "tv"
   ],
   "2": [
    "rotura",
-   "emis",
-   "ltifr"
+   "emis"
   ],
   "6": [
    "perd",
-   "ami",
-   "qr"
+   "ami"
   ],
   "7": [
    "emc",

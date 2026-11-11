@@ -64,7 +64,7 @@ footer{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin
 fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
   const col=e=>{if(e==null)return null;for(const [m,c] of K.semaforo)if(e>=m)return c;return K.semaforo.at(-1)[1];};
   const fmt=e=>String(Math.round(e*10)/10).replace('.',',')+' %';
-  document.getElementById('meta').innerHTML=`<b>Corte ${K.corte}</b><br>`+(K.pendiente?'<span class="pend">Pendiente de actualizar al corte de octubre 2026</span>':'Junta Directiva');
+  document.getElementById('meta').innerHTML=`<b>${K.corte}</b><br>`+(K.pendiente?'<span class="pend">Pendiente de actualizar al corte de octubre 2026</span>':'Junta Directiva');
   document.getElementById('leg').innerHTML='% de ejecución: '+K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
   const g=document.getElementById('grid');
   const blocks=[{cols:1,secs:[0,1]},{cols:2,secs:[2]},{cols:2,secs:[3]}];
