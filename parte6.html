@@ -1712,11 +1712,20 @@ function perf(){pfN++; const now=performance.now(); if(now-pfT<1500)return; cons
   if(FPSB){const i=renderer.info.render;FPSB.textContent=fps.toFixed(0)+' fps · res '+PR.toFixed(2)+'x · '+(i.triangles/1e6).toFixed(2)+' M tri · '+i.calls+' llamadas';}}
 function frame(){
   const dt=Math.min(clock.getDelta(),0.05), time=clock.elapsedTime;
-  {const dl=(target-cur)*(reduce?1:1-Math.pow(0.12,dt)), vmax=reduce?99:0.42*Math.min(dt,0.1)*10/10; cur+= reduce?dl:Math.max(-0.42*dt,Math.min(0.42*dt,dl));} // velocidad máxima de cámara: evita zooms bruscos
+  {const dl=(target-cur)*(reduce?1:1-Math.pow(0.12,dt)), vmax=reduce?99:0.42*Math.min(dt,0.1)*10/10; cur+= reduce?dl:Math.max(-0.7*dt,Math.min(0.7*dt,dl));} // velocidad máxima de cámara: evita zooms bruscos
   const world=PART===5?1:0, gs=mapPart(cur), c2=gs;
   let camD;
   if(world===0){
-    const S=sampleC(gs); if(CAMO){const q=CAMO.split(',').map(Number);S.t=V(q[0],q[1],q[5]||0);S.d=q[2];S.az=q[3];S.el=q[4];} const tgt=S.t;
+    const S=sampleC(gs); if(CAMO){const q=CAMO.split(',').map(Number);S.t=V(q[0],q[1],q[5]||0);S.d=q[2];S.az=q[3];S.el=q[4];}
+    // cámara con inercia: el acercamiento y el desplazamiento tienen velocidad máxima y frenan al llegar (sin zooms bruscos)
+    if(!CAMO&&!reduce){ const h=Math.min(dt,0.05);
+      if(!window.CSm){window.CSm={t:S.t.clone(),ld:Math.log(S.d),az:S.az,el:S.el};}
+      const C=window.CSm, ldT=Math.log(S.d), dl=ldT-C.ld, vz=Math.min(1.8,2.2*Math.abs(dl)+0.04);
+      C.ld+=Math.sign(dl)*Math.min(Math.abs(dl),vz*h);
+      const dist=C.t.distanceTo(S.t), vt=Math.min(3.0*dist+0.2,1.6*Math.exp(C.ld)); if(dist>1e-4)C.t.lerp(S.t,Math.min(1,vt*h/dist));
+      let da=S.az-C.az; da=Math.atan2(Math.sin(da),Math.cos(da)); C.az+=da*(1-Math.exp(-2.4*h)); C.el+=(S.el-C.el)*(1-Math.exp(-2.4*h));
+      S.t=C.t.clone(); S.d=Math.exp(C.ld); S.az=C.az; S.el=C.el; }
+    const tgt=S.t;
     camera.position.set(tgt.x+Math.sin(S.az)*Math.cos(S.el)*S.d, tgt.y+Math.sin(S.el)*S.d, tgt.z+Math.cos(S.az)*Math.cos(S.el)*S.d);
     if(camera.position.y<1.0)camera.position.y=1.0;
     camera.lookAt(tgt); camD=S.d;
