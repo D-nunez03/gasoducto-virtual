@@ -1,7 +1,7 @@
 {
  "corte": "Acumulado 2026",
  "pendiente": false,
- "nota": "Corte al 31 de octubre de 2026 (acumulado del año).",
+ "nota": "Acumulado 2026.",
  "semaforo": [
   [
    98,
@@ -94,8 +94,7 @@
    "real": "61.233",
    "ppto": "74.809",
    "ejec": 81.9,
-   "p": 1,
-   "nota": "corte 17 nov"
+   "p": 1
   },
   "rpq": {
    "nombre": "Revisiones periódicas",
@@ -103,8 +102,7 @@
    "real": "144.691",
    "ppto": "154.400",
    "ejec": 93.7,
-   "p": 1,
-   "nota": "corte oct"
+   "p": 1
   },
   "cont": {
    "nombre": "Continuidad del servicio",

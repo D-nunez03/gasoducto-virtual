@@ -68,10 +68,8 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
 .seg span{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .seg .pc{font-family:var(--f-mono);font-size:17px;font-weight:600;padding:5px 12px;border-radius:999px;color:#08131d;align-self:flex-start}
 .seg em{grid-column:1/-1;font-style:normal;font-family:var(--f-mono);font-size:12px;color:#f3d27a;margin-top:4px}
-.alerta{align-self:flex-start;display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:22px;line-height:1;padding:9px 14px;border-radius:4px;background:#e5483a;color:#fff;box-shadow:0 0 0 0 #e5483a99;animation:alerta 1.8s ease-out infinite}
-.alerta i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#e5483a;font-size:17px}
-@keyframes alerta{0%{box-shadow:0 0 0 0 #e5483a99}70%{box-shadow:0 0 0 14px #e5483a00}100%{box-shadow:0 0 0 0 #e5483a00}}
-@media (prefers-reduced-motion:reduce){.alerta{animation:none}}
+.alerta{align-self:flex-start;display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:22px;line-height:1;padding:9px 14px 9px 12px;border-radius:4px;background:color-mix(in srgb,var(--paper) 7%,transparent);border-left:3px solid #5cc2f2;color:var(--paper)}
+.alerta i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1.5px solid #5cc2f2;color:#5cc2f2;font-size:14px;font-family:var(--f-mono)}
 
 .kpi-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
 .kpi-h .eyebrow{margin:0}
@@ -1648,7 +1646,7 @@ function updateC(S,time,camD,s){
     RIG.gB.rotation.x=pose[0]; RIG.gS.rotation.x=pose[1]; RIG.gK.rotation.x=pose[2];}
   const tw_=clamp(dgv/0.45,0,1); trench.scale.set(0.01+tw_*3.2,1,0.01+tw_*1.6); trench.userData.mound.scale.set(0.3+tw_*0.7,0.01+tw_*0.6,0.3+tw_*0.7);
   pipeA.visible=pipeB.visible=dgv>0.3; const brk=dgv>0.47?0.12:0; pipeA.children[0].position.x=-0.75-brk; pipeB.children[0].position.x=0.75+brk;
-  let amt=clamp((dgv-0.47)/0.08,0,1)*(1-smooth(clamp((dgv-0.78)/0.08,0,1))); // al llegar la cuadrilla se corta el gas cloud.visible=amt>0.01&&camD<500; cloud.material.opacity=0.62*amt;
+  let amt=clamp((dgv-0.47)/0.08,0,1)*(1-smooth(clamp((dgv-0.78)/0.08,0,1))); cloud.visible=amt>0.01&&camD<500; cloud.material.opacity=0.62*amt;
   if(cloud.visible){const p=cloud.geometry.attributes.position.array, sd=cloud.userData.seed, o=V(dg.x,dg.y,0.3);
     for(let i=0;i<sd.length;i++){const [ph,an,sp]=sd[i];const a=(ph+time*0.22*sp)%1;const rr=a*4.5*sp;p[i*3]=o.x+Math.cos(an)*rr+a*3;p[i*3+1]=0.3+a*a*16*sp;p[i*3+2]=o.z+Math.sin(an)*rr;}
     cloud.geometry.attributes.position.needsUpdate=true;}
