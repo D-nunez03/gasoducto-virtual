@@ -1332,7 +1332,7 @@ const FR=CM.fraud, frAz=Math.atan2(FR.nx,-FR.ny), frCw=new THREE.Vector3(), frMw
   // señal wifi del medidor inteligente (titila)
   const cw=document.createElement('canvas');cw.width=cw.height=128;{const c=cw.getContext('2d');c.fillStyle='rgba(8,30,52,0.85)';c.beginPath();c.arc(64,64,62,0,6.283);c.fill();
    c.strokeStyle='#5cf2a0';c.lineCap='round';c.lineWidth=9;[[44],[30],[16]].forEach(([r])=>{c.beginPath();c.arc(64,84,r,-Math.PI*0.78,-Math.PI*0.22);c.stroke();});c.fillStyle='#5cf2a0';c.beginPath();c.arc(64,84,6,0,6.283);c.fill();}
-  const wifi=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cw),depthTest:false,transparent:true})); wifi.scale.setScalar(0.42); wifi.position.set(0.32,1.42,0.3); wifi.renderOrder=21; wifi.visible=false; mg.add(wifi);
+  const wifi=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cw),depthTest:false,transparent:true})); wifi.scale.setScalar(0.42); wifi.position.set(-0.34,1.32,0.3); wifi.renderOrder=21; wifi.visible=false; mg.add(wifi);
   g.position.copy(V(FR.x,FR.y)); g.rotation.y=frAz; sceneC.add(g); g.updateMatrixWorld(true);
   alert.position.copy(g.position).setY(Hh+3.2); sceneC.add(alert);
   frCw.copy(g.position).setY(2); frMw.copy(mg.localToWorld(new THREE.Vector3(0.03,0.6,0.15)));
@@ -1824,7 +1824,7 @@ requestAnimationFrame(()=>{frame();const l=$('loading');l.style.opacity=0;setTim
     document.querySelectorAll('.kpi[data-part]').forEach(box=>{
       const ids=(K.partes[box.dataset.part]||[]);
       const rows=ids.map(id=>{const k=K.kpis[id]; if(!k)return ''; const c=col(k.ejec);
-        return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}${k.nota?' · <b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':''}</span></div>`+
+        return `<div class="kpi-row"><div class="kpi-n">${k.nombre}<span>${k.sub?k.sub+' · ':''}Ppto ${k.ppto??'—'}${k.unidad&&!/%|#/.test(k.unidad)?' · '+k.unidad:''}${k.inverso?' · menor es mejor':''}${k.nota?' · <b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':''}</span></div>`+
                `<div class="kpi-v">${k.real??'—'}</div><div class="kpi-e${c?'':' na'}" style="${c?'background:'+c:''}">${c?pct(k.ejec):'pendiente'}</div></div>`;}).join('');
       const leg=K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
       box.innerHTML=`<div class="kpi-h"><div class="eyebrow">Indicadores del proceso</div><small>${K.corte}</small></div>${rows}<div class="kpi-f">% de ejecución: ${leg}</div>`+(K.pendiente?`<div class="kpi-p">Pendiente de actualizar al corte de octubre 2026</div>`:'');

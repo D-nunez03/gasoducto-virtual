@@ -458,7 +458,7 @@ fetch('../kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
   $$('[data-kpi]').forEach(x=>{const k=K.kpis[x.dataset.kpi]; if(k&&k.real)x.textContent=k.real;});
   $$('[data-kpi-ppto]').forEach(x=>{const k=K.kpis[x.dataset.kpiPpto]; if(k&&k.ppto)x.textContent=k.ppto;});
   $$('.kp[data-kpis]').forEach(box=>{box.innerHTML=box.dataset.kpis.split(',').map(id=>{const k=K.kpis[id]; if(!k)return '';
-    return `<div class="kr"><div class="n">${k.nombre}<small>Meta ${k.ppto??'—'}${k.inverso?' · menor es mejor':''}</small></div><div class="v">${k.real??'—'}</div><span class="pill" style="--k:${col(k.ejec)}">${pc(k.ejec)}</span></div>`;}).join('');});
+    return `<div class="kr"><div class="n">${k.nombre}<small>${k.sub?k.sub+' · ':''}Meta ${k.ppto??'—'}${k.inverso?' · menor es mejor':''}</small></div><div class="v">${k.real??'—'}</div><span class="pill" style="--k:${col(k.ejec)}">${pc(k.ejec)}</span></div>`;}).join('');});
   $('#cuadroNota').textContent=`${K.corte}, frente a la meta. % de cumplimiento = real / meta (en los inversos, meta / real).`;
   const PC=['var(--ok)','var(--flame)','var(--pe)','var(--vir)'];
   $('#persp').innerHTML=K.perspectivas.map((p,i)=>{const ks=Object.values(K.kpis).filter(k=>k.p===i&&k.cuadro!==false); if(!ks.length)return '';

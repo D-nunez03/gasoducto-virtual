@@ -91,12 +91,13 @@
    "p": 1
   },
   "ubrp": {
-   "nombre": "Utilidad bruta RP",
+   "nombre": "Revisiones periódicas",
    "unidad": "",
    "real": "$12.470 M",
    "ppto": "$13.139 M",
    "ejec": 94.9,
-   "p": 1
+   "p": 1,
+   "sub": "Utilidad bruta (UB)"
   },
   "tv": {
    "nombre": "Trabajos varios",
@@ -105,7 +106,8 @@
    "ppto": "74.809",
    "ejec": 81.9,
    "p": 1,
-   "cuadro": false
+   "cuadro": false,
+   "sub": "Cantidad"
   },
   "rpq": {
    "nombre": "Revisiones periódicas",
@@ -117,12 +119,13 @@
    "cuadro": false
   },
   "ubtv": {
-   "nombre": "Utilidad bruta trabajos varios",
+   "nombre": "Trabajos varios",
    "unidad": "",
    "real": "$5.486 M",
    "ppto": "$5.617 M",
    "ejec": 97.7,
-   "p": 1
+   "p": 1,
+   "sub": "Utilidad bruta (UB)"
   },
   "cont": {
    "nombre": "Continuidad del servicio",
