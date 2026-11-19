@@ -73,7 +73,7 @@ fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
   document.getElementById('persp').innerHTML=`<b>${K.corte}</b>`+K.perspectivas.map((p,i)=>`<span style="--c:${PC[i]}">${p}</span>`).join('');
   document.getElementById('leg').innerHTML='Cumplimiento:'+K.semaforo.map(([m,c,t])=>`<i style="background:${c}"></i>${t}`).join('');
   const g=document.getElementById('grid');
-  const ks=Object.values(K.kpis).sort((a,b)=>a.p-b.p);
+  const ks=Object.values(K.kpis).filter(k=>k.cuadro!==false).sort((a,b)=>a.p-b.p);
   ks.forEach(k=>{
     const cc=col(k.ejec), u=k.unidad&&!/%/.test(k.unidad)&&k.unidad!=='#'?`<small>${k.unidad}</small>`:'';
     const t=document.createElement('div'); t.className='tile'; if(cc)t.style.setProperty('--k',cc); t.style.setProperty('--pc',PC[k.p]);

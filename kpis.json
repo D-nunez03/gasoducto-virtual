@@ -33,7 +33,8 @@
  "partes": {
   "1": [
    "tv",
-   "rpq"
+   "rpq",
+   "ubtv"
   ],
   "2": [
    "rotura",
@@ -51,7 +52,8 @@
   ],
   "1rp": [
    "nrp",
-   "msrp"
+   "msrp",
+   "ubrp"
   ]
  },
  "kpis": {
@@ -88,6 +90,15 @@
    "ejec": 98.9,
    "p": 1
   },
+  "ubrp": {
+   "nombre": "Utilidad bruta RP",
+   "unidad": "",
+   "real": "$12.470 M",
+   "ppto": "$13.139 M",
+   "ejec": 94.9,
+   "p": 0,
+   "cuadro": false
+  },
   "tv": {
    "nombre": "Trabajos varios",
    "unidad": "#",
@@ -103,6 +114,15 @@
    "ppto": "154.400",
    "ejec": 93.7,
    "p": 1
+  },
+  "ubtv": {
+   "nombre": "Utilidad bruta trabajos varios",
+   "unidad": "",
+   "real": "$5.486 M",
+   "ppto": "$5.617 M",
+   "ejec": 97.7,
+   "p": 0,
+   "cuadro": false
   },
   "cont": {
    "nombre": "Continuidad del servicio",
