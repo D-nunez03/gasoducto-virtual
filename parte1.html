@@ -38,6 +38,7 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden
 #story{position:relative;z-index:2;padding-inline:max(16px,5vw);padding-bottom:80vh;pointer-events:none}
 .step{min-height:260vh;display:flex;align-items:flex-start;padding-block:22vh 0}
 .step .card{position:sticky;top:22vh}
+.step .stack{position:sticky;top:12vh;display:flex;flex-direction:column;gap:16px;pointer-events:none}.stack .card{position:static}
 .step:last-child{min-height:150vh}
 .card{pointer-events:auto;max-width:410px;background:color-mix(in srgb,var(--ink) 92%,transparent);border:1px solid var(--ink-2);border-radius:6px;padding:22px 24px 24px;box-shadow:0 18px 40px -18px rgba(5,15,20,.55);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:10px}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center}
@@ -138,7 +139,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
   <div class="tag cg" data-k="c-toa">TOA<small>asigna la cuadrilla más cercana</small></div>
   <div class="tag cg" data-k="c-valv">Válvula automatizada<small>cierre remoto del sector</small></div>
   <div class="tag cg" data-k="c-byp">Bypass ilegal<small>el gas no pasa por el medidor</small></div>
-  <div class="tag" data-k="c-fr">Restaurante y Asadero Felipe<small>comercio de barrio · Cartagena</small></div>
+  <div class="tag" data-k="c-fr">Restaurante Felipe<small>comercio de barrio · Cartagena</small></div>
   <div class="tag cg" data-k="c-bal">Consumos atípicos<small>balance del sector</small></div>
   <div class="tag town" data-k="c-sol">Energía solar<small>Caribe Plaza</small></div>
   <div class="tag cg" data-k="cg">Estación La Lucha<small>Sahagún · compresión y carga de GNC</small></div>
@@ -200,18 +201,16 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <p>La red de polietileno llega hasta el medidor de cada vivienda.</p>
     <div class="stat"><div><strong class="c-pe">962.614</strong><span>hogares clientes</span></div></div>
   </div></section>
-  <section class="step"><div class="card kcard">
+  <section class="step"><div class="stack"><div class="card kcard">
     <div class="eyebrow"><b>07</b> Revisión periódica</div>
     <h2>Una revisión cada 5 años</h2>
     <p>Un inspector acreditado verifica la instalación y busca fugas (Res. CREG 059 de 2012). Si encuentra un defecto, se genera una orden de trabajo.</p>
-    <div class="kpi" data-part="1rp" data-bare="1"></div>
-  </div></section>
-  <section class="step"><div class="card kcard">
+  </div><div class="card kcard"><div class="kpi" data-part="1rp"></div></div></div></section>
+  <section class="step"><div class="stack"><div class="card kcard">
     <div class="eyebrow"><b>08</b> Trabajos varios</div>
     <h2>Servicios asociados</h2>
-    <p>De la revisión se derivan trabajos como el cambio de regulador, la reubicación de medidores y el mantenimiento de gasodomésticos.</p>
-    <div class="kpi" data-part="1" data-bare="1"></div>
-  </div></section>
+    <p>De la revisión periódica, emergencias o solicitudes de los clientes se derivan trabajos como el cambio de regulador, la reubicación de medidores y el mantenimiento de gasodomésticos.</p>
+  </div><div class="card kcard"><div class="kpi" data-part="1"></div></div></div></section>
 </main>
 <div class="legend" id="legend"><div><i style="background:#d93a2b"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
 <div class="credit">Geometría: SIG Surtigas · Imagen: Esri World Imagery · Edificaciones: Google Open Buildings (alturas estimadas)</div>

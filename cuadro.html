@@ -24,8 +24,10 @@ h1{margin:.2vh 0 0;font-family:var(--f-display);font-weight:600;font-size:clamp(
 .persp{display:flex;flex-wrap:wrap;gap:.6vh 1.4vw;justify-content:flex-end;font-family:var(--f-mono);font-size:clamp(11px,1.6vh,16px);color:var(--muted)}
 .persp span::before{content:"";display:inline-block;width:.9em;height:.9em;border-radius:3px;background:var(--c);margin-right:.45em;vertical-align:-.08em}
 .persp b{color:var(--paper);font-weight:500;background:var(--ink-2);padding:.15em .7em;border-radius:999px}
-.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:1.4vh 1vw;min-height:0}
-.tile{container-type:size;position:relative;background:color-mix(in srgb,var(--ink) 90%,transparent);border:1px solid var(--ink-2);border-radius:10px;overflow:hidden;
+.grid{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:1.4vh 1vw;min-height:0}
+.tile{grid-column:span 5;container-type:size;}
+.tile.w{grid-column:span 6}
+.tile{position:relative;background:color-mix(in srgb,var(--ink) 90%,transparent);border:1px solid var(--ink-2);border-radius:10px;overflow:hidden;
   opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
 .tile.in{opacity:1;transform:none}
 .tile .c{position:absolute;inset:0;display:flex;flex-direction:column;padding:7cqh 6cqw 6cqh 8cqw}
@@ -48,7 +50,7 @@ footer{display:flex;justify-content:space-between;gap:2vw;flex-wrap:wrap;font-fa
 .leg i{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin:0 .35em 0 1.1em;vertical-align:-.05em}
 .leg i:first-child{margin-left:.4em}
 /* pantallas angostas: se permite el scroll */
-@media (max-width:900px),(max-height:420px){.wrap{height:auto;min-height:100vh}.grid{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:150px}header{flex-wrap:wrap}.persp{justify-content:flex-start}}
+@media (max-width:900px),(max-height:420px){.wrap{height:auto;min-height:100vh}.tile,.tile.w{grid-column:auto}.grid{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:150px}header{flex-wrap:wrap}.persp{justify-content:flex-start}}
 @media (prefers-reduced-motion:reduce){.tile,.bar i{transition:none}}
 </style>
 </head>
@@ -76,7 +78,7 @@ fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
   const ks=Object.values(K.kpis).filter(k=>k.cuadro!==false).sort((a,b)=>a.p-b.p);
   ks.forEach(k=>{
     const cc=col(k.ejec), u=k.unidad&&!/%/.test(k.unidad)&&k.unidad!=='#'?`<small>${k.unidad}</small>`:'';
-    const t=document.createElement('div'); t.className='tile'; if(cc)t.style.setProperty('--k',cc); t.style.setProperty('--pc',PC[k.p]);
+    const t=document.createElement('div'); t.className='tile'+(k.p<2&&ks.filter(x=>x.p<2).length===5?' w':''); if(cc)t.style.setProperty('--k',cc); t.style.setProperty('--pc',PC[k.p]);
     t.innerHTML=`<div class="c"><div class="top"><div class="tag">${['Financiera','Mercado','Cliente','Procesos'][k.p]}</div><span class="pill${cc?'':' na'}">${cc?fmt(k.ejec):'pendiente'}</span></div><div class="tn">${k.nombre}${k.nota?' <small>· '+k.nota+'</small>':''}</div>`+
       `<div class="tv"><strong>${k.real??'—'}${k.real?u:''}</strong></div>`+
       `<div class="tp"><span>Meta ${k.ppto??'—'}</span><span>${k.inverso?'↓ mejor':''}</span></div>`+

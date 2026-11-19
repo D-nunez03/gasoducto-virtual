@@ -33,7 +33,6 @@
  "partes": {
   "1": [
    "tv",
-   "rpq",
    "ubtv"
   ],
   "2": [
@@ -72,7 +71,8 @@
    "ppto": "27.766",
    "ejec": 88.9,
    "p": 1,
-   "nota": "meta anual"
+   "nota": "meta anual",
+   "cuadro": false
   },
   "nrp": {
    "nombre": "Normalización usuarios RP",
@@ -96,8 +96,7 @@
    "real": "$12.470 M",
    "ppto": "$13.139 M",
    "ejec": 94.9,
-   "p": 0,
-   "cuadro": false
+   "p": 1
   },
   "tv": {
    "nombre": "Trabajos varios",
@@ -105,7 +104,8 @@
    "real": "61.233",
    "ppto": "74.809",
    "ejec": 81.9,
-   "p": 1
+   "p": 1,
+   "cuadro": false
   },
   "rpq": {
    "nombre": "Revisiones periódicas",
@@ -113,7 +113,8 @@
    "real": "144.691",
    "ppto": "154.400",
    "ejec": 93.7,
-   "p": 1
+   "p": 1,
+   "cuadro": false
   },
   "ubtv": {
    "nombre": "Utilidad bruta trabajos varios",
@@ -121,8 +122,7 @@
    "real": "$5.486 M",
    "ppto": "$5.617 M",
    "ejec": 97.7,
-   "p": 0,
-   "cuadro": false
+   "p": 1
   },
   "cont": {
    "nombre": "Continuidad del servicio",
@@ -221,9 +221,9 @@
   "emis": {
    "nombre": "Emisiones (huella descarbonizada)",
    "unidad": "t CO₂e",
-   "real": "14.307",
-   "ppto": "13.381",
-   "ejec": 94,
+   "real": "14.577",
+   "ppto": "16.057",
+   "ejec": 110.2,
    "inverso": true,
    "p": 3
   }

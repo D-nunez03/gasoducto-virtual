@@ -138,7 +138,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
   <div class="tag cg" data-k="c-toa">TOA<small>asigna la cuadrilla más cercana</small></div>
   <div class="tag cg" data-k="c-valv">Válvula automatizada<small>cierre remoto del sector</small></div>
   <div class="tag cg" data-k="c-byp">Bypass ilegal<small>el gas no pasa por el medidor</small></div>
-  <div class="tag" data-k="c-fr">Restaurante y Asadero Felipe<small>comercio de barrio · Cartagena</small></div>
+  <div class="tag" data-k="c-fr">Restaurante Felipe<small>comercio de barrio · Cartagena</small></div>
   <div class="tag cg" data-k="c-bal">Consumos atípicos<small>balance del sector</small></div>
   <div class="tag town" data-k="c-sol">Energía solar<small>Caribe Plaza</small></div>
   <div class="tag cg" data-k="cg">Estación La Lucha<small>Sahagún · compresión y carga de GNC</small></div>
@@ -172,13 +172,11 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="eyebrow">Balance de gas</div>
     <h2>El balance lo delata</h2>
     <p>Comparamos el gas que compramos con el que facturamos. La diferencia son las pérdidas.</p>
-    <div class="stat"><div><strong class="c-truck"><span data-kpi="perd">3,1 %</span></strong><span>índice de pérdidas · meta < 3,5 %</span></div></div>
   </div></section>
   <section class="step"><div class="card">
     <div class="eyebrow">Control de pérdidas</div>
     <h2>Detectar y normalizar</h2>
     <p>Medidores digitales con alarmas e inspecciones para recuperar el gas no facturado.</p>
-    <div class="stat"><div><strong class="c-pe"><span data-kpi="ami">3.204</span></strong><span>medidores con medición avanzada</span></div></div>
   </div></section>
   <section class="step"><div class="card kcard">
     <div class="kpi" data-part="6"></div>
@@ -1313,7 +1311,7 @@ const FR=CM.fraud, frAz=Math.atan2(FR.nx,-FR.ny), frCw=new THREE.Vector3(), frMw
   // letrero del restaurante (nombre ficticio, negocio de barrio)
   {const cv=document.createElement('canvas');cv.width=1024;cv.height=200;const c=cv.getContext('2d');
    c.fillStyle='#8f1d14';c.fillRect(0,0,1024,200);c.strokeStyle='#f6d58b';c.lineWidth=10;c.strokeRect(12,12,1000,176);
-   c.fillStyle='#f6d58b';c.textAlign='center';c.textBaseline='middle';c.font='600 46px Georgia,serif';c.fillText('RESTAURANTE Y ASADERO',512,68);
+   c.fillStyle='#f6d58b';c.textAlign='center';c.textBaseline='middle';c.font='600 52px Georgia,serif';c.fillText('RESTAURANTE',512,64);
    c.fillStyle='#ffffff';c.font='bold 74px Georgia,serif';c.fillText('Felipe',512,138);
    const sw=Math.min(W-1.2,5.2), tx=new THREE.CanvasTexture(cv); tx.anisotropy=4;
    const sg=new THREE.Mesh(new THREE.PlaneGeometry(sw,sw*200/1024),new THREE.MeshLambertMaterial({map:tx,emissive:new THREE.Color('#ffffff'),emissiveMap:tx,emissiveIntensity:0.35}));
@@ -1331,6 +1329,10 @@ const FR=CM.fraud, frAz=Math.atan2(FR.nx,-FR.ny), frCw=new THREE.Vector3(), frMw
   // alerta del medidor digital (AMI)
   const cv=document.createElement('canvas');cv.width=cv.height=128;const c=cv.getContext('2d');c.fillStyle='#e23b2e';c.beginPath();c.arc(64,64,58,0,6.283);c.fill();c.fillStyle='#fff';c.font='bold 84px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText('!',64,70);
   const alert=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false,transparent:true})); alert.scale.setScalar(1.6); alert.renderOrder=20; alert.visible=false;
+  // señal wifi del medidor inteligente (titila)
+  const cw=document.createElement('canvas');cw.width=cw.height=128;{const c=cw.getContext('2d');c.fillStyle='rgba(8,30,52,0.85)';c.beginPath();c.arc(64,64,62,0,6.283);c.fill();
+   c.strokeStyle='#5cf2a0';c.lineCap='round';c.lineWidth=9;[[44],[30],[16]].forEach(([r])=>{c.beginPath();c.arc(64,84,r,-Math.PI*0.78,-Math.PI*0.22);c.stroke();});c.fillStyle='#5cf2a0';c.beginPath();c.arc(64,84,6,0,6.283);c.fill();}
+  const wifi=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cw),depthTest:false,transparent:true})); wifi.scale.setScalar(0.42); wifi.position.set(0.32,1.42,0.3); wifi.renderOrder=21; wifi.visible=false; mg.add(wifi);
   g.position.copy(V(FR.x,FR.y)); g.rotation.y=frAz; sceneC.add(g); g.updateMatrixWorld(true);
   alert.position.copy(g.position).setY(Hh+3.2); sceneC.add(alert);
   frCw.copy(g.position).setY(2); frMw.copy(mg.localToWorld(new THREE.Vector3(0.03,0.6,0.15)));
@@ -1348,7 +1350,7 @@ const FR=CM.fraud, frAz=Math.atan2(FR.nx,-FR.ny), frCw=new THREE.Vector3(), frMw
   const van=surtigasVan('van1',5.7); const vg=new THREE.Group(); vg.add(van); van.rotation.y=Math.PI/2; vg.visible=false; sceneC.add(vg);
   const t1=person('trab1',1.76); t1.position.set(along+0.65,0.15,D/2+0.9); t1.rotation.y=Math.PI*1.1; t1.visible=false; g.add(t1);
   const nX=FR.nx, nY=FR.ny, tX=-nY, tY=nX;
-  FX={mg,byp,mag,seal,alert,marks,bad,legal,fraud,vg,t1,cur:legal,v:2731.418,base:[FR.x+FR.nx*(D/2+4.5),FR.y+FR.ny*(D/2+4.5)],t:[tX,tY]};
+  FX={wifi,mg,byp,mag,seal,alert,marks,bad,legal,fraud,vg,t1,cur:legal,v:2731.418,base:[FR.x+FR.nx*(D/2+4.5),FR.y+FR.ny*(D/2+4.5)],t:[tX,tY]};
 })();
 const frFlow=new THREE.InstancedMesh(new THREE.SphereGeometry(0.022,8,6),new THREE.MeshBasicMaterial({color:0xa052ff,fog:false}),70); frFlow.visible=false; sceneC.add(frFlow);
 function updateFraud(S,time,camD,s){
@@ -1364,6 +1366,7 @@ function updateFraud(S,time,camD,s){
   FX.alert.visible=on&&nm>0.05&&nm<0.6; FX.alert.material.opacity=0.6+0.4*Math.sin(time*7); FX.alert.scale.setScalar(Math.max(1.6,camD*0.05));
   FX.vg.visible=on&&nm>0.1; if(FX.vg.visible){const off=-6-36*(1-smooth(clamp((nm-0.1)/0.35,0,1))); FX.vg.position.copy(V(FX.base[0]+FX.t[0]*off,FX.base[1]+FX.t[1]*off)); FX.vg.rotation.y=Math.atan2(FX.t[1],FX.t[0]);}
   FX.t1.visible=on&&nm>0.45;
+  FX.wifi.visible=on&&nm>0.3; FX.wifi.material.opacity=0.35+0.65*(0.5+0.5*Math.sin(time*5));
 }
 
 // ---- Parte 7 · atención de emergencias: fuga en vivienda, llamada al 164, despacho, válvula y restablecimiento
