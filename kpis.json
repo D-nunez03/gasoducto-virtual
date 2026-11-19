@@ -32,7 +32,6 @@
  ],
  "partes": {
   "1": [
-   "tv",
    "ubtv"
   ],
   "2": [
@@ -226,8 +225,7 @@
    "unidad": "t CO₂e",
    "real": "14.577",
    "ppto": "16.057",
-   "ejec": 110.2,
-   "inverso": true,
+   "ejec": 90.8,
    "p": 3
   }
  }

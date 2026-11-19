@@ -211,8 +211,8 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="eyebrow"><b>08</b> Trabajos varios</div>
     <h2>Servicios asociados</h2>
     <p>De la revisión periódica, emergencias o solicitudes de los clientes se derivan trabajos como el cambio de regulador, la reubicación de medidores y el mantenimiento de gasodomésticos.</p>
+    <div class="kpi" data-part="1" data-bare="1"></div>
   </div></section>
-  <section class="step"><div class="card kcard"><div class="kpi" data-part="1"></div></div></section>
 </main>
 <div class="legend" id="legend"><div><i style="background:#d93a2b"></i>Transporte · Promigas</div><div><i style="background:#3f93d8"></i>Acero</div><div><i style="background:#ff5fa8"></i>Polietileno P100</div><div><i style="background:#e8b931"></i>Polietileno P80</div></div>
 <div class="credit">Geometría: SIG Surtigas · Imagen: Esri World Imagery · Edificaciones: Google Open Buildings (alturas estimadas)</div>
@@ -1742,7 +1742,7 @@ addEventListener('resize',resize);resize();
 // ---------- loop ----------
 const clock=new THREE.Clock(); const tmp=new THREE.Vector3();
 let lastRail=-1;
-const PMAP={1:[[0,0],[5,5],[6,6.15],[7,6.35],[8,6.55],[9,6.62],[10,6.86],[11,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]],7:[[0,17],[1,17.95],[2,19.15],[3,19.62],[4,21]]}[PART];
+const PMAP={1:[[0,0],[5,5],[6,6.15],[7,6.35],[8,6.55],[9,6.62],[10,7]],2:[[0,7],[2,9]],3:[[0,9],[2,11]],4:[[0,11],[2,13]],5:[[0,0.7],[1,2.0],[2,3.0],[3,4.0],[4,5.0],[5,6.2]],6:[[0,13],[1,13.9],[2,14.85],[3,15.9],[4,17]],7:[[0,17],[1,17.95],[2,19.15],[3,19.62],[4,21]]}[PART];
 function mapPart(l){for(let i=0;i<PMAP.length-1;i++){const a=PMAP[i],b=PMAP[i+1];if(l<=b[0]||i===PMAP.length-2)return a[1]+(b[1]-a[1])*clamp((l-a[0])/(b[0]-a[0]),0,1);}return PMAP[0][1];}
 const CAMO=(location.search.match(/cam=([^&]+)/)||[])[1];
 // resolución adaptativa: si el equipo no sostiene ~40 fps baja la resolución de dibujo; si sobra, la sube (tope 1,5x)
