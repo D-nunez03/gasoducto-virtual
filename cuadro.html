@@ -34,6 +34,7 @@ h1{margin:.2vh 0 0;font-family:var(--f-display);font-weight:600;font-size:clamp(
 .top .pill{margin:0}
 .tag{font-family:var(--f-mono);font-size:max(10px,7.5cqh);letter-spacing:.06em;text-transform:uppercase;color:var(--pc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn{font-size:max(12px,10cqh);line-height:1.15;font-weight:500;color:#e3ecee;margin-top:2cqh;min-height:2.3em}
+.tn small{font-family:var(--f-mono);font-size:.72em;font-weight:400;color:#f3d27a;white-space:nowrap}
 .tv{display:flex;align-items:flex-end;justify-content:space-between;gap:4cqw;margin-top:auto}
 .tv strong{font-family:var(--f-display);font-weight:600;font-size:min(27cqh,16cqw);line-height:.95;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tv strong small{font-size:.42em;font-weight:500;color:var(--muted);margin-left:.25em}
@@ -76,9 +77,9 @@ fetch('kpis.json?t='+Date.now()).then(r=>r.json()).then(K=>{
   ks.forEach(k=>{
     const cc=col(k.ejec), u=k.unidad&&!/%/.test(k.unidad)&&k.unidad!=='#'?`<small>${k.unidad}</small>`:'';
     const t=document.createElement('div'); t.className='tile'; if(cc)t.style.setProperty('--k',cc); t.style.setProperty('--pc',PC[k.p]);
-    t.innerHTML=`<div class="c"><div class="top"><div class="tag">${['Financiera','Mercado','Cliente','Procesos'][k.p]}</div><span class="pill${cc?'':' na'}">${cc?fmt(k.ejec):'pendiente'}</span></div><div class="tn">${k.nombre}</div>`+
+    t.innerHTML=`<div class="c"><div class="top"><div class="tag">${['Financiera','Mercado','Cliente','Procesos'][k.p]}</div><span class="pill${cc?'':' na'}">${cc?fmt(k.ejec):'pendiente'}</span></div><div class="tn">${k.nombre}${k.nota?' <small>· '+k.nota+'</small>':''}</div>`+
       `<div class="tv"><strong>${k.real??'—'}${k.real?u:''}</strong></div>`+
-      `<div class="tp"><span>Meta ${k.ppto??'—'}</span><span>${k.nota?'<b style="color:#f3d27a;font-weight:500">'+k.nota+'</b>':(k.inverso?'↓ mejor':'')}</span></div>`+
+      `<div class="tp"><span>Meta ${k.ppto??'—'}</span><span>${k.inverso?'↓ mejor':''}</span></div>`+
       `<div class="bar"><i data-w="${k.ejec==null?0:Math.min(100,k.ejec)}"></i></div></div>`;
     g.appendChild(t);});
   const tiles=[...g.querySelectorAll('.tile')];

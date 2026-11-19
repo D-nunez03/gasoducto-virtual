@@ -57,20 +57,34 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
 .k{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 .stat{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px}
 .stat div{display:flex;flex-direction:column}
-.stat strong{font-family:var(--f-display);font-size:34px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
-.stat span{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat strong{font-family:var(--f-display);font-size:40px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--f-mono);font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat strong span{font:inherit;color:inherit;text-transform:none;letter-spacing:0}
 .kcard{max-width:470px!important}
+.stat.xl{gap:28px}.stat.xl strong{font-size:64px}.stat.xl span{font-size:13.5px;max-width:20ch}
+.seg{display:grid;grid-template-columns:auto auto auto;gap:4px 22px;margin-top:6px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--paper) 18%,transparent);align-items:end}
+.seg small{grid-column:1/-1;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.seg div{display:flex;flex-direction:column;gap:3px}
+.seg b{font-family:var(--f-display);font-size:34px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;color:var(--paper)}
+.seg span{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.seg .pc{font-family:var(--f-mono);font-size:17px;font-weight:600;padding:5px 12px;border-radius:999px;color:#08131d;align-self:flex-start}
+.seg em{grid-column:1/-1;font-style:normal;font-family:var(--f-mono);font-size:12px;color:#f3d27a;margin-top:4px}
+.alerta{align-self:flex-start;display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:22px;line-height:1;padding:9px 14px;border-radius:4px;background:#e5483a;color:#fff;box-shadow:0 0 0 0 #e5483a99;animation:alerta 1.8s ease-out infinite}
+.alerta i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#e5483a;font-size:17px}
+@keyframes alerta{0%{box-shadow:0 0 0 0 #e5483a99}70%{box-shadow:0 0 0 14px #e5483a00}100%{box-shadow:0 0 0 0 #e5483a00}}
+@media (prefers-reduced-motion:reduce){.alerta{animation:none}}
+
 .kpi-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
 .kpi-h .eyebrow{margin:0}
-.kpi-h small{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.kpi-h small{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
 .kpi-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px 14px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--paper) 12%,transparent)}
 .kpi-row:first-of-type{border-top:0}
-.kpi-n{font-size:14px;line-height:1.25;color:#d5e0e1}
-.kpi-n span{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:2px}
-.kpi-v{font-family:var(--f-display);font-size:30px;font-weight:600;line-height:1;color:var(--paper);font-variant-numeric:tabular-nums;text-align:right}
-.kpi-e{font-family:var(--f-mono);font-size:12.5px;font-weight:500;min-width:58px;text-align:center;padding:4px 8px;border-radius:999px;color:#08131d}
+.kpi-n{font-size:16px;line-height:1.25;color:#d5e0e1}
+.kpi-n span{display:block;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin-top:2px}
+.kpi-v{font-family:var(--f-display);font-size:34px;font-weight:600;line-height:1;color:var(--paper);font-variant-numeric:tabular-nums;text-align:right}
+.kpi-e{font-family:var(--f-mono);font-size:14px;font-weight:500;min-width:58px;text-align:center;padding:4px 8px;border-radius:999px;color:#08131d}
 .kpi-e.na{background:transparent!important;color:var(--muted);border:1px dashed var(--muted)}
-.kpi-f{margin-top:10px;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);line-height:1.5}
+.kpi-f{margin-top:10px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);line-height:1.5}
 .kpi-f i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 10px;vertical-align:0}
 .kpi-f i:first-child{margin-left:0}
 .kpi-p{display:inline-block;margin-top:8px;font-family:var(--f-mono);font-size:10.5px;color:#f3d27a;border:1px solid #f3d27a66;border-radius:3px;padding:2px 6px}
@@ -127,7 +141,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
   <div class="tag cg" data-k="c-toa">TOA<small>asigna la cuadrilla más cercana</small></div>
   <div class="tag cg" data-k="c-valv">Válvula automatizada<small>cierre remoto del sector</small></div>
   <div class="tag cg" data-k="c-byp">Bypass ilegal<small>el gas no pasa por el medidor</small></div>
-  <div class="tag" data-k="c-fr">Vivienda<small>Cartagena</small></div>
+  <div class="tag" data-k="c-fr">Restaurante y Asadero Felipe<small>comercio de barrio · Cartagena</small></div>
   <div class="tag cg" data-k="c-bal">Consumos atípicos<small>balance del sector</small></div>
   <div class="tag town" data-k="c-sol">Energía solar<small>Caribe Plaza</small></div>
   <div class="tag cg" data-k="cg">Estación La Lucha<small>Sahagún · compresión y carga de GNC</small></div>
@@ -156,7 +170,6 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
     <div class="eyebrow"><b>02</b> Transporte</div>
     <h2>123,5 km de gasoducto sobre ruedas</h2>
     <p>De Sahagún a Canalete, pasando por Montería.</p>
-    <div class="stat"><div><strong class="c-truck">0</strong><span>accidentes de personal directo desde jun. 2024</span></div></div>
   </div></section>
   <section class="step"><div class="card">
     <div class="eyebrow"><b>03</b> Estación virtual Canalete</div>
@@ -166,7 +179,7 @@ p{margin:0;color:#d5e0e1;max-width:62ch}
   <section class="step"><div class="card">
     <div class="eyebrow"><b>04</b> Distribución y mantenimiento</div>
     <h2>16,4 km de red en Canalete</h2>
-    <div class="stat"><div><strong class="c-pe"><span data-kpi="mant">99,7 %</span></strong><span>cumplimiento del plan de mantenimiento</span></div></div>
+    <div class="stat xl"><div><strong class="c-pe">776</strong><span>usuarios con gas natural</span></div><div><strong>16.655</strong><span>habitantes · proyección DANE 2026</span></div></div>
   </div></section>
   <section class="step"><div class="card">
     <div class="eyebrow"><b>05</b> Llegada al usuario</div>
@@ -1594,7 +1607,7 @@ function tagVisibleC(k,s,d){
   if(k==='c-lab')return s>10.2&&s<11.0;
   if(k==='c-sol')return s>11.2&&s<12.4;
   if(k==='c-byp')return s>14.2&&s<14.95&&d<6;
-  if(k==='c-fr')return s>13.05&&s<13.5;
+  if(k==='c-fr')return s>13.05&&s<13.85;
   if(k==='c-bal')return s>15.2&&s<15.95;
   if(k==='c-base')return s>18.3&&s<18.62;
   if(k==='c-toa')return s>18.05&&s<18.29;
@@ -1786,7 +1799,7 @@ function frame(){
     t.el.style.opacity=vis?1:0; if(vis)t.el.style.transform=`translate(${(p.x*.5+.5)*w}px,${(-p.y*.5+.5)*h-14}px) translate(-50%,-100%)`;
   }
   const ri=Math.min(steps.length-1,Math.floor(cur+0.05)); if(ri!==lastRail){railBtns.forEach((b,i)=>b.classList.toggle('on',i===ri));lastRail=ri;}
-  {const si=Math.min(steps.length-1,Math.floor(cur+0.25)); $('legend').style.opacity=(world===0&&PART!==4&&!steps[si].querySelector('.kcard'))?1:0;}
+  {const si=Math.min(steps.length-1,Math.floor(cur+0.25)), L=$('legend'), lr=L.getBoundingClientRect(); let hit=false; for(const c of (window.__cards||(window.__cards=[...document.querySelectorAll('#story .card')]))){const r=c.getBoundingClientRect(); if(r.bottom>lr.top-8&&r.top<lr.bottom&&r.left<lr.right&&r.right>lr.left){hit=true;break;}} L.style.opacity=(world===0&&PART!==4&&!hit&&!steps[si].querySelector('.kcard'))?1:0;}
   renderer.render(world===0?sceneC:scene,camera);
   perf();
   requestAnimationFrame(frame);

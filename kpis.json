@@ -32,7 +32,8 @@
  ],
  "partes": {
   "1": [
-   "tv"
+   "tv",
+   "rpq"
   ],
   "2": [
    "rotura",
@@ -49,8 +50,8 @@
    "trest"
   ],
   "1rp": [
-   "msrp",
-   "nrp"
+   "nrp",
+   "msrp"
   ]
  },
  "kpis": {
@@ -63,11 +64,20 @@
    "p": 0
   },
   "clientes": {
-   "nombre": "Clientes conectados",
+   "nombre": "Clientes nuevos conectados",
    "unidad": "#",
-   "real": "23.020",
-   "ppto": "23.279",
-   "ejec": 98.9,
+   "real": "24.682",
+   "ppto": "27.766",
+   "ejec": 88.9,
+   "p": 1,
+   "nota": "meta anual"
+  },
+  "nrp": {
+   "nombre": "Normalización usuarios RP",
+   "unidad": "%",
+   "real": "96,7 %",
+   "ppto": "97 %",
+   "ejec": 99.7,
    "p": 1
   },
   "msrp": {
@@ -78,21 +88,23 @@
    "ejec": 98.9,
    "p": 1
   },
-  "nrp": {
-   "nombre": "Normalización usuarios RP",
-   "unidad": "%",
-   "real": "96,7 %",
-   "ppto": "97 %",
-   "ejec": 99.7,
-   "p": 1
-  },
   "tv": {
    "nombre": "Trabajos varios",
    "unidad": "#",
-   "real": "56.843",
-   "ppto": "62.640",
-   "ejec": 90.7,
-   "p": 1
+   "real": "61.233",
+   "ppto": "74.809",
+   "ejec": 81.9,
+   "p": 1,
+   "nota": "corte 17 nov"
+  },
+  "rpq": {
+   "nombre": "Revisiones periódicas",
+   "unidad": "#",
+   "real": "144.691",
+   "ppto": "154.400",
+   "ejec": 93.7,
+   "p": 1,
+   "nota": "corte oct"
   },
   "cont": {
    "nombre": "Continuidad del servicio",
@@ -108,15 +120,6 @@
    "real": "99,78 %",
    "ppto": "100 %",
    "ejec": 100,
-   "p": 2
-  },
-  "qr": {
-   "nombre": "QR imputables total GO",
-   "unidad": "#",
-   "real": "752",
-   "ppto": "520",
-   "ejec": 69.1,
-   "inverso": true,
    "p": 2
   },
   "trest": {
